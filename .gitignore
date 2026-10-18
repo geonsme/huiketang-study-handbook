@@ -13,6 +13,8 @@ __pycache__/
 .venv/
 *.log
 *.qoder.site
+.qoder/
+site_config.json
 .DS_Store
 Thumbs.db
 
@@ -20,3 +22,4 @@ Thumbs.db
 check.js
 sample*
 apple.json
+*.zip

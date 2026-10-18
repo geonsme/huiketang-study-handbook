@@ -3,6 +3,7 @@
 把播客《慧客堂》111 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、111 篇 Vol 导读、111 条“董了”观点、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
+- GitHub 公开仓库：https://github.com/geonsme/huiketang-study-handbook
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
 - Agent 阅读指南：[README.agent.md](README.agent.md)（公开：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/README.agent.md）
 
@@ -96,6 +97,14 @@ pip install sherpa-onnx numpy
 - 叙述视角：播客正文、导读、精读与“董了”里，主播董艺婷统一为第一人称“我”；这代表播客里的主理人，不代表站点作者。站点由一位老听众整理，品牌、Hero、首页推荐语、关于等站点级文案使用听众视角；手册内容不代表主播本人审订。
 - 原话引文、官方 Shownotes、逐字稿保持原文；逐字稿是机器转写，保留口语和少量错字，时间戳为 60 秒段首，约一分钟误差。
 - 播客内容版权归《慧客堂》/主播董艺婷所有；本仓库用于个人学习与检索，不用于商业再分发。
+- 仓库已公开；如权利方要求，会下架相关文字或电子书。
+
+## 公开仓库与版权
+
+- 本仓库和站点均为公开内容，方便个人学习、检索与 Agent 阅读。
+- 播客文字、Shownotes、封面及节目内容的版权归《慧客堂》/ 主播董艺婷所有；本仓库是听众的学习整理，不用于商业再分发。
+- 构建脚本可以按原样用于个人学习；播客内容不随代码一并授权。
+- 如权利方对公开内容有异议，可联系仓库所有者下架相关材料。
 
 ## 未入库内容
 

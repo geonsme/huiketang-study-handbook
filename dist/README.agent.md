@@ -21,7 +21,7 @@
 ```
 
 - 在线站点：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
-- 私有 GitHub 快照：https://github.com/geonsme/huiketang-study-handbook
+- 公开 GitHub 快照：https://github.com/geonsme/huiketang-study-handbook
 - 电子书下载：
   - https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/ebook/huiketang-handbook.epub
   - https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/ebook/huiketang-transcripts.epub
@@ -69,8 +69,8 @@
 | `template-v2.html` | 单文件页面模板与渲染逻辑 |
 | `build-v2.js` | 把 `data-v2.json` 注入模板，生成最终 HTML |
 | `build_ebook.py` | 生成两本 EPUB 和一本 TXT |
-| `site_config.json` | Qoder Site 的 siteRoot / projectId / siteId / 域名；不要公开 |
-| `sync_github.py` | 有新增时把白名单内容提交到私有 GitHub 仓库 |
+| `site_config.json` | Qoder Site 的 siteRoot / projectId / siteId / 域名；本机配置，不入库 |
+| `sync_github.py` | 有新增时把白名单内容提交到公开 GitHub 仓库 |
 
 ### Episode 关键字段
 
@@ -153,7 +153,7 @@ python sync_github.py
 - 逐字稿是本地 Paraformer 机器转写，可能有错字；时间戳为 60 秒段首，约一分钟误差。
 - 页面是单文件 HTML，数据内嵌，文件约 12MB；首次打开可能稍慢。
 - 学习进度、收藏、笔记保存在浏览器 localStorage，不跨设备同步。
-- 私有 GitHub 仓库是内容快照，不是站点运行依赖。
+- 公开 GitHub 仓库是内容快照，不是站点运行依赖。
 
 ## 8. 机器可读小结
 
@@ -163,7 +163,7 @@ python sync_github.py
   "public": true,
   "agent_readme": "https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/README.agent.md",
   "repo": "https://github.com/geonsme/huiketang-study-handbook",
-  "repo_visibility": "private",
+  "repo_visibility": "public",
   "rss": "https://feed.xyzfm.space/7neh8whbtc9w",
   "data": "data-v2.json",
   "build": ["node build-v2.js", "python build_ebook.py"],
