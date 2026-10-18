@@ -1,6 +1,6 @@
 # 慧客堂 · 学习手册
 
-把播客《慧客堂》111 期整理成一本手机端学习手册：8 篇章节大导读、111 篇 Vol 导读、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。
+把播客《慧客堂》111 期整理成一本手机端学习手册：8 篇章节大导读、111 篇 Vol 导读、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
@@ -18,6 +18,8 @@
 | `guides/` | 8 篇章节大导读与 111 篇 Vol 导读的源数据 |
 | `apply_guides.js` | 把 `guides/*.json` 合并进 `data-v2.json` |
 | `build_guides.py` | 生成 8 篇章节导读与 111 篇 Vol 导读 |
+| `build_ebook.py` | 生成学习手册 EPUB、逐字稿全集 EPUB 与 TXT |
+| `ebook/` | 可直接导入微信读书的电子书文件 |
 | `ep_meta/` | 每期标题、Shownotes、章节、标签 |
 | `ep_content/` | 视角改写前的节目内容快照 |
 | `meta.js` | 模块、原则、路径、书单、术语表 |
@@ -55,7 +57,19 @@ node build-v2.js
 
 ### GitHub 自动提交
 
-每天确认有新一期、且逐字稿/精读/引文完整并通过发布前检查后，自动化会自动把白名单内容 commit 并 push 到本仓库 `main`，不需要人工审批。没有新增时不产生空提交；音频、WAV、模型、日志和本机站点配置不入库。
+每天确认有新一期、且逐字稿/精读/引文/导读完整并通过发布前检查后，自动化会自动把白名单内容 commit 并 push 到本仓库 `main`，不需要人工审批。没有新增时不产生空提交；音频、WAV、模型、日志和本机站点配置不入库。
+
+## 电子书
+
+`ebook/` 下有三份可导入微信读书的文件：
+
+- `慧客堂·学习手册.epub`：导读、核心要点、精读、原文摘录、Shownotes、章节大导读和附录。
+- `慧客堂·逐字稿全集.epub`：111 期完整逐字稿，60 秒段首时间戳。
+- `慧客堂·学习手册.txt`：UTF-8 TXT，兼容备份。
+
+网页版也在首页提供下载：`ebook/huiketang-handbook.epub`、`ebook/huiketang-transcripts.epub`、`ebook/huiketang-handbook.txt`。
+
+导入方式：微信读书 → 书架右上角「+」→ 从本地导入（安卓）或从 iCloud / 文件导入（iOS）；也可以把文件发到微信文件传输助手，点开 → 用其他应用打开 → 微信读书。推荐 EPUB，保留封面和目录。电子书由 `build_ebook.py` 从 `data-v2.json` 自动生成，内容更新后不要手工改文件，重新运行脚本即可。
 
 依赖：
 

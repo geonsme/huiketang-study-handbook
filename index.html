@@ -710,6 +710,17 @@ html[data-theme="dark"] .vg-keys span{color:#ffc45c;background:rgba(245,166,35,.
 .rm-body p{font-size:11px;line-height:1.6;color:var(--muted);margin:3px 0 0}
 .vol-map{margin-top:12px;padding:12px 14px;border:1px dashed var(--line-strong);border-radius:14px;background:rgba(245,166,35,.04)}
 html[data-theme="dark"] .vol-map{background:rgba(245,166,35,.03)}
+.ebook-card{display:flex;gap:18px;align-items:center;justify-content:space-between;border:2px solid var(--ink);border-radius:16px;background:var(--card);padding:16px;box-shadow:4px 4px 0 rgba(245,166,35,.24)}
+.ebook-copy .kicker{color:var(--red);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700}
+.ebook-copy h3{font-size:20px;line-height:1.35;margin-top:4px}
+.ebook-copy p{font-size:11.5px;color:var(--muted);line-height:1.65;margin-top:5px;max-width:34em}
+.ebook-links{display:flex;flex-direction:column;gap:7px;flex:none}
+.ebook-links .btn{padding:9px 13px;font-size:11.5px;white-space:nowrap}
+@media (max-width:560px){
+  .ebook-card{display:block}
+  .ebook-links{margin-top:12px;flex-direction:row;flex-wrap:wrap}
+  .ebook-links .btn{flex:1;min-width:128px}
+}
 @media (max-width:560px){
   .learn-path{grid-template-columns:1fr}
   .cg-grid{grid-template-columns:1fr}
@@ -1013,6 +1024,21 @@ function renderHome(){
           <p>真话是态度，减法是选择。我用这个节目聊投资，也聊家庭、健康、读书与中年重启。</p>
         </div>
         <button class="hm-more" data-go="modules">我的方法 →</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="ebook-card">
+        <div class="ebook-copy">
+          <div class="kicker">E-book</div>
+          <h3>导入微信读书，离线也能读</h3>
+          <p>下载 EPUB 后，用微信读书打开：书架右上角「+」→ 从本地导入 / 从微信导入。TXT 作为兼容备份；逐字稿单独一本。</p>
+        </div>
+        <div class="ebook-links">
+          <a class="btn btn-primary" href="ebook/huiketang-handbook.epub" download>学习手册 EPUB</a>
+          <a class="btn btn-ghost" href="ebook/huiketang-transcripts.epub" download>逐字稿全集 EPUB</a>
+          <a class="btn btn-ghost" href="ebook/huiketang-handbook.txt" download>TXT 备份</a>
+        </div>
       </div>
     </section>
 

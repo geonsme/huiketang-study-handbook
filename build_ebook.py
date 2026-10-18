@@ -1,0 +1,765 @@
+# -*- coding: utf-8 -*-
+"""生成《慧客堂》电子书：学习手册 EPUB、逐字稿全集 EPUB、学习手册 TXT。
+
+输出：
+    ebook/慧客堂·学习手册.epub
+    ebook/慧客堂·逐字稿全集.epub
+    ebook/慧客堂·学习手册.txt
+    ebook/导入微信读书.txt
+
+同时复制到本地 dist/ebook/ 与 Qoder Site 的 siteRoot/dist/ebook/。
+"""
+import html
+import json
+import os
+import re
+import shutil
+import sys
+import uuid
+import zipfile
+from datetime import datetime, timezone
+from xml.etree import ElementTree as ET
+
+from PIL import Image, ImageDraw, ImageFont
+
+BASE = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = os.path.join(BASE, "data-v2.json")
+EBOOK_DIR = os.path.join(BASE, "ebook")
+DIST_DIR = os.path.join(BASE, "dist", "ebook")
+SITE_CONFIG = os.path.join(BASE, "site_config.json")
+COVER_SRC = os.path.join(BASE, "cover.png")
+
+FONT_SERIF = "C:/Windows/Fonts/simsun.ttc"
+FONT_SANS = "C:/Windows/Fonts/msyh.ttc"
+
+CSS = """
+body{font-family:"Songti SC","Noto Serif CJK SC","STSong",serif;line-height:1.8;margin:0;padding:1.1em;color:#171512;background:#fbf3e3;font-size:1em}
+h1{font-family:"Songti SC","STSong",serif;font-size:1.75em;line-height:1.35;margin:0 0 .25em;color:#171512}
+h2{font-family:"Songti SC","STSong",serif;font-size:1.3em;line-height:1.4;margin:1.5em 0 .4em;padding-left:.5em;border-left:4px solid #f5a623;color:#171512}
+h3{font-size:1.08em;line-height:1.45;margin:1.1em 0 .3em;color:#3b3226}
+p{margin:0 0 .8em}
+ul,ol{margin:.4em 0 1em;padding-left:1.3em}
+li{margin:.25em 0}
+.meta,.note{color:#786b58;font-size:.82em;line-height:1.6}
+.subtitle{color:#786b58;font-size:1em;margin:.2em 0 1em}
+.label{color:#a95a05;font-size:.72em;letter-spacing:.14em;font-weight:bold}
+.guide{background:#fff9ec;border:1px solid #e5d7bd;border-left:4px solid #f5a623;border-radius:8px;padding:.9em 1em;margin:1em 0}
+.guide .hook{font-size:1.05em;line-height:1.75;margin:.35em 0 .7em}
+.question{color:#a95a05;font-weight:bold}
+.keywords span,.tag{display:inline-block;border:1px solid #e5d7bd;border-radius:4px;padding:0 .35em;margin:0 .25em .3em 0;color:#786b58;font-size:.78em}
+.flow{margin:.9em 0 1.1em}
+.flow .step{position:relative;padding:.55em .7em .55em 2.3em;border:1px solid #e5d7bd;border-radius:8px;margin:.35em 0;background:#fff9ec;font-size:.9em;line-height:1.6}
+.flow .step b{display:block;color:#a95a05;font-size:.8em;letter-spacing:.06em}
+.flow .step p{margin:.15em 0 0;color:#3b3226}
+.flow{counter-reset:step}
+.flow .step:before{counter-increment:step;content:counter(step);position:absolute;left:.55em;top:.55em;width:1.3em;height:1.3em;border-radius:50%;background:#171512;color:#fbf3e3;text-align:center;font-size:.75em;line-height:1.3em}
+blockquote{border-left:3px solid #f5a623;margin:.8em 0;padding:.35em 0 .35em .9em;color:#3b3226;background:#fff9ec}
+blockquote .time{display:block;color:#a95a05;font-size:.72em;font-family:monospace;margin-bottom:.1em}
+.tr{margin:.5em 0;font-size:.94em}
+.tr .time{color:#a95a05;font-family:monospace;font-size:.74em;margin-right:.4em}
+.title-page{text-align:center;padding-top:8%}
+.title-page .logo{width:38%;max-width:320px;margin:0 auto 1.2em;border-radius:14px}
+.title-page h1{font-size:2.1em;margin:.2em 0}
+.title-page .subtitle{font-size:1.05em}
+.title-page .author{margin-top:2em;font-size:1em;color:#3b3226}
+.title-page .stats{font-size:.9em;color:#786b58;margin-top:.4em}
+.cover-img{width:100%;height:auto;display:block;margin:0;padding:0}
+.section{margin:1.1em 0}
+.index li{margin:.25em 0}
+.ref{color:#a95a05;text-decoration:none;font-size:.86em}
+"""
+
+
+def esc(s):
+    return html.escape(str(s or ""), quote=True)
+
+
+def load_data():
+    with open(DATA_PATH, encoding="utf-8") as f:
+        data = json.load(f)
+    episodes = sorted(data["episodes"], key=lambda e: e["n"])
+    return data, episodes, {e["n"]: e for e in episodes}
+
+
+def xhtml(title, body):
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<!DOCTYPE html>\n'
+        '<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" '
+        'xml:lang="zh-CN" lang="zh-CN">\n'
+        f'<head><meta charset="utf-8"/><title>{esc(title)}</title>'
+        '<link rel="stylesheet" type="text/css" href="style.css"/></head>\n'
+        f'<body>{body}</body></html>'
+    )
+
+
+def ep_title(e):
+    return re.sub(r"^(?:Vol\.|V)\d+[.、\s]*", "", e.get("title", "")).strip()
+
+
+def short_title(e, n=34):
+    t = ep_title(e)
+    return t if len(t) <= n else t[:n] + "…"
+
+
+def first_sentence(s, n=60):
+    t = re.split(r"[。！？]", str(s or ""))[0]
+    return t if len(t) <= n else t[:n] + "…"
+
+
+def ep_link(e, text=None):
+    return f'<a class="ref" href="vol_{e["n"]}.xhtml">{esc(text or (e["label"] + " · " + short_title(e)))}</a>'
+
+
+def guide_box(g, label="本期导读"):
+    if not g:
+        return ""
+    q = f'<p class="question">带着这个问题读：{esc(g.get("question", ""))}</p>' if g.get("question") else ""
+    keys = g.get("keywords") or []
+    kw = f'<p class="keywords">{"".join(f"<span>{esc(k)}</span>" for k in keys)}</p>' if keys else ""
+    return (
+        f'<div class="guide"><div class="label">{esc(label)}</div>'
+        f'<p class="hook">{esc(g.get("hook", ""))}</p>{q}{kw}</div>'
+    )
+
+
+def flow(steps):
+    if not steps:
+        return ""
+    return '<div class="flow">' + "".join(
+        f'<div class="step"><b>{esc(s[0])}</b><p>{esc(s[1])}</p></div>' for s in steps
+    ) + "</div>"
+
+
+def ul(items):
+    return "<ul>" + "".join(f"<li>{esc(x)}</li>" for x in items if x) + "</ul>"
+
+
+def paragraphs(items):
+    return "".join(f"<p>{esc(x)}</p>" for x in items if x)
+
+
+def module_page(m):
+    g = m.get("guide") or {}
+    body = f'<h1>MODULE {esc(m.get("no"))} · {esc(m.get("title"))}</h1>'
+    body += f'<p class="subtitle">{esc(m.get("subtitle"))} · {esc(m.get("kicker"))}</p>'
+    body += guide_box(g, "CHAPTER GUIDE · 本章导读")
+    steps = [
+        (f"第 {i+1} 步", s.get("h", "") + ("：" + first_sentence((s.get("p") or [""])[0], 55) if s.get("p") else ""))
+        for i, s in enumerate(m.get("sections") or [])
+    ]
+    body += flow(steps)
+    if g.get("questions"):
+        body += "<h3>带着三个问题读</h3><ol>" + "".join(f"<li>{esc(q)}</li>" for q in g["questions"]) + "</ol>"
+    if g.get("outcomes"):
+        body += "<h3>读完后，你应该能</h3>" + ul(g["outcomes"])
+    if g.get("path"):
+        body += "<h3>建议路线</h3><ul class=\"route\">"
+        for p in g["path"]:
+            e = EP_BY_N.get(p.get("n"))
+            if e:
+                body += f"<li>{ep_link(e)} — {esc(p.get('why'))}</li>"
+        body += "</ul>"
+    body += f'<h2>本章导读</h2><p>{esc(m.get("lead"))}</p>'
+    body += f'<blockquote>{esc(m.get("bigIdea"))}</blockquote>'
+    if m.get("quote"):
+        body += f'<blockquote>“{esc(m["quote"].get("text"))}”<span class="time">— {esc(m["quote"].get("src"))}</span></blockquote>'
+    if m.get("quotes"):
+        body += "<h2>节目原话</h2>"
+        for q in m["quotes"]:
+            e = EP_BY_N.get(q.get("n"))
+            src = ep_link(e, f'{e["label"]} · 点此读原文') if e else ""
+            body += f'<blockquote><span class="time">{esc(q.get("t"))}</span>{esc(q.get("text"))}<br/>{src}</blockquote>'
+    if m.get("transcriptTakeaways"):
+        body += "<h2>从原文反复出现的判断</h2>" + ul(m["transcriptTakeaways"])
+    for s in m.get("sections") or []:
+        body += f'<h2>{esc(s.get("h"))}</h2>' + paragraphs(s.get("p") or [])
+    if m.get("cases"):
+        body += "<h2>案例与切片</h2>"
+        for c in m["cases"]:
+            body += f'<h3>{esc(c.get("title"))}</h3><p>{esc(c.get("text"))}</p>'
+            refs = " ".join(ep_link(EP_BY_N[n], EP_BY_N[n]["label"]) for n in c.get("eps", []) if n in EP_BY_N)
+            if refs:
+                body += f'<p class="meta">{refs}</p>'
+    if m.get("actions"):
+        body += "<h2>行动清单</h2>" + ul(m["actions"])
+    if g.get("questions"):
+        body += "<h2>离章前，再问自己一次</h2><ol>" + "".join(f"<li>{esc(q)}</li>" for q in g["questions"]) + "</ol>"
+        body += '<p class="note">三个问题都能用自己的话回答，这一章才算真的读完。</p>'
+    if m.get("eps"):
+        body += "<h2>推荐精读</h2><ul>"
+        for n in m["eps"]:
+            e = EP_BY_N.get(n)
+            if e:
+                body += f"<li>{ep_link(e)}</li>"
+        body += "</ul>"
+    return xhtml(f"MODULE {m.get('no')} · {m.get('title')}", body)
+
+
+def vol_page(e):
+    g = e.get("guide") or {}
+    title = ep_title(e)
+    tags = " · ".join(e.get("tags") or [])
+    body = f'<h1>{esc(e.get("label"))} · {esc(title)}</h1>'
+    body += f'<p class="meta">{esc(e.get("date"))} · {esc(e.get("duration"))}{(" · " + esc(tags)) if tags else ""}</p>'
+    body += guide_box(g, "EPISODE GUIDE · 本期导读")
+    a0 = (e.get("analysis") or [{}])[0]
+    body += flow([
+        ("入口问题", g.get("question", "")),
+        ("主理人的判断", e.get("line") or e.get("summary") or ""),
+        ("展开的线索", (a0.get("h") or "") + ("：" + (a0.get("p") or [""])[0][:90] if a0.get("p") else "")),
+    ])
+    body += f'<h2>本期一句话</h2><blockquote>{esc(e.get("summary") or e.get("line"))}</blockquote>'
+    if e.get("points"):
+        body += "<h2>核心要点</h2>" + ul(e["points"])
+    if e.get("analysis"):
+        body += "<h2>精读</h2>"
+        for s in e["analysis"]:
+            body += f'<h3>{esc(s.get("h"))}</h3>' + paragraphs(s.get("p") or [])
+    excerpts = e.get("excerpts") or e.get("quotes") or []
+    if excerpts:
+        body += "<h2>原文摘录</h2>"
+        for q in excerpts[:8]:
+            body += f'<blockquote><span class="time">{esc(q.get("t"))}</span>{esc(q.get("text"))}</blockquote>'
+    if e.get("case"):
+        body += f'<h2>案例</h2><p>{esc(e["case"])}</p>'
+    if e.get("chapters"):
+        body += "<h2>本期时间轴</h2><ul>"
+        for c in e["chapters"]:
+            body += f'<li><span class="time">{esc(c.get("t"))}</span> {esc(c.get("text"))}</li>'
+        body += "</ul>"
+    if e.get("paras"):
+        body += "<h2>官方 Shownotes</h2>" + paragraphs(e["paras"])
+    if g.get("question"):
+        body += f'<h2>读后一问</h2><p class="question">{esc(g["question"])}</p><p class="note">读完可以回到网页版，在“我的笔记”里写一句：我准备改变什么。</p>'
+    body += '<p class="note">完整逐字稿见《慧客堂 · 逐字稿全集》，或在网页版展开“完整逐字稿”。机器转写可能有错字，引用请以音频为准。</p>'
+    return xhtml(f'{e.get("label")} · {title}', body)
+
+
+def transcript_page(e):
+    g = e.get("guide") or {}
+    title = ep_title(e)
+    body = f'<h1>{esc(e.get("label"))} · {esc(title)}</h1>'
+    body += f'<p class="meta">{esc(e.get("date"))} · {esc(e.get("duration"))} · {(e.get("transcriptChars") or 0)/10000:.1f} 万字</p>'
+    if g.get("hook"):
+        body += f'<blockquote>{esc(g.get("hook"))}</blockquote>'
+    body += "<h2>完整逐字稿</h2>"
+    chunks = (e.get("transcript") or {}).get("chunks") or []
+    if not chunks:
+        body += '<p class="note">这一期的逐字稿暂缺。</p>'
+    else:
+        for c in chunks:
+            if not c or len(c) < 2 or not c[1]:
+                continue
+            body += f'<p class="tr"><span class="time">[{esc(c[0])}]</span>{esc(c[1])}</p>'
+    body += '<p class="note">本地 Paraformer 转写，时间戳为 60 秒段首，可能有错字；引用请以音频为准。</p>'
+    return xhtml(f'{e.get("label")} · 逐字稿', body)
+
+
+def module_index_html(modules):
+    body = '<h1>八章导读</h1><p>先读一章的导读，知道它在解决什么问题；再按建议路线进入具体节目。</p>'
+    for m in modules:
+        g = m.get("guide") or {}
+        body += f'<h2><a href="module_{m["id"]}.xhtml">MODULE {esc(m.get("no"))} · {esc(m.get("title"))}</a></h2>'
+        body += f'<p>{esc(g.get("teaser") or m.get("subtitle"))}</p>'
+        if g.get("questions"):
+            body += f'<p class="question">带读问题：{esc(g["questions"][0])}</p>'
+    return xhtml("八章导读", body)
+
+
+def vol_index_html(episodes, transcript=False):
+    if transcript:
+        body = '<h1>按 Vol 读逐字稿</h1><p>从开篇到最新一期。点击任意一期进入完整逐字稿；导读、要点与精读见《慧客堂 · 学习手册》。</p>'
+    else:
+        body = '<h1>按 Vol 读</h1><p>从开篇到最新一期。点击任意一期进入本期导读与精读。</p>'
+    years = []
+    for e in episodes:
+        y = (e.get("date") or "")[:4]
+        if y not in years:
+            years.append(y)
+    for y in years:
+        body += f"<h2>{esc(y)}</h2><ul class=\"index\">"
+        for e in episodes:
+            if (e.get("date") or "")[:4] == y:
+                body += f'<li><a href="vol_{e["n"]}.xhtml">{esc(e.get("label"))} · {esc(short_title(e, 40))}</a> <span class="meta">{esc(e.get("date"))}</span></li>'
+        body += "</ul>"
+    return xhtml("按 Vol 读", body)
+
+
+def howto_html(data):
+    p = data["podcast"]
+    body = '<h1>怎么读这本手册</h1>'
+    body += '<p>这不是一本“听完就忘”的播客合集。每一章有章节大导读，每一期有 Vol 小导读；先读导读，带着问题进入，再回到原文。</p>'
+    body += flow([
+        ("先读一章大导读", "知道这一章在解决什么问题，带着三个问题进入。"),
+        ("再读 10 期精选", "用一句理由和三个核心词，先建立自己的坐标。"),
+        ("回到 Vol 做笔记", "听原声、看逐字稿，最后写一条“我要改变什么”。"),
+    ])
+    body += '<h2>两条路</h2><p>按模块：从风险、配置、产品、周期、人生、读书、案例、方法八个章节建立框架。按 Vol：从开篇到最新一期，按时间读完整手记。</p>'
+    body += '<h2>这本电子书包含什么</h2><p>111 期导读、核心要点、精读、原文摘录、官方 Shownotes、8 篇章节大导读和 10 条原则。完整逐字稿单独成书，见《慧客堂 · 逐字稿全集》。</p>'
+    body += '<h2>导入微信读书</h2><p>微信读书支持 EPUB / TXT。推荐导入 EPUB：书架右上角「+」→ 从本地导入（安卓）或从 iCloud / 文件导入（iOS）；也可以把文件发到微信文件传输助手，点开文件 → 用其他应用打开 → 微信读书。</p>'
+    body += f'<p class="meta">整理范围：{esc(p.get("firstDate"))} — {esc(p.get("lastDate"))} · {p.get("count")} 期 · {esc(p.get("transcriptWan"))} 万字逐字稿。</p>'
+    body += '<p class="note">播客内容版权归《慧客堂》/ 主播董艺婷所有；本电子书用于个人学习与检索，不用于商业再分发。</p>'
+    return xhtml("怎么读这本手册", body)
+
+
+def transcript_howto_html(data):
+    p = data["podcast"]
+    body = '<h1>怎么读逐字稿</h1>'
+    body += '<p>这是《慧客堂》111 期的完整逐字稿，按 Vol 编排。每段前的时间戳是 60 秒段首，方便回到音频核对。</p>'
+    body += '<h2>怎么用</h2><ol><li>从目录选择一期，先看开头两三段，判断是否是你此刻要读的内容。</li><li>用阅读器的搜索功能查人物、术语或数字；时间戳对应音频位置。</li><li>需要导读、核心要点和精读时，打开《慧客堂 · 学习手册》。</li></ol>'
+    body += '<h2>说明</h2><p>逐字稿由本地 Paraformer 转写，保留口语与少量错字；引用请以音频为准。</p>'
+    body += f'<p class="meta">整理范围：{esc(p.get("firstDate"))} — {esc(p.get("lastDate"))} · {p.get("count")} 期 · {esc(p.get("transcriptWan"))} 万字。</p>'
+    body += '<p class="note">播客内容版权归《慧客堂》/ 主播董艺婷所有；本电子书用于个人学习与检索，不用于商业再分发。</p>'
+    return xhtml("怎么读逐字稿", body)
+
+
+def appendix_html(data):
+    body = '<h1>附录</h1><h2>十条原则</h2>'
+    for p in data.get("principles") or []:
+        body += f'<h3>{esc(p.get("no"))} · {esc(p.get("title"))}</h3><p>{esc(p.get("body"))}</p>'
+        refs = " ".join(ep_link(EP_BY_N[n], EP_BY_N[n]["label"]) for n in p.get("eps", []) if n in EP_BY_N)
+        if refs:
+            body += f'<p class="meta">{refs}</p>'
+    body += "<h2>术语速查</h2>"
+    for g in data.get("glossary") or []:
+        body += f'<p><b>{esc(g.get("term"))}</b>：{esc(g.get("desc"))}</p>'
+    p = data["podcast"]
+    body += f'<h2>关于这本手册</h2><p>我是{esc(p.get("host"))}。{esc(p.get("hostBio"))}</p>'
+    body += f'<p>我把 {p.get("count")} 期节目、{p.get("chapters")} 个官方章节，整理成这本手册，基于 {esc(p.get("firstDate"))}—{esc(p.get("lastDate"))} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。</p>'
+    body += '<p class="note">逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。播客内容版权归《慧客堂》/ 主播董艺婷所有，本电子书用于个人学习与检索。</p>'
+    return xhtml("附录", body)
+
+
+def title_page_html(data, cover_title, subtitle):
+    p = data["podcast"]
+    body = '<div class="title-page">'
+    body += '<img class="logo" src="images/logo.png" alt="慧客堂"/>'
+    body += '<h1>慧客堂 · ' + esc(cover_title) + '</h1>'
+    body += f'<p class="subtitle">{esc(subtitle)}</p>'
+    body += '<p class="author">董艺婷 · 慧客堂</p>'
+    body += f'<p class="stats">{p.get("count")} 期 · {p.get("hours")} 小时 · {p.get("transcriptWan")} 万字逐字稿</p>'
+    body += f'<p class="stats">{esc(p.get("firstDate"))} — {esc(p.get("lastDate"))}</p>'
+    body += '</div>'
+    return xhtml("慧客堂 · " + cover_title, body)
+
+
+def cover_page_html():
+    return xhtml("封面", '<div><img class="cover-img" src="images/cover.jpg" alt="封面"/></div>')
+
+
+def create_cover(path, title2, subtitle, stats, quote, logo):
+    W, H = 1200, 1800
+    BG, CARD, INK, MUTED = (245, 166, 35), (251, 243, 227), (23, 21, 18), (120, 107, 88)
+    im = Image.new("RGB", (W, H), BG)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([60, 60, W - 60, H - 60], radius=36, fill=CARD, outline=INK, width=6)
+    logo.thumbnail((380, 380), Image.LANCZOS)
+    lw, lh = logo.size
+    lx, ly = (W - lw) // 2, 120
+    d.rounded_rectangle([lx - 8, ly - 8, lx + lw + 8, ly + lh + 8], radius=24, fill=(255, 249, 236), outline=INK, width=4)
+    im.paste(logo, (lx, ly), logo if logo.mode == "RGBA" else None)
+    d.text((600, 585), "慧客堂", font=ImageFont.truetype(FONT_SERIF, 92), fill=INK, anchor="mm")
+    f2 = fit_font(d, title2, FONT_SERIF, 118, 920)
+    d.text((600, 710), title2, font=f2, fill=INK, anchor="mm")
+    d.text((600, 865), subtitle, font=fit_font(d, subtitle, FONT_SANS, 44, 920), fill=MUTED, anchor="mm")
+    d.line([300, 945, 900, 945], fill=(245, 166, 35), width=5)
+    d.text((600, 1015), "董艺婷 · 慧客堂", font=ImageFont.truetype(FONT_SANS, 42), fill=INK, anchor="mm")
+    d.text((600, 1090), stats, font=fit_font(d, stats, FONT_SANS, 34, 920), fill=MUTED, anchor="mm")
+    d.text((600, 1450), quote, font=fit_font(d, quote, FONT_SERIF, 42, 900), fill=INK, anchor="mm")
+    d.text((600, 1620), "EPUB · 2026", font=ImageFont.truetype(FONT_SANS, 26), fill=MUTED, anchor="mm")
+    im.save(path, "JPEG", quality=92, optimize=True)
+
+
+def fit_font(draw, text, path, max_size, max_width):
+    for size in range(max_size, 19, -2):
+        font = ImageFont.truetype(path, size)
+        box = draw.textbbox((0, 0), text, font=font)
+        if box[2] - box[0] <= max_width:
+            return font
+    return ImageFont.truetype(path, 20)
+
+
+def nav_xhtml(groups):
+    def child_list(children):
+        if not children:
+            return ""
+        return "<ol>" + "".join(
+            f'<li><a href="{c["href"]}">{esc(c["title"])}</a></li>' for c in children
+        ) + "</ol>"
+
+    items = "".join(
+        f'<li><a href="{g["href"]}">{esc(g["title"])}</a>{child_list(g.get("children"))}</li>'
+        for g in groups
+    )
+    body = f'<nav epub:type="toc" id="toc"><h1>目录</h1><ol>{items}</ol></nav>'
+    return xhtml("目录", body)
+
+
+def ncx_xml(uid, groups):
+    counter = [0]
+
+    def build(g):
+        counter[0] += 1
+        order = counter[0]
+        children = "".join(build(c) for c in g.get("children") or [])
+        return (
+            f'<navPoint id="np{order}" playOrder="{order}">'
+            f'<navLabel><text>{esc(g["title"])}</text></navLabel>'
+            f'<content src="{g["href"]}"/>{children}</navPoint>'
+        )
+
+    navmap = "".join(build(g) for g in groups)
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="zh-CN">'
+        f'<head><meta name="dtb:uid" content="{esc(uid)}"/><meta name="dtb:depth" content="2"/>'
+        '<meta name="dtb:totalPageCount" content="0"/><meta name="dtb:maxPageNumber" content="0"/></head>'
+        f'<docTitle><text>慧客堂</text></docTitle><navMap>{navmap}</navMap></ncx>'
+    )
+
+
+def opf_xml(uid, book_title, author, description, pages):
+    manifest = [
+        '<item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>',
+        '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>',
+        '<item id="css" href="style.css" media-type="text/css"/>',
+        '<item id="cover-image" href="images/cover.jpg" media-type="image/jpeg" properties="cover-image"/>',
+        '<item id="logo-image" href="images/logo.png" media-type="image/png"/>',
+    ]
+    for p in pages:
+        manifest.append(f'<item id="p_{p["id"]}" href="{p["href"]}" media-type="application/xhtml+xml"/>')
+    spine = "".join(f'<itemref idref="p_{p["id"]}"/>' for p in pages)
+    modified = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return (
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="bookid" xml:lang="zh-CN">'
+        '<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">'
+        f'<dc:identifier id="bookid">{esc(uid)}</dc:identifier>'
+        f'<dc:title>{esc(book_title)}</dc:title>'
+        f'<dc:creator>{esc(author)}</dc:creator>'
+        '<dc:language>zh-CN</dc:language>'
+        f'<dc:description>{esc(description)}</dc:description>'
+        '<dc:publisher>慧客堂学习手册</dc:publisher>'
+        f'<dc:date>{datetime.now().strftime("%Y-%m-%d")}</dc:date>'
+        f'<meta property="dcterms:modified">{modified}</meta>'
+        '<meta name="cover" content="cover-image"/>'
+        '<meta name="generator" content="build_ebook.py"/>'
+        '</metadata>'
+        f'<manifest>{"".join(manifest)}</manifest>'
+        f'<spine toc="ncx">{spine}</spine>'
+        '<guide><reference type="cover" title="封面" href="cover.xhtml"/>'
+        '<reference type="toc" title="目录" href="nav.xhtml"/>'
+        '<reference type="text" title="正文" href="howto.xhtml"/></guide>'
+        '</package>'
+    )
+
+
+def write_epub(path, book_title, subtitle, description, cover_path, logo_path, pages, groups):
+    uid = "urn:uuid:" + str(uuid.uuid5(uuid.NAMESPACE_URL, "huiketang-" + book_title))
+    files = {
+        "META-INF/container.xml": (
+            '<?xml version="1.0" encoding="utf-8"?>\n'
+            '<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">'
+            '<rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles>'
+            '</container>'
+        ),
+        "OEBPS/content.opf": opf_xml(uid, book_title, "董艺婷 · 慧客堂", description, pages),
+        "OEBPS/nav.xhtml": nav_xhtml(groups),
+        "OEBPS/toc.ncx": ncx_xml(uid, groups),
+        "OEBPS/style.css": CSS,
+    }
+    for p in pages:
+        files["OEBPS/" + p["href"]] = p["content"]
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with zipfile.ZipFile(path, "w") as z:
+        zi = zipfile.ZipInfo("mimetype")
+        z.writestr(zi, "application/epub+zip", compress_type=zipfile.ZIP_STORED)
+        for name, content in files.items():
+            z.writestr(name, content, compress_type=zipfile.ZIP_DEFLATED)
+        z.writestr("OEBPS/images/cover.jpg", open(cover_path, "rb").read(), compress_type=zipfile.ZIP_DEFLATED)
+        z.writestr("OEBPS/images/logo.png", open(logo_path, "rb").read(), compress_type=zipfile.ZIP_DEFLATED)
+
+
+def validate_epub(path, min_pages):
+    with zipfile.ZipFile(path) as z:
+        names = z.namelist()
+        assert names[0] == "mimetype", "mimetype 不是第一个文件"
+        assert z.read("mimetype") == b"application/epub+zip"
+        for required in ("META-INF/container.xml", "OEBPS/content.opf", "OEBPS/nav.xhtml", "OEBPS/toc.ncx"):
+            assert required in names, "缺少 " + required
+        for name in names:
+            if name.endswith((".xhtml", ".opf", ".ncx", ".xml")):
+                ET.fromstring(z.read(name))
+        xhtml_count = sum(1 for n in names if n.endswith(".xhtml") and n.startswith("OEBPS/") and n not in ("OEBPS/nav.xhtml",))
+        assert xhtml_count >= min_pages, f"页面数不足：{xhtml_count} < {min_pages}"
+        assert z.testzip() is None
+    return os.path.getsize(path)
+
+
+def sync_file(src, dst):
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    shutil.copyfile(src, dst)
+
+
+def build_txt(data, episodes, path):
+    p = data["podcast"]
+    lines = []
+    add = lines.append
+    add("慧客堂 · 学习手册")
+    add("董艺婷 · 慧客堂")
+    add(f"{p.get('count')} 期 · {p.get('hours')} 小时 · {p.get('transcriptWan')} 万字逐字稿")
+    add(f"{p.get('firstDate')} — {p.get('lastDate')}")
+    add("")
+    add("怎么读：先读一章大导读，带着三个问题进入；再按模块或 Vol 读；最后回到原文，写一条“我要改变什么”。")
+    add("完整逐字稿见《慧客堂 · 逐字稿全集》EPUB，或在网页版展开。")
+    add("")
+    add("目录")
+    add("一、八章导读")
+    for m in data["modules"]:
+        add(f"  {m.get('no')} {m.get('title')}")
+    add("二、按 Vol 读")
+    for e in episodes:
+        add(f"  {e.get('label')} {ep_title(e)}")
+    add("三、附录：十条原则 / 术语速查")
+    add("")
+    add("=" * 64)
+    add("八章导读")
+    add("=" * 64)
+    for m in data["modules"]:
+        g = m.get("guide") or {}
+        add("")
+        add(f"MODULE {m.get('no')} · {m.get('title')}")
+        add(m.get("subtitle", ""))
+        add("")
+        add("【本章导读】" + (g.get("hook") or ""))
+        if g.get("questions"):
+            add("【带着三个问题读】")
+            for q in g["questions"]:
+                add("  - " + q)
+        if g.get("outcomes"):
+            add("【读完后，你应该能】")
+            for o in g["outcomes"]:
+                add("  - " + o)
+        if g.get("path"):
+            add("【建议路线】")
+            for ref in g["path"]:
+                e = EP_BY_N.get(ref.get("n"))
+                if e:
+                    add(f"  - {e.get('label')} {ep_title(e)}：{ref.get('why')}")
+        add("")
+        add(m.get("lead", ""))
+        add("")
+        add(m.get("bigIdea", ""))
+        for s in m.get("sections") or []:
+            add("")
+            add("## " + s.get("h", ""))
+            for para in s.get("p") or []:
+                add(para)
+        if m.get("actions"):
+            add("")
+            add("【行动清单】")
+            for a in m["actions"]:
+                add("  - " + a)
+        add("")
+        add("-" * 64)
+    add("")
+    add("=" * 64)
+    add("按 Vol 读")
+    add("=" * 64)
+    for e in episodes:
+        g = e.get("guide") or {}
+        add("")
+        add(f"{e.get('label')} · {ep_title(e)}")
+        add(f"{e.get('date')} · {e.get('duration')} · {' / '.join(e.get('tags') or [])}")
+        add("")
+        add("【本期导读】" + (g.get("hook") or ""))
+        if g.get("question"):
+            add("【带着这个问题读】" + g["question"])
+        if g.get("keywords"):
+            add("【关键词】" + " / ".join(g["keywords"]))
+        add("【本期一句话】" + (e.get("summary") or e.get("line") or ""))
+        if e.get("points"):
+            add("【核心要点】")
+            for i, x in enumerate(e["points"], 1):
+                add(f"  {i}. {x}")
+        if e.get("analysis"):
+            add("【精读】")
+            for s in e["analysis"]:
+                add("## " + s.get("h", ""))
+                for para in s.get("p") or []:
+                    add(para)
+        excerpts = e.get("excerpts") or e.get("quotes") or []
+        if excerpts:
+            add("【原文摘录】")
+            for q in excerpts[:8]:
+                add(f"  [{q.get('t')}] {q.get('text')}")
+        if e.get("case"):
+            add("【案例】" + e["case"])
+        if e.get("chapters"):
+            add("【本期时间轴】")
+            for c in e["chapters"]:
+                add(f"  {c.get('t')}  {c.get('text')}")
+        if e.get("paras"):
+            add("【官方 Shownotes】")
+            for para in e["paras"]:
+                add(para)
+        add("")
+        add("-" * 64)
+    add("")
+    add("=" * 64)
+    add("附录：十条原则")
+    add("=" * 64)
+    for pr in data.get("principles") or []:
+        add("")
+        add(f"{pr.get('no')} · {pr.get('title')}")
+        add(pr.get("body", ""))
+    add("")
+    add("=" * 64)
+    add("术语速查")
+    add("=" * 64)
+    for gl in data.get("glossary") or []:
+        add(f"{gl.get('term')}：{gl.get('desc')}")
+    add("")
+    add("关于这本手册")
+    add(f"我是{p.get('host')}。{p.get('hostBio')}")
+    add("每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。")
+    add("逐字稿由 Paraformer 转写，机器转写可能有错字；引用请以音频为准。")
+    add("播客内容版权归《慧客堂》/ 主播董艺婷所有，本电子书用于个人学习与检索。")
+    with open(path, "w", encoding="utf-8-sig") as f:
+        f.write("\n".join(lines))
+    return os.path.getsize(path)
+
+
+def main():
+    global EP_BY_N
+    data, episodes, EP_BY_N = load_data()
+    os.makedirs(EBOOK_DIR, exist_ok=True)
+    if not os.path.exists(COVER_SRC):
+        print("ERROR: missing cover.png")
+        return 1
+
+    logo = Image.open(COVER_SRC).convert("RGBA")
+    cover_handbook = os.path.join(EBOOK_DIR, "cover_handbook.jpg")
+    cover_transcripts = os.path.join(EBOOK_DIR, "cover_transcripts.jpg")
+    create_cover(
+        cover_handbook, "学习手册", "按 Vol 与模块的播客深读",
+        f"{data['podcast'].get('count')} 期 · 8 大模块 · {len(episodes)} 篇导读",
+        "把投资、财富与生活放到一张桌子上聊", logo.copy()
+    )
+    create_cover(
+        cover_transcripts, "逐字稿全集", "111 期完整原文 · 60 秒时间戳",
+        f"约 {data['podcast'].get('transcriptWan')} 万字 · {data['podcast'].get('count')} 期",
+        "原文在这里，判断交给你", logo.copy()
+    )
+    logo_out = os.path.join(EBOOK_DIR, "logo.png")
+    logo.save(logo_out)
+
+    reading_pages = [
+        {"id": "cover", "href": "cover.xhtml", "title": "封面", "content": cover_page_html()},
+        {"id": "titlepage", "href": "titlepage.xhtml", "title": "书名页", "content": title_page_html(data, "学习手册", "按 Vol 与模块的播客深读")},
+        {"id": "howto", "href": "howto.xhtml", "title": "怎么读这本手册", "content": howto_html(data)},
+        {"id": "modules_index", "href": "modules_index.xhtml", "title": "八章导读", "content": module_index_html(data["modules"])},
+    ]
+    module_toc = []
+    for m in data["modules"]:
+        pid = "module_" + m["id"]
+        href = pid + ".xhtml"
+        reading_pages.append({"id": pid, "href": href, "title": f"MODULE {m.get('no')} · {m.get('title')}", "content": module_page(m)})
+        module_toc.append({"title": f"{m.get('no')} · {m.get('title')}", "href": href})
+    reading_pages.append({"id": "vols_index", "href": "vols_index.xhtml", "title": "按 Vol 读", "content": vol_index_html(episodes)})
+    vol_toc = []
+    for e in episodes:
+        pid = f"vol_{e['n']}"
+        href = pid + ".xhtml"
+        reading_pages.append({"id": pid, "href": href, "title": f"{e.get('label')} · {short_title(e, 30)}", "content": vol_page(e)})
+        vol_toc.append({"title": f"{e.get('label')} · {short_title(e, 30)}", "href": href})
+    reading_pages.append({"id": "appendix", "href": "appendix.xhtml", "title": "附录", "content": appendix_html(data)})
+    reading_groups = [
+        {"title": "开始阅读", "href": "howto.xhtml", "children": []},
+        {"title": "八章导读", "href": "modules_index.xhtml", "children": module_toc},
+        {"title": "按 Vol 读", "href": "vols_index.xhtml", "children": vol_toc},
+        {"title": "附录", "href": "appendix.xhtml", "children": []},
+    ]
+    reading_path = os.path.join(EBOOK_DIR, "慧客堂·学习手册.epub")
+    write_epub(
+        reading_path, "慧客堂 · 学习手册", "按 Vol 与模块的播客深读",
+        "111 期播客学习手册：8 篇章节大导读、111 篇 Vol 导读、精读、原文摘录与官方 Shownotes。",
+        cover_handbook, logo_out, reading_pages, reading_groups
+    )
+    reading_size = validate_epub(reading_path, len(reading_pages) - 1)
+
+    transcript_pages = [
+        {"id": "cover", "href": "cover.xhtml", "title": "封面", "content": cover_page_html()},
+        {"id": "titlepage", "href": "titlepage.xhtml", "title": "书名页", "content": title_page_html(data, "逐字稿全集", "111 期完整原文 · 60 秒时间戳")},
+        {"id": "howto", "href": "howto.xhtml", "title": "怎么读", "content": transcript_howto_html(data)},
+        {"id": "vols_index", "href": "vols_index.xhtml", "title": "按 Vol 读", "content": vol_index_html(episodes, transcript=True)},
+    ]
+    transcript_toc = []
+    for e in episodes:
+        pid = f"vol_{e['n']}"
+        href = pid + ".xhtml"
+        transcript_pages.append({"id": pid, "href": href, "title": f"{e.get('label')} · {short_title(e, 30)}", "content": transcript_page(e)})
+        transcript_toc.append({"title": f"{e.get('label')} · {short_title(e, 30)}", "href": href})
+    transcript_groups = [
+        {"title": "开始阅读", "href": "howto.xhtml", "children": []},
+        {"title": "按 Vol 读", "href": "vols_index.xhtml", "children": transcript_toc},
+    ]
+    transcript_path = os.path.join(EBOOK_DIR, "慧客堂·逐字稿全集.epub")
+    write_epub(
+        transcript_path, "慧客堂 · 逐字稿全集", "111 期完整原文 · 60 秒时间戳",
+        "慧客堂 111 期播客完整逐字稿，含 60 秒段首时间戳；机器转写，引用请以音频为准。",
+        cover_transcripts, logo_out, transcript_pages, transcript_groups
+    )
+    transcript_size = validate_epub(transcript_path, len(transcript_pages) - 1)
+
+    txt_path = os.path.join(EBOOK_DIR, "慧客堂·学习手册.txt")
+    txt_size = build_txt(data, episodes, txt_path)
+
+    import_note = (
+        "微信读书导入说明\n\n"
+        "推荐格式：EPUB（保留封面、目录和排版）。TXT 作为兼容备份。\n\n"
+        "方法一（手机本地）：\n"
+        "1. 在手机浏览器打开学习手册站点，下载 EPUB。\n"
+        "2. 打开微信读书 → 书架右上角「+」→ 从本地导入（安卓）或从 iCloud / 文件导入（iOS）。\n"
+        "3. 选择下载好的 EPUB。\n\n"
+        "方法二（微信文件）：\n"
+        "1. 把 EPUB 发到微信文件传输助手。\n"
+        "2. 在微信里点开文件 → 用其他应用打开 → 微信读书。\n\n"
+        "两本电子书：\n"
+        "- 慧客堂·学习手册.epub：导读、要点、精读、原文摘录、Shownotes。\n"
+        "- 慧客堂·逐字稿全集.epub：111 期完整逐字稿。\n"
+    )
+    note_path = os.path.join(EBOOK_DIR, "导入微信读书.txt")
+    with open(note_path, "w", encoding="utf-8-sig") as f:
+        f.write(import_note)
+
+    outputs = [
+        (reading_path, "huiketang-handbook.epub"),
+        (transcript_path, "huiketang-transcripts.epub"),
+        (txt_path, "huiketang-handbook.txt"),
+        (note_path, "import-wechat-reading.txt"),
+    ]
+    for src, name in outputs:
+        sync_file(src, os.path.join(DIST_DIR, name))
+    if os.path.exists(SITE_CONFIG):
+        with open(SITE_CONFIG, encoding="utf-8") as f:
+            cfg = json.load(f)
+        root = cfg.get("siteRoot")
+        if root:
+            web = os.path.join(root, cfg.get("webDirectory") or "dist", "ebook")
+            for src, name in outputs:
+                sync_file(src, os.path.join(web, name))
+
+    print(json.dumps({
+        "reading_epub": {"path": reading_path, "bytes": reading_size},
+        "transcript_epub": {"path": transcript_path, "bytes": transcript_size},
+        "txt": {"path": txt_path, "bytes": txt_size},
+        "pages": {"reading": len(reading_pages), "transcript": len(transcript_pages)},
+        "vols": len(episodes),
+    }, ensure_ascii=False, indent=1))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
