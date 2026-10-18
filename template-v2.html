@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#f3eee5">
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f5a623%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2760%27 text-anchor=%27middle%27 fill=%27%23171512%27%3E%E6%85%A7%3C/text%3E%3C/svg%3E">
-<title>慧客堂 · 学习手册｜章节导读与 Vol 深读</title>
-<meta name="description" content="慧客堂 111 期播客学习手册：8 篇章节大导读、111 期 Vol 导读、111 条董了观点、逐字稿原文摘录、34 期核心精读、8 大模块。">
+<title>慧客堂 · 学习手册｜老听众整理 · 章节导读与 Vol 深读</title>
+<meta name="description" content="慧客堂 111 期播客学习手册（老听众整理）：8 篇章节大导读、111 期 Vol 导读、111 条董了观点、逐字稿原文摘录、34 期核心精读、8 大模块。">
 <style>
 :root{
   --paper:#fbf3e3;
@@ -947,7 +947,7 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
   <div class="header-inner">
     <a class="brand" href="#/home" aria-label="回到总览">
       <img class="brand-logo" src="__LOGO__" alt="慧客堂 logo">
-      <span class="brand-text"><strong>慧客堂</strong><span>播客学习手册</span></span>
+      <span class="brand-text"><strong>慧客堂</strong><span>听众学习手册</span></span>
     </a>
     <div class="header-actions">
       <button class="icon-btn" id="searchJump" aria-label="搜索节目">
@@ -1114,23 +1114,23 @@ function applyHighlights(root){
 function renderHome(){
   const p = DATA.podcast;
   const picks = [
-    { n: 2, reason: '这一期，我先建立投资世界观：承认看不懂、识别立场偏差，再按资金期限选择打法。', core: ['看不懂', '立场偏差', '资金属性'] },
-    { n: 5, reason: '这一期，我从《再见爱人》聊到信托：家庭财富不是买产品，而是把“我想照顾谁”写进安排里。', core: ['家庭工具箱', '信托', '传承'] },
-    { n: 15, reason: '我用 21 年买方经历讲我为什么选 FOF：越微观越算法，越宏观越人脑。', core: ['FOF', '方法论多样性', '敬畏'] },
-    { n: 26, reason: '这一期，我把黄金、商品、CTA 与危机 Alpha 一次讲清，也讲清它们什么时候失效。', core: ['商品定价', '危机 Alpha', 'CTA'] },
-    { n: 27, reason: '这一期，我教你分清 Beta 与 Alpha，用四问拆指数、指增与 ETF。', core: ['宽基', '指增', '跟踪误差'] },
-    { n: 43, reason: '这一期，我复盘上半年并给出下半年配置：低利率下别信 5%-6% 的“无风险”。', core: ['微观年', '拥挤度', '哑铃'] },
-    { n: 60, reason: '这一期，我讲周期：它是地图不是时钟，普通人只需要“模糊的准确”。', core: ['周期嵌套', '情绪钟摆', '打分表'] },
-    { n: 71, reason: '这一期，我用“往外看 / 往内看”两只眼睛，搭一个 2026 年睡得踏实的组合。', core: ['世界叙事', '机构行为', '财富地图'] },
-    { n: 97, reason: '这一期，我请韭菜之王复盘十年踩坑：合同、结构、利益一致性比明星项目重要。', core: ['股权份额', '工商变更', '双录'] },
-    { n: 106, reason: '这一期，我请两位嘉宾讲两种人生、四层资产：以支定收，先算下限，再谈自由。', core: ['四层资产', '以支定收', '现金流'] },
+    { n: 2, reason: '这一期适合先建立投资世界观：承认看不懂、识别立场偏差，再按资金期限选择打法。', core: ['看不懂', '立场偏差', '资金属性'] },
+    { n: 5, reason: '这一期从《再见爱人》聊到信托：家庭财富不是买产品，而是把“想照顾谁”写进安排里。', core: ['家庭工具箱', '信托', '传承'] },
+    { n: 15, reason: '董艺婷用 21 年买方经历讲她为什么选 FOF：越微观越算法，越宏观越人脑。', core: ['FOF', '方法论多样性', '敬畏'] },
+    { n: 26, reason: '这一期把黄金、商品、CTA 与危机 Alpha 一次讲清，也讲清它们什么时候失效。', core: ['商品定价', '危机 Alpha', 'CTA'] },
+    { n: 27, reason: '这一期讲清 Beta 与 Alpha，用四问拆指数、指增与 ETF。', core: ['宽基', '指增', '跟踪误差'] },
+    { n: 43, reason: '这一期复盘上半年并给出下半年配置：低利率下别信 5%-6% 的“无风险”。', core: ['微观年', '拥挤度', '哑铃'] },
+    { n: 60, reason: '这一期讲周期：它是地图不是时钟，普通人只需要“模糊的准确”。', core: ['周期嵌套', '情绪钟摆', '打分表'] },
+    { n: 71, reason: '这一期用“往外看 / 往内看”两只眼睛，搭一个 2026 年睡得踏实的组合。', core: ['世界叙事', '机构行为', '财富地图'] },
+    { n: 97, reason: '这一期请韭菜之王复盘十年踩坑：合同、结构、利益一致性比明星项目重要。', core: ['股权份额', '工商变更', '双录'] },
+    { n: 106, reason: '这一期请两位嘉宾讲两种人生、四层资产：以支定收，先算下限，再谈自由。', core: ['四层资产', '以支定收', '现金流'] },
   ];
 
   $('#view-home').innerHTML = `
   <div class="hero">
     <img class="hero-cover" src="__LOGO__" alt="慧客堂封面">
     <div class="wrap hero-inner">
-      <div class="eyebrow">播客学习手册 · ${p.firstDate} — ${p.lastDate}</div>
+      <div class="eyebrow">老听众整理 · ${p.firstDate} — ${p.lastDate}</div>
       <h1>把「慧客堂」<br>读成一本<br><em>人生的资产配置书</em></h1>
       <p class="hero-lead"><strong>${p.count} 期，${p.hours} 小时。</strong>先读一章导读，带着问题进入；再按 Vol 回到原声，把听到的变成自己的判断。</p>
       <div class="hero-stats">
@@ -1254,11 +1254,11 @@ function renderHome(){
       <div class="host-mini">
         <img src="__LOGO__" alt="慧客堂封面">
         <div class="host-mini-main">
-          <div class="hm-name">我是董艺婷 <span>主播</span></div>
+          <div class="hm-name">董艺婷 <span>主播</span></div>
           <div class="hm-role">21 年买方投资 · 量化 FOF 管理人</div>
-          <p>真话是态度，减法是选择。我用这个节目聊投资，也聊家庭、健康、读书与中年重启。</p>
+          <p>真话是态度，减法是选择。她在节目里聊投资，也聊家庭、健康、读书与中年重启。</p>
         </div>
-        <button class="hm-more" data-go="modules">我的方法 →</button>
+        <button class="hm-more" data-go="modules">她的方法 →</button>
       </div>
     </section>
 
@@ -1279,7 +1279,7 @@ function renderHome(){
 
     <section class="section">
       <div class="home-note">
-        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · ${DATA.episodes.filter(e=>e.dongliao).length} 条董了 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。
+        <b>一位老听众整理</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · ${DATA.episodes.filter(e=>e.dongliao).length} 条董了 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。手册里的精读与“董了”是听众的学习整理，不代表主播本人审订。
         <div class="home-note-links"><button data-go="me">我的笔记 / 关于</button><a href="${p.url}" target="_blank" rel="noopener">小宇宙播客主页</a></div>
       </div>
     </section>
@@ -1405,7 +1405,7 @@ function renderEpisodes(){
     <div class="module-hero" style="padding-top:8px">
       <div class="mno">BY VOL</div>
       <h1>按 Vol，<br>从第一期读到最新一期</h1>
-      <p class="lead">${p.firstDate} 的开堂白到 ${p.lastDate} 的最新一期。每一期都有：逐字稿原文摘录、我的观点拆解、官方 Shownotes、完整时间轴与逐字稿全文。</p>
+      <p class="lead">${p.firstDate} 的开堂白到 ${p.lastDate} 的最新一期。每一期都有：逐字稿原文摘录、主理人的观点拆解、官方 Shownotes、完整时间轴与逐字稿全文。</p>
     </div>
     <div style="margin-top:18px">
       <div class="search-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="epSearch" type="search" placeholder="搜索标题、主题、逐字稿或节目笔记…" value="${esc(epQuery)}"><button class="search-clear ${epQuery?'show':''}" id="searchClear" aria-label="清空">×</button></div>
@@ -1543,7 +1543,7 @@ function renderVol(n){
     </div>
     <div class="vol-body">
       <section class="vol-section"><h2><span class="num">01</span>原文精读</h2>${excerptHtml}</section>
-      <section class="vol-section"><h2><span class="num">02</span>我的观点</h2>${analysisHtml}</section>
+      <section class="vol-section"><h2><span class="num">02</span>主理人的观点</h2>${analysisHtml}</section>
       <section class="vol-section"><h2><span class="num">03</span>本期时间轴</h2>${chaptersHtml}</section>
       <section class="vol-section"><h2><span class="num">04</span>官方节目笔记</h2>${notesHtml}</section>
       <section class="vol-section"><h2><span class="num">05</span>完整逐字稿</h2>${transcriptHtml}</section>
@@ -1644,8 +1644,8 @@ function renderMe(){
       <h2>关于这本手册</h2>
       <div class="about-card">
         <strong>${DATA.podcast.title}</strong> · ${DATA.podcast.subtitle}<br>
-        我是${DATA.podcast.host}。${DATA.podcast.hostBio}<br><br>
-        我把 ${DATA.podcast.count} 期节目、${DATA.podcast.chapters} 个官方章节，整理成这本手册，基于 ${DATA.podcast.firstDate}—${DATA.podcast.lastDate} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。<br><br><strong>转写方法：</strong>60 秒分段 + 标点模型，时间戳为段首，误差约 1 分钟。
+        《慧客堂》由${DATA.podcast.host}主理。${DATA.podcast.hostBio}<br><br>
+        我以一位老听众的身份，把 ${DATA.podcast.count} 期节目、${DATA.podcast.chapters} 个官方章节，整理成这本手册，基于 ${DATA.podcast.firstDate}—${DATA.podcast.lastDate} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。手册里的精读与“董了”是我的学习整理，不代表主播本人审订。逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。<br><br><strong>转写方法：</strong>60 秒分段 + 标点模型，时间戳为段首，误差约 1 分钟。
         <div class="actions-row">
           <button class="btn btn-ghost" id="exportNotes">导出我的笔记</button>
           <button class="btn btn-ghost danger" id="resetAll">清空学习数据</button>

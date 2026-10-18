@@ -315,8 +315,8 @@ def appendix_html(data):
     for g in data.get("glossary") or []:
         body += f'<p><b>{esc(g.get("term"))}</b>：{esc(g.get("desc"))}</p>'
     p = data["podcast"]
-    body += f'<h2>关于这本手册</h2><p>我是{esc(p.get("host"))}。{esc(p.get("hostBio"))}</p>'
-    body += f'<p>我把 {p.get("count")} 期节目、{p.get("chapters")} 个官方章节，整理成这本手册，基于 {esc(p.get("firstDate"))}—{esc(p.get("lastDate"))} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。</p>'
+    body += f'<h2>关于这本手册</h2><p>《慧客堂》由{esc(p.get("host"))}主理。{esc(p.get("hostBio"))}</p>'
+    body += f'<p>我以一位老听众的身份，把 {p.get("count")} 期节目、{p.get("chapters")} 个官方章节，整理成这本手册，基于 {esc(p.get("firstDate"))}—{esc(p.get("lastDate"))} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。手册里的精读与“董了”是我的学习整理，不代表主播本人审订。</p>'
     body += '<p class="note">逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。播客内容版权归《慧客堂》/ 主播董艺婷所有，本电子书用于个人学习与检索。</p>'
     return xhtml("附录", body, "backmatter")
 
@@ -327,7 +327,8 @@ def title_page_html(data, cover_title, subtitle):
     body += '<img class="logo" src="images/logo.png" alt="慧客堂"/>'
     body += '<h1>慧客堂 · ' + esc(cover_title) + '</h1>'
     body += f'<p class="subtitle">{esc(subtitle)}</p>'
-    body += '<p class="author">董艺婷 · 慧客堂</p>'
+    body += '<p class="author">董艺婷 · 播客主理人</p>'
+    body += '<p class="stats">老听众整理</p>'
     body += f'<p class="stats">{p.get("count")} 期 · {p.get("hours")} 小时 · {p.get("transcriptWan")} 万字逐字稿</p>'
     body += f'<p class="stats">{esc(p.get("firstDate"))} — {esc(p.get("lastDate"))}</p>'
     body += '</div>'
@@ -354,7 +355,8 @@ def create_cover(path, title2, subtitle, stats, quote, logo):
     d.text((600, 710), title2, font=f2, fill=INK, anchor="mm")
     d.text((600, 865), subtitle, font=fit_font(d, subtitle, FONT_SANS, 44, 920), fill=MUTED, anchor="mm")
     d.line([300, 945, 900, 945], fill=(245, 166, 35), width=5)
-    d.text((600, 1015), "董艺婷 · 慧客堂", font=ImageFont.truetype(FONT_SANS, 42), fill=INK, anchor="mm")
+    d.text((600, 1015), "董艺婷 · 播客主理人", font=ImageFont.truetype(FONT_SANS, 42), fill=INK, anchor="mm")
+    d.text((600, 1058), "老听众整理", font=ImageFont.truetype(FONT_SANS, 26), fill=MUTED, anchor="mm")
     d.text((600, 1090), stats, font=fit_font(d, stats, FONT_SANS, 34, 920), fill=MUTED, anchor="mm")
     d.text((600, 1450), quote, font=fit_font(d, quote, FONT_SERIF, 42, 900), fill=INK, anchor="mm")
     d.text((600, 1620), "EPUB · 2026", font=ImageFont.truetype(FONT_SANS, 26), fill=MUTED, anchor="mm")
@@ -428,6 +430,7 @@ def opf_xml(uid, book_title, author, description, pages):
         f'<dc:identifier id="bookid">{esc(uid)}</dc:identifier>'
         f'<dc:title>{esc(book_title)}</dc:title>'
         f'<dc:creator>{esc(author)}</dc:creator>'
+        '<dc:contributor>董艺婷（播客主理人）</dc:contributor>'
         '<dc:language>zh-CN</dc:language>'
         f'<dc:description>{esc(description)}</dc:description>'
         '<dc:publisher>慧客堂学习手册</dc:publisher>'
@@ -458,7 +461,7 @@ def write_epub(path, book_title, subtitle, description, cover_path, logo_path, p
             '<rootfiles><rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/></rootfiles>'
             '</container>'
         ),
-        "OEBPS/content.opf": opf_xml(uid, book_title, "董艺婷 · 慧客堂", description, pages),
+        "OEBPS/content.opf": opf_xml(uid, book_title, "《慧客堂》老听众整理", description, pages),
         "OEBPS/nav.xhtml": nav_xhtml(groups),
         "OEBPS/toc.ncx": ncx_xml(uid, groups),
         "OEBPS/style.css": CSS,
@@ -501,7 +504,7 @@ def build_txt(data, episodes, path):
     lines = []
     add = lines.append
     add("慧客堂 · 学习手册")
-    add("董艺婷 · 慧客堂")
+    add("董艺婷 · 播客主理人 / 老听众整理")
     add(f"{p.get('count')} 期 · {p.get('hours')} 小时 · {p.get('transcriptWan')} 万字逐字稿")
     add(f"{p.get('firstDate')} — {p.get('lastDate')}")
     add("")
@@ -623,7 +626,8 @@ def build_txt(data, episodes, path):
         add(f"{gl.get('term')}：{gl.get('desc')}")
     add("")
     add("关于这本手册")
-    add(f"我是{p.get('host')}。{p.get('hostBio')}")
+    add(f"《慧客堂》由{p.get('host')}主理。{p.get('hostBio')}")
+    add("我以一位老听众的身份整理这本手册；精读与“董了”是学习整理，不代表主播本人审订。")
     add("每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。")
     add("逐字稿由 Paraformer 转写，机器转写可能有错字；引用请以音频为准。")
     add("播客内容版权归《慧客堂》/ 主播董艺婷所有，本电子书用于个人学习与检索。")
