@@ -31,7 +31,7 @@ for (const file of files) {
     if (item.line) e.line = clean(item.line);
     if (item.summary) e.summary = clean(item.summary);
     if (Array.isArray(item.keyPoints) && item.keyPoints.length) {
-      e.shownotePoints = e.points;
+      if (!Array.isArray(e.shownotePoints) || !e.shownotePoints.length) e.shownotePoints = e.points;
       e.points = item.keyPoints.map(clean).filter(Boolean);
     }
     if (Array.isArray(item.quotes)) {
@@ -67,7 +67,7 @@ for (const e of data.episodes) {
     e.pointsSource = 'agent-brief';
     e.summarySource = 'agent';
   } else {
-    if (e.points && e.points.length) e.shownotePoints = e.points;
+    if (e.points && e.points.length && (!Array.isArray(e.shownotePoints) || !e.shownotePoints.length)) e.shownotePoints = e.points;
     const ks = (e.keyChunks || []).slice(0, 3).map(c => c.text);
     if (ks.length) e.points = ks;
     e.pointsSource = 'transcript';
