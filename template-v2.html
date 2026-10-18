@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f5f0e6">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f5a623%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2760%27 text-anchor=%27middle%27 fill=%27%23171512%27%3E%E6%85%A7%3C/text%3E%3C/svg%3E">
-<title>慧客堂 · 学习手册｜按 Vol 与模块的播客深读</title>
-<meta name="description" content="慧客堂 111 期播客学习手册：逐字稿原文摘录、34 期核心精读、8 大模块、按 Vol 与按模块双主线。">
+<title>慧客堂 · 学习手册｜章节导读与 Vol 深读</title>
+<meta name="description" content="慧客堂 111 期播客学习手册：8 篇章节大导读、111 期 Vol 导读、逐字稿原文摘录、34 期核心精读、8 大模块。">
 <style>
 :root{
   --paper:#fbf3e3;
@@ -660,6 +660,52 @@ html[data-theme="dark"] .pick-core span{color:#ffc45c;background:rgba(245,166,35
 .home-note-links button,.home-note-links a{font-size:10.5px;color:var(--red);text-decoration:none}
 @media (max-width:420px){.picks-section .section-head{display:block}.picks-section .link-more{margin-top:8px}.pick-item{grid-template-columns:30px 1fr 14px;gap:8px}.pick-title{font-size:15px}.two-ways{grid-template-columns:1fr}.way-no{font-size:26px}.host-mini{align-items:flex-start}.hm-more{display:none}}
 
+/* ===== 学习导读 ===== */
+.learn-path{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.learn-step{display:flex;flex-direction:column;gap:5px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:3px 3px 0 rgba(23,21,18,.06);transition:transform .18s,border-color .2s,box-shadow .2s}
+.learn-step:hover{transform:translateY(-1px);border-color:var(--ink);box-shadow:5px 5px 0 rgba(245,166,35,.24)}
+.ls-no{font-family:var(--serif);font-size:26px;line-height:1;color:var(--orange)}
+.ls-title{font-family:var(--serif);font-size:16px;line-height:1.35}
+.ls-text{font-size:11px;color:var(--muted);line-height:1.65}
+.guide-index{display:grid;gap:0;border-top:1px solid var(--line);padding-top:2px}
+.gi-row{display:grid;grid-template-columns:42px 1fr 14px;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 2px;border-bottom:1px solid var(--line);background:none;transition:background .2s}
+.gi-row:hover{background:rgba(245,166,35,.06)}
+.gi-no{font-family:var(--serif);font-size:19px;line-height:1;color:var(--red)}
+.gi-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.gi-title{font-family:var(--serif);font-size:16px;line-height:1.35;color:var(--ink)}
+.gi-teaser{font-size:11px;color:var(--muted);line-height:1.55;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gi-arrow{font-size:15px;color:var(--red)}
+.module-card .mguide{font-size:10.5px;color:var(--red);line-height:1.55;margin-top:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;opacity:.9}
+.chapter-guide{margin-top:18px;border:2px solid var(--ink);border-radius:18px;background:var(--card);padding:18px;box-shadow:5px 5px 0 rgba(245,166,35,.24)}
+.cg-label{font-size:9.5px;letter-spacing:.18em;color:var(--red);font-weight:700;text-transform:uppercase}
+.cg-hook{font-family:var(--serif);font-size:18px;line-height:1.72;margin-top:9px;color:var(--ink)}
+.cg-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.cg-block h3,.cg-path h3{font-size:12px;font-family:var(--sans);letter-spacing:.04em;color:var(--red);margin-bottom:7px;font-weight:600}
+.cg-block ol,.cg-block ul{margin:0;padding-left:17px;font-size:12px;line-height:1.75;color:var(--ink-2)}
+.cg-block li{margin-bottom:5px}
+.cg-path{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
+.cg-route{display:flex;gap:7px;flex-wrap:wrap}
+.cg-route-item{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--paper);max-width:220px;transition:border-color .2s,background .2s}
+.cg-route-item:hover{border-color:var(--red);background:rgba(245,166,35,.06)}
+.cg-route-item b{font-family:var(--mono);font-size:9.5px;color:var(--red);font-weight:600}
+.cg-route-item span{font-size:10.5px;color:var(--muted);line-height:1.5}
+.vol-guide{margin-top:18px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--orange);border-radius:14px;padding:15px 16px;box-shadow:3px 3px 0 rgba(23,21,18,.06)}
+.vg-label{font-size:9.5px;letter-spacing:.18em;color:var(--red);font-weight:700;text-transform:uppercase}
+.vg-hook{font-family:var(--serif);font-size:16.5px;line-height:1.75;margin-top:7px;color:var(--ink)}
+.vg-question{margin-top:11px;padding-top:10px;border-top:1px dashed var(--line);font-size:12px;color:var(--ink-2);line-height:1.65}
+.vg-question b{color:var(--red);font-weight:600;margin-right:5px}
+.vg-keys{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.vg-keys span{font-size:9.5px;background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.22);color:#7a4a05;border-radius:4px;padding:2px 6px}
+html[data-theme="dark"] .vg-keys span{color:#ffc45c;background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)}
+.guide-badge{display:inline-block;font-size:9px;line-height:1.5;color:var(--red);border:1px solid rgba(169,90,5,.35);border-radius:4px;padding:0 5px;margin-right:5px;vertical-align:1px;font-weight:600}
+.recap-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6}
+@media (max-width:560px){
+  .learn-path{grid-template-columns:1fr}
+  .cg-grid{grid-template-columns:1fr}
+  .cg-route-item{max-width:none;width:100%}
+  .gi-row{grid-template-columns:34px 1fr 12px;gap:8px}
+  .module-card .mguide{-webkit-line-clamp:3}
+}
 </style>
 </head>
 <body>
@@ -750,6 +796,7 @@ function toast(msg){
 }
 function epTitle(e){ return e.title.replace(/^(?:Vol\.|V)\d+[.、\s]*/i,'').trim(); }
 function shortTitle(e, len=30){ const t = epTitle(e); return t.length > len ? t.slice(0,len)+'…' : t; }
+function firstSentence(s, len=46){ const t = String(s||'').split(/[。！？]/)[0]; return t.length > len ? t.slice(0,len)+'…' : t; }
 function durText(e){
   const s = e.seconds; const h = Math.floor(s/3600), m = Math.round((s%3600)/60);
   return h ? `${h} 小时 ${m} 分` : `${m} 分钟`;
@@ -840,15 +887,15 @@ function renderHome(){
     <div class="wrap hero-inner">
       <div class="eyebrow">播客学习手册 · ${p.firstDate} — ${p.lastDate}</div>
       <h1>把「慧客堂」<br>读成一本<br><em>人生的资产配置书</em></h1>
-      <p class="hero-lead"><strong>${p.count} 期，${p.hours} 小时。</strong>我先带你读 10 期精华，建立投资、配置与人生的框架；想深入时，再按 Vol 或模块回到原声。</p>
+      <p class="hero-lead"><strong>${p.count} 期，${p.hours} 小时。</strong>先读一章导读，带着问题进入；再按 Vol 回到原声，把听到的变成自己的判断。</p>
       <div class="hero-stats">
         <div class="hero-stat"><b>${p.count}</b><span>期节目</span></div>
         <div class="hero-stat"><b>${p.hours}</b><span>小时音频</span></div>
         <div class="hero-stat"><b>${DATA.podcast.transcriptWan || 0}</b><span>万字逐字稿</span></div>
-        <div class="hero-stat"><b>${DATA.episodes.filter(e=>e.core).length}</b><span>期精读</span></div>
+        <div class="hero-stat"><b>${DATA.episodes.filter(e=>e.guide).length}</b><span>期导读</span></div>
       </div>
       <div class="hero-actions">
-        <button class="btn btn-primary" data-scroll="picks">开始精读 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        <button class="btn btn-primary" data-scroll="chapters">从导读开始 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
         <button class="btn btn-ghost" data-go="episodes">按 Vol 浏览</button>
       </div>
       <div class="tr-status"><span class="tr-dot"></span>逐字稿 ${DATA.podcast.transcribedCount || 0}/111 期已转写 · ${DATA.podcast.transcriptWan || 0} 万字原文</div>
@@ -856,12 +903,60 @@ function renderHome(){
   </div>
 
   <div class="wrap">
+    <section class="section" id="howto">
+      <div class="section-head">
+        <div>
+          <div class="kicker">How to Read</div>
+          <h2>先读导读，再读原文</h2>
+          <div class="sub">三件事，把“听过”变成“学会”。</div>
+        </div>
+      </div>
+      <div class="learn-path">
+        <button class="learn-step" data-scroll="chapters">
+          <span class="ls-no">01</span>
+          <span class="ls-title">读一章大导读</span>
+          <span class="ls-text">先知道这一章在解决什么问题，带着三个问题进入。</span>
+        </button>
+        <button class="learn-step" data-scroll="picks">
+          <span class="ls-no">02</span>
+          <span class="ls-title">读 10 期精选</span>
+          <span class="ls-text">用一句理由和三个核心词，先建立自己的坐标。</span>
+        </button>
+        <button class="learn-step" data-go="episodes">
+          <span class="ls-no">03</span>
+          <span class="ls-title">回到 Vol 做笔记</span>
+          <span class="ls-text">听原声、看逐字稿，最后写一条“我要改变什么”。</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section" id="chapters">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Chapter Guides</div>
+          <h2>八章导读，从最痛的那章开始</h2>
+          <div class="sub">每章先给你一个钩子、三个问题和一条建议路线。</div>
+        </div>
+        <button class="link-more" data-go="episodes">按 Vol 浏览 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </div>
+      <div class="guide-index">
+        ${DATA.modules.map(m=>`<button class="gi-row" data-module="${m.id}">
+          <span class="gi-no">${pad(+m.no)}</span>
+          <span class="gi-main">
+            <span class="gi-title">${esc(m.title)}</span>
+            <span class="gi-teaser">${esc(m.guide?.teaser || m.subtitle)}</span>
+          </span>
+          <span class="gi-arrow">→</span>
+        </button>`).join('')}
+      </div>
+    </section>
+
     <section class="section picks-section" id="picks">
       <div class="section-head">
         <div>
           <div class="kicker">Quick Start</div>
-          <h2>10 期精读，先读精华</h2>
-          <div class="sub">每期只留一句“为什么读”和三个核心词；读完再回原声。</div>
+          <h2>10 期入口，先建立坐标</h2>
+          <div class="sub">每期一句“为什么读”和三个核心词；读完再回 Vol。</div>
         </div>
         <button class="link-more" data-epfilter="core">34 期精读 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
       </div>
@@ -888,24 +983,6 @@ function renderHome(){
     </section>
 
     <section class="section">
-      <div class="section-head"><div><div class="kicker">Two Ways</div><h2>接下来怎么读</h2><div class="sub">按时间，或按主题；两条路都能回到同一份原文。</div></div></div>
-      <div class="two-ways">
-        <button class="way-card" data-go="episodes">
-          <span class="way-no">111</span>
-          <span class="way-title">按 Vol</span>
-          <span class="way-desc">从 2024.10 开篇到 V110，按时间读完整 111 期。</span>
-          <span class="way-go">进入时间线 →</span>
-        </button>
-        <button class="way-card" data-go="modules">
-          <span class="way-no">08</span>
-          <span class="way-title">按模块</span>
-          <span class="way-desc">风险、配置、产品、周期、人生、读书、案例、方法，八个主题框架。</span>
-          <span class="way-go">进入模块 →</span>
-        </button>
-      </div>
-    </section>
-
-    <section class="section">
       <div class="host-mini">
         <img src="__LOGO__" alt="慧客堂封面">
         <div class="host-mini-main">
@@ -919,7 +996,7 @@ function renderHome(){
 
     <section class="section">
       <div class="home-note">
-        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成分析并更新本页。
+        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。
         <div class="home-note-links"><button data-go="me">我的笔记 / 关于</button><a href="${p.url}" target="_blank" rel="noopener">小宇宙播客主页</a></div>
       </div>
     </section>
@@ -931,11 +1008,12 @@ function renderHome(){
 function epRow(e){
   const done = !!state.done[e.n];
   const tags = (e.tags||[]).slice(0,2).map(t=>`<span class="mini-tag">${esc(t)}</span>`).join('');
+  const line = e.guide?.hook ? firstSentence(e.guide.hook, 46) : e.line;
   return `<button class="ep-row ${done?'is-done':''}" data-ep="${e.n}">
     <div><div class="ep-label">${esc(e.label)}</div><div class="ep-date">${esc(e.date.slice(5))}<br>${durText(e)}</div></div>
     <div>
       <h3>${esc(shortTitle(e,38))}</h3>
-      <div class="ep-line">${esc(e.line)}</div>
+      <div class="ep-line">${e.guide?'<span class="guide-badge">导读</span>':''}${esc(line)}</div>
       <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
     </div>
     <span class="done-dot"></span>
@@ -949,7 +1027,7 @@ function renderModules(){
     <div class="module-hero">
       <div class="mno">THE MODULES</div>
       <h1>八个模块，<br>一套完整的财富观</h1>
-      <p class="lead">先处理风险与概率，再处理资产与产品；先看懂周期与时代，再回到家庭、健康与人生。你可以按顺序读，也可以从最痛的那一块开始。</p>
+      <p class="lead">先处理风险与概率，再处理资产与产品；先看懂周期与时代，再回到家庭、健康与人生。每章先读导读：一个钩子、三个问题、一条建议路线。</p>
     </div>
     <div class="module-grid" style="margin-top:18px">
       ${DATA.modules.map(m=>`
@@ -957,6 +1035,7 @@ function renderModules(){
           <div class="mno">MODULE ${m.no}</div>
           <h3>${esc(m.title)}</h3>
           <div class="msub">${esc(m.subtitle)}</div>
+          ${m.guide?.teaser?`<div class="mguide">${esc(m.guide.teaser)}</div>`:''}
           <div class="mcount"><span>${modEpCount(m.id)} 期关联</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
         </button>`).join('')}
     </div>
@@ -969,12 +1048,25 @@ function renderModule(id){
   if (!m) { location.hash = '#/modules'; return; }
   const idx = DATA.modules.findIndex(x=>x.id===id);
   const next = DATA.modules[idx+1];
+  const g = m.guide;
+  const guideHtml = g ? `<div class="chapter-guide">
+    <div class="cg-label">CHAPTER GUIDE · 本章导读</div>
+    <p class="cg-hook">${esc(g.hook)}</p>
+    <div class="cg-grid">
+      <div class="cg-block"><h3>带着三个问题读</h3><ol>${(g.questions||[]).map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>
+      <div class="cg-block"><h3>读完后，你应该能</h3><ul>${(g.outcomes||[]).map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="cg-path"><h3>建议路线</h3><div class="cg-route">
+      ${(g.path||[]).map(p=>{ const e=byId[p.n]; return e?`<button class="cg-route-item" data-ep="${e.n}"><b>${esc(e.label)}</b><span>${esc(p.why)}</span></button>`:''; }).join('')}
+    </div></div>
+  </div>` : '';
   $('#view-module').innerHTML = `<div class="wrap">
     <div class="detail-top"><button class="back-btn" data-go="modules"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 全部模块</button></div>
     <div class="module-hero">
       <div class="mno">MODULE ${m.no} · ${esc(m.kicker)}</div>
       <h1>${esc(m.title)}</h1>
       <div class="msub">${esc(m.subtitle)}</div>
+      ${guideHtml}
       <p class="lead">${esc(m.lead)}</p>
       <div class="big-idea">${esc(m.bigIdea)}</div>
       <div class="quote-card"><div class="q">“${esc(m.quote.text)}”</div><div class="src">— ${esc(m.quote.src)}</div></div>
@@ -997,6 +1089,11 @@ function renderModule(id){
         <h2>行动清单</h2>
         <ul class="action-list">${m.actions.map(a=>`<li><span class="box"></span><span>${esc(a)}</span></li>`).join('')}</ul>
       </section>
+      ${g?`<section class="module-section module-recap">
+        <h2>离章前，再问自己一次</h2>
+        <ul class="action-list">${(g.questions||[]).map(q=>`<li><span class="box"></span><span>${esc(q)}</span></li>`).join('')}</ul>
+        <div class="recap-note">三个问题都能用自己的话回答，这一章才算真的读完。</div>
+      </section>`:''}
       <section class="module-section">
         <h2>推荐精读</h2>
         <div class="related-grid">
@@ -1052,7 +1149,7 @@ function matchEp(e){
   if (epFilter!=='all' && epFilter!=='core' && !(e.tags||[]).includes(epFilter)) return false;
   if (!epQuery) return true;
   const q = epQuery.toLowerCase();
-  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' ')].join(' ').toLowerCase();
+  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' '),e.guide?[e.guide.hook,e.guide.question,(e.guide.keywords||[]).join(' ')].join(' '):''].join(' ').toLowerCase();
   return hay.includes(q);
 }
 
@@ -1114,6 +1211,13 @@ function renderVol(n){
     : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
 
   const noteVal = state.notes[e.n] || '';
+  const g = e.guide;
+  const guideHtml = g ? `<div class="vol-guide">
+    <div class="vg-label">EPISODE GUIDE · 本期导读</div>
+    <p class="vg-hook">${esc(g.hook)}</p>
+    ${g.question?`<div class="vg-question"><b>带着这个问题读：</b>${esc(g.question)}</div>`:''}
+    ${(g.keywords||[]).length?`<div class="vg-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
+  </div>` : '';
   $('#view-vol').innerHTML = `<div class="wrap">
     <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
     <div class="vol-hero">
@@ -1126,6 +1230,7 @@ function renderVol(n){
         <button class="tool-btn ${saved?'on':''}" id="volSaveBtn"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
         <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
       </div>
+      ${guideHtml}
       <div class="vol-line"><span class="vl-k">本期一句话</span>${esc(summary)}</div>
     </div>
     <div class="vol-body">
@@ -1232,7 +1337,7 @@ function renderMe(){
       <div class="about-card">
         <strong>${DATA.podcast.title}</strong> · ${DATA.podcast.subtitle}<br>
         我是${DATA.podcast.host}。${DATA.podcast.hostBio}<br><br>
-        我把 ${DATA.podcast.count} 期节目、${DATA.podcast.chapters} 个官方章节，整理成这本手册，基于 ${DATA.podcast.firstDate}—${DATA.podcast.lastDate} 的官方 Shownotes 与本地逐字稿编写。逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。<br><br><strong>转写方法：</strong>60 秒分段 + 标点模型，时间戳为段首，误差约 1 分钟。
+        我把 ${DATA.podcast.count} 期节目、${DATA.podcast.chapters} 个官方章节，整理成这本手册，基于 ${DATA.podcast.firstDate}—${DATA.podcast.lastDate} 的官方 Shownotes 与本地逐字稿编写。每章开头有章节大导读，每一期标题下有 Vol 小导读；先读导读，再回到原文。逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。<br><br><strong>转写方法：</strong>60 秒分段 + 标点模型，时间戳为段首，误差约 1 分钟。
         <div class="actions-row">
           <button class="btn btn-ghost" id="exportNotes">导出我的笔记</button>
           <button class="btn btn-ghost danger" id="resetAll">清空学习数据</button>

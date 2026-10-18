@@ -47,6 +47,13 @@ for (const file of files) {
     }
     if (item.case) e.case = clean(item.case);
     if (Array.isArray(item.keywords)) e.keywords = item.keywords.map(clean).filter(Boolean);
+    if (item.guide && item.guide.hook) {
+      e.guide = {
+        hook: clean(item.guide.hook),
+        question: clean(item.guide.question || ''),
+        keywords: (item.guide.keywords || e.keywords || []).map(clean).filter(Boolean).slice(0, 3)
+      };
+    }
     applied++;
   }
 }

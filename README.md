@@ -1,6 +1,6 @@
 # 慧客堂 · 学习手册
 
-把播客《慧客堂》111 期整理成一本手机端学习手册：按 Vol 与按模块两条主线，含逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。
+把播客《慧客堂》111 期整理成一本手机端学习手册：8 篇章节大导读、111 篇 Vol 导读、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
@@ -15,6 +15,9 @@
 | `transcripts/` | 111 期逐字稿（txt + json，带 60 秒时间戳） |
 | `summaries/` | 各批次的节目摘要、要点、引文、分析 |
 | `fp/` | 第一人称视角改写层：只改主播叙述，嘉宾与原话保持原意 |
+| `guides/` | 8 篇章节大导读与 111 篇 Vol 导读的源数据 |
+| `apply_guides.js` | 把 `guides/*.json` 合并进 `data-v2.json` |
+| `build_guides.py` | 生成 8 篇章节导读与 111 篇 Vol 导读 |
 | `ep_meta/` | 每期标题、Shownotes、章节、标签 |
 | `ep_content/` | 视角改写前的节目内容快照 |
 | `meta.js` | 模块、原则、路径、书单、术语表 |
@@ -42,7 +45,13 @@ node build-v2.js
 5. 增量写入 `data-v2.json`、`ep_meta/`、`transcripts/`
 6. 运行 `finalize_new.js`，先生成一份本地草稿
 
-随后 Qoder 自动化会基于完整逐字稿写精读，依次运行 `apply_summaries.js`、`apply_firstperson.js`、`finalize_new.js`、`build-v2.js`，再发布到 Qoder Sites。
+随后 Qoder 自动化会基于完整逐字稿写精读，并为每一期新节目写 `guide`（hook、带读问题、3 个关键词）；依次运行 `apply_summaries.js`、`apply_firstperson.js`、`finalize_new.js`、`build-v2.js`，再发布到 Qoder Sites。
+
+### 导读结构
+
+- **章节大导读**：每个模块开头有钩子、3 个带读问题、3 个读后能力、3 期建议路线；首页「八章导读」可直接进入。
+- **Vol 小导读**：每期标题下有 2 句开场、一个带读问题和 3 个关键词；节目列表也会显示导读首句。
+- 章节导读源数据在 `guides/module_guides.json`；Vol 导读源数据在 `guides/vol_guides.json`。新增期的导读写在当天的 `summaries/batch_auto_*.json` 里，由 `apply_summaries.js` 一起写入。
 
 ### GitHub 自动提交
 
