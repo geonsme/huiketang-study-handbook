@@ -217,6 +217,14 @@ def vol_page(e):
         ("主理人的判断", e.get("line") or e.get("summary") or ""),
         ("展开的线索", (a0.get("h") or "") + ("：" + (a0.get("p") or [""])[0][:90] if a0.get("p") else "")),
     ], "本期脉络")
+    d = e.get("dongliao") or {}
+    if d:
+        body += "<h2>董了</h2>"
+        body += f'<h3>{esc(d.get("title"))}</h3>'
+        body += f'<blockquote><p>{esc(d.get("quote"))}</p><p class="source">{esc(e.get("label"))} · {esc(d.get("t"))}</p></blockquote>'
+        body += f'<h3>放回上下文</h3><p>{esc(d.get("context"))}</p>'
+        body += f'<h3>再往下想一层</h3><p>{esc(d.get("critique"))}</p>'
+        body += f'<h3>点睛</h3><p class="lead">{esc(d.get("insight"))}</p>'
     body += f'<h2>本期一句话</h2><p class="lead">{esc(e.get("summary") or e.get("line"))}</p>'
     if e.get("points"):
         body += "<h2>核心要点</h2><ol>" + "".join(f"<li>{esc(x)}</li>" for x in e["points"]) + "</ol>"
@@ -564,6 +572,13 @@ def build_txt(data, episodes, path):
             add("【带着这个问题读】" + g["question"])
         if g.get("keywords"):
             add("【关键词】" + " / ".join(g["keywords"]))
+        if e.get("dongliao"):
+            d = e["dongliao"]
+            add("【董了】" + (d.get("title") or ""))
+            add("原文：" + (d.get("quote") or ""))
+            add("上下文：" + (d.get("context") or ""))
+            add("再往下想一层：" + (d.get("critique") or ""))
+            add("点睛：" + (d.get("insight") or ""))
         add("【本期一句话】" + (e.get("summary") or e.get("line") or ""))
         if e.get("points"):
             add("【核心要点】")
@@ -630,7 +645,7 @@ def main():
     cover_transcripts = os.path.join(EBOOK_DIR, "cover_transcripts.jpg")
     create_cover(
         cover_handbook, "学习手册", "按 Vol 与模块的播客深读",
-        f"{data['podcast'].get('count')} 期 · 8 大模块 · {len(episodes)} 篇导读",
+        f"{data['podcast'].get('count')} 期 · 8 大模块 · {len(episodes)} 条董了",
         "把投资、财富与生活放到一张桌子上聊", logo.copy()
     )
     create_cover(

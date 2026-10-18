@@ -7,7 +7,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f5a623%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2760%27 text-anchor=%27middle%27 fill=%27%23171512%27%3E%E6%85%A7%3C/text%3E%3C/svg%3E">
 <title>慧客堂 · 学习手册｜章节导读与 Vol 深读</title>
-<meta name="description" content="慧客堂 111 期播客学习手册：8 篇章节大导读、111 期 Vol 导读、逐字稿原文摘录、34 期核心精读、8 大模块。">
+<meta name="description" content="慧客堂 111 期播客学习手册：8 篇章节大导读、111 期 Vol 导读、111 条董了观点、逐字稿原文摘录、34 期核心精读、8 大模块。">
 <style>
 :root{
   --paper:#fbf3e3;
@@ -903,6 +903,43 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
   .hero-actions .btn{padding:10px 16px;min-height:42px}
   .tr-status{margin-top:10px}
 }
+/* 董了 · 原文里长出来的观点 */
+.dongliao{position:relative;margin-top:18px;padding:22px;border-radius:28px;border:1.5px solid transparent;background:linear-gradient(var(--glass-strong),var(--glass-strong)) padding-box,linear-gradient(120deg,rgba(255,184,77,.95),rgba(255,255,255,.25),rgba(245,166,35,.9),rgba(255,255,255,.2)) border-box;background-size:100% 100%,300% 300%;animation:dlBorder 12s ease-in-out infinite;box-shadow:0 22px 55px rgba(245,166,35,.14),inset 0 1px 0 var(--glass-highlight);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur)}
+@keyframes dlBorder{0%,100%{background-position:0 0,0% 50%}50%{background-position:0 0,100% 50%}}
+.dl-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.dl-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,var(--orange-2),var(--orange));color:#1d1d1f;font-size:10px;font-weight:800;letter-spacing:.04em;box-shadow:0 6px 16px rgba(245,166,35,.25)}
+.dl-badge:before{content:"";width:5px;height:5px;border-radius:50%;background:#1d1d1f;opacity:.7}
+.dl-kicker{font-size:9.5px;letter-spacing:.14em;color:var(--red);font-weight:700}
+.dl-title{font-family:var(--font-display);font-size:22px;line-height:1.35;letter-spacing:-.03em;margin-top:10px;color:var(--ink)}
+.dl-quote{margin:12px 0 0;padding:13px 15px;border-left:3px solid var(--orange);border-radius:0 14px 14px 0;background:color-mix(in srgb,var(--glass-highlight) 22%,transparent)}
+.dl-quote p{font-family:var(--font-read);font-size:17px;line-height:1.8;color:var(--ink);margin:0}
+.dl-quote cite{display:block;margin-top:6px;font-style:normal;font-size:10px;color:var(--muted);letter-spacing:.04em}
+.dl-flow{display:flex;align-items:center;gap:7px;margin:14px 0 0;font-size:9.5px;color:var(--muted);flex-wrap:wrap}
+.dl-flow i{display:block;width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--orange),transparent);background-size:200% 100%;animation:dlFlow 3.2s linear infinite}
+@keyframes dlFlow{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;border-top:1px dashed var(--line-strong);padding-top:14px}
+.dl-block h3{font-size:11px;color:var(--red);letter-spacing:.06em;margin-bottom:5px}
+.dl-block p{font-family:var(--font-read);font-size:13px;line-height:1.9;color:var(--ink-2)}
+.dl-insight{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:13px 15px;border-radius:16px;border:1px solid rgba(245,166,35,.3);background:linear-gradient(135deg,color-mix(in srgb,var(--orange) 14%,transparent),color-mix(in srgb,var(--glass-highlight) 16%,transparent))}
+.dl-insight span{flex:none;font-size:9.5px;font-weight:800;color:var(--red);letter-spacing:.08em;padding-top:2px}
+.dl-insight p{font-family:var(--font-read);font-size:14px;line-height:1.8;color:var(--ink);margin:0}
+.dl-home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dl-home-card{position:relative;display:flex;flex-direction:column;gap:7px;text-align:left;padding:16px;border-radius:22px;border:1px solid transparent;background:linear-gradient(var(--glass),var(--glass)) padding-box,linear-gradient(120deg,rgba(255,184,77,.8),rgba(255,255,255,.2),rgba(245,166,35,.7)) border-box;box-shadow:var(--glass-shadow);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);transition:transform .24s cubic-bezier(.22,1,.36,1),background .2s}
+.dl-home-card:hover{transform:translateY(-3px);background:linear-gradient(var(--glass-strong),var(--glass-strong)) padding-box,linear-gradient(120deg,rgba(255,184,77,.95),rgba(255,255,255,.25),rgba(245,166,35,.9)) border-box}
+.dl-home-top{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dl-mini-badge{font-size:9px;font-weight:800;color:#1d1d1f;background:linear-gradient(135deg,var(--orange-2),var(--orange));border-radius:999px;padding:2px 7px}
+.dl-home-label{font-size:9.5px;color:var(--red);letter-spacing:.04em}
+.dl-home-title{font-family:var(--font-display);font-size:16px;line-height:1.4;letter-spacing:-.02em;color:var(--ink)}
+.dl-home-insight{font-size:11.5px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dl-home-arrow{position:absolute;right:14px;bottom:12px;color:var(--red);font-size:16px}
+.mini-tag.dl-tag{color:var(--red);border:1px solid rgba(245,166,35,.35);background:color-mix(in srgb,var(--orange) 10%,transparent);font-weight:700}
+.rm-step:not(:last-child)::before{background:linear-gradient(180deg,transparent,var(--orange),transparent);background-size:100% 220%;animation:rmFlow 4.5s linear infinite}
+@keyframes rmFlow{0%{background-position:0 -120%}100%{background-position:0 220%}}
+.rm-node{animation:rmPulse 4.5s ease-in-out infinite}
+@keyframes rmPulse{0%,100%{box-shadow:0 6px 16px rgba(245,166,35,.2)}50%{box-shadow:0 6px 24px rgba(245,166,35,.45)}}
+@media (max-width:560px){.dongliao{padding:18px;border-radius:24px}.dl-title{font-size:20px}.dl-quote p{font-size:15.5px}.dl-grid{grid-template-columns:1fr}.dl-home-grid{grid-template-columns:1fr}.dl-home-card{padding:14px}}
+@media (prefers-reduced-motion:reduce){.dongliao,.dl-flow i,.rm-step:not(:last-child)::before,.rm-node{animation:none!important}}
+
 </style>
 </head>
 <body>
@@ -1100,7 +1137,7 @@ function renderHome(){
         <div class="hero-stat"><b>${p.count}</b><span>期节目</span></div>
         <div class="hero-stat"><b>${p.hours}</b><span>小时音频</span></div>
         <div class="hero-stat"><b>${DATA.podcast.transcriptWan || 0}</b><span>万字逐字稿</span></div>
-        <div class="hero-stat"><b>${DATA.episodes.filter(e=>e.guide).length}</b><span>期导读</span></div>
+        <div class="hero-stat"><b>${DATA.episodes.filter(e=>e.dongliao).length}</b><span>条董了</span></div>
       </div>
       <div class="hero-actions">
         <button class="btn btn-primary" data-scroll="chapters">从导读开始 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
@@ -1135,6 +1172,29 @@ function renderHome(){
           <span class="ls-title">回到 Vol 做笔记</span>
           <span class="ls-text">听原声、看逐字稿，最后写一条“我要改变什么”。</span>
         </button>
+      </div>
+    </section>
+
+    <section class="section" id="dongliao">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Dong Liao</div>
+          <h2>董了 · 原文里长出来的观点</h2>
+          <div class="sub">不是金句合集：把一句话放回上下文，再往下想一层。</div>
+        </div>
+        <button class="link-more" data-epfilter="董了">全部 ${DATA.episodes.filter(e=>e.dongliao).length} 条 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </div>
+      <div class="dl-home-grid">
+        ${[16,71,102].map(n=>{
+          const e = byId[n]; const d = e?.dongliao;
+          if (!d) return '';
+          return `<button class="dl-home-card" data-ep="${e.n}">
+            <span class="dl-home-top"><span class="dl-mini-badge">董了</span><span class="dl-home-label">${esc(e.label)}</span></span>
+            <span class="dl-home-title">${esc(d.title)}</span>
+            <span class="dl-home-insight">${esc(d.insight)}</span>
+            <span class="dl-home-arrow">→</span>
+          </button>`;
+        }).join('')}
       </div>
     </section>
 
@@ -1219,7 +1279,7 @@ function renderHome(){
 
     <section class="section">
       <div class="home-note">
-        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。
+        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · ${DATA.episodes.filter(e=>e.dongliao).length} 条董了 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。
         <div class="home-note-links"><button data-go="me">我的笔记 / 关于</button><a href="${p.url}" target="_blank" rel="noopener">小宇宙播客主页</a></div>
       </div>
     </section>
@@ -1237,7 +1297,7 @@ function epRow(e){
     <div>
       <h3>${esc(shortTitle(e,38))}</h3>
       <div class="ep-line">${e.guide?'<span class="guide-badge">导读</span>':''}${esc(line)}</div>
-      <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
+      <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.dongliao?'<span class="mini-tag dl-tag">董了</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
     </div>
     <span class="done-dot"></span>
   </button>`;
@@ -1339,7 +1399,7 @@ let epQuery = '';
 
 function renderEpisodes(){
   const p = DATA.podcast;
-  const tags = ['all','core','投资入门','资产配置','基金产品','宏观周期','读书认知','财富人生','真实案例','科技AI','商品黄金'];
+  const tags = ['all','core','董了','投资入门','资产配置','基金产品','宏观周期','读书认知','财富人生','真实案例','科技AI','商品黄金'];
   $('#view-episodes').innerHTML = `<div class="wrap">
     <div class="detail-top"><button class="back-btn" data-go="home"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 总览</button></div>
     <div class="module-hero" style="padding-top:8px">
@@ -1372,10 +1432,11 @@ function bindEpisodes(){
 
 function matchEp(e){
   if (epFilter==='core' && !e.core) return false;
-  if (epFilter!=='all' && epFilter!=='core' && !(e.tags||[]).includes(epFilter)) return false;
+  if (epFilter==='董了' && !e.dongliao) return false;
+  if (epFilter!=='all' && epFilter!=='core' && epFilter!=='董了' && !(e.tags||[]).includes(epFilter)) return false;
   if (!epQuery) return true;
   const q = epQuery.toLowerCase();
-  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' '),e.guide?[e.guide.hook,e.guide.question,(e.guide.keywords||[]).join(' ')].join(' '):''].join(' ').toLowerCase();
+  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' '),e.guide?[e.guide.hook,e.guide.question,(e.guide.keywords||[]).join(' ')].join(' '):'',e.dongliao?[e.dongliao.title,e.dongliao.quote,e.dongliao.context,e.dongliao.critique,e.dongliao.insight].join(' '):''].join(' ').toLowerCase();
   return hay.includes(q);
 }
 
@@ -1445,6 +1506,18 @@ function renderVol(n){
     { k: '展开的线索', h: a0?.h || '这一期的关键拆解', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
   ] : [];
   const mapHtml = g ? `<div class="vol-map"><div class="rm-title">READING MAP · 本期脉络</div>${readMap(mapSteps)}</div>` : '';
+  const dl = e.dongliao;
+  const dlHtml = dl ? `<section class="dongliao" aria-label="董了观点">
+    <div class="dl-head"><span class="dl-badge">董了</span><span class="dl-kicker">原文里长出来的观点</span></div>
+    <h2 class="dl-title">${esc(dl.title)}</h2>
+    <blockquote class="dl-quote"><p>${esc(dl.quote)}</p><cite>${esc(e.label)} · ${esc(dl.t)}</cite></blockquote>
+    <div class="dl-flow" aria-hidden="true"><span>原文</span><i></i><span>上下文</span><i></i><span>再想一层</span><i></i><span>点睛</span></div>
+    <div class="dl-grid">
+      <div class="dl-block"><h3>放回上下文</h3><p>${esc(dl.context)}</p></div>
+      <div class="dl-block"><h3>再往下想一层</h3><p>${esc(dl.critique)}</p></div>
+    </div>
+    <div class="dl-insight"><span>点睛</span><p>${esc(dl.insight)}</p></div>
+  </section>` : '';
   const guideHtml = g ? `<div class="vol-guide">
     <div class="vg-label">EPISODE GUIDE · 本期导读</div>
     <p class="vg-hook">${esc(g.hook)}</p>
@@ -1465,6 +1538,7 @@ function renderVol(n){
       </div>
       ${guideHtml}
       ${mapHtml}
+      ${dlHtml}
       <div class="vol-line"><span class="vl-k">本期一句话</span>${esc(summary)}</div>
     </div>
     <div class="vol-body">

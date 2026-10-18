@@ -1,6 +1,6 @@
 # 慧客堂 · 学习手册
 
-把播客《慧客堂》111 期整理成一本手机端学习手册：8 篇章节大导读、111 篇 Vol 导读、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
+把播客《慧客堂》111 期整理成一本手机端学习手册：8 篇章节大导读、111 篇 Vol 导读、111 条“董了”观点、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
@@ -15,9 +15,11 @@
 | `transcripts/` | 111 期逐字稿（txt + json，带 60 秒时间戳） |
 | `summaries/` | 各批次的节目摘要、要点、引文、分析 |
 | `fp/` | 第一人称视角改写层：只改主播叙述，嘉宾与原话保持原意 |
-| `guides/` | 8 篇章节大导读与 111 篇 Vol 导读的源数据 |
-| `apply_guides.js` | 把 `guides/*.json` 合并进 `data-v2.json` |
+| `guides/` | 8 篇章节大导读、111 篇 Vol 导读与 111 条董了观点的源数据 |
+| `apply_guides.js` | 把 `guides/module_guides.json`、`vol_guides.json` 合并进 `data-v2.json` |
 | `build_guides.py` | 生成 8 篇章节导读与 111 篇 Vol 导读 |
+| `apply_dongliao.js` | 把 `guides/dongliao.json` 合并进 `data-v2.json` |
+| `build_dongliao.py` | 从精读中提炼 111 条“董了”观点 |
 | `build_ebook.py` | 生成学习手册 EPUB、逐字稿全集 EPUB 与 TXT |
 | `ebook/` | 可直接导入微信读书的电子书文件 |
 | `ep_meta/` | 每期标题、Shownotes、章节、标签 |
@@ -47,12 +49,13 @@ node build-v2.js
 5. 增量写入 `data-v2.json`、`ep_meta/`、`transcripts/`
 6. 运行 `finalize_new.js`，先生成一份本地草稿
 
-随后 Qoder 自动化会基于完整逐字稿写精读，并为每一期新节目写 `guide`（hook、带读问题、3 个关键词）；依次运行 `apply_summaries.js`、`apply_firstperson.js`、`finalize_new.js`、`build-v2.js`，再发布到 Qoder Sites。
+随后 Qoder 自动化会基于完整逐字稿写精读，并为每一期新节目写 `guide`（hook、带读问题、3 个关键词）和 `dongliao`（原话、上下文、批判性边界、点睛）；依次运行 `apply_summaries.js`、`apply_firstperson.js`、`finalize_new.js`、`apply_guides.js`、`build-v2.js`、`build_ebook.py`，再发布到 Qoder Sites。
 
 ### 导读结构
 
 - **章节大导读**：每个模块开头有钩子、3 个带读问题、3 个读后能力、3 期建议路线；首页「八章导读」可直接进入。模块页带一张 4 步“本章脉络”纵向流程图。
 - **Vol 小导读**：每期标题下有 2 句开场、一个带读问题和 3 个关键词；节目列表也会显示导读首句。Vol 页带一张“问题 → 判断 → 展开线索”的 3 步脉络图。
+- **董了观点**：每期从逐字稿里选一句原话，放回上下文，再往下想一层（它假设了什么、哪里会失效），最后一句点睛。网站用渐变边框轻动效卡片呈现；节目列表有“董了”标记，可按“董了”筛选；电子书用普通章节呈现。
 - 章节导读源数据在 `guides/module_guides.json`；Vol 导读源数据在 `guides/vol_guides.json`。新增期的导读写在当天的 `summaries/batch_auto_*.json` 里，由 `apply_summaries.js` 一起写入。
 
 ### GitHub 自动提交

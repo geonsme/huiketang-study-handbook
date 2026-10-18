@@ -54,6 +54,19 @@ for (const file of files) {
         keywords: (item.guide.keywords || e.keywords || []).map(clean).filter(Boolean).slice(0, 3)
       };
     }
+    if (item.dongliao && item.dongliao.quoteT) {
+      const q = (e.quotes || []).find(x => x.t === item.dongliao.quoteT) || (e.quotes || [])[0];
+      if (q) {
+        e.dongliao = {
+          title: clean(item.dongliao.title || ''),
+          quote: q.text,
+          t: q.t,
+          context: clean(item.dongliao.context || ''),
+          critique: clean(item.dongliao.critique || ''),
+          insight: clean(item.dongliao.insight || '')
+        };
+      }
+    }
     applied++;
   }
 }
