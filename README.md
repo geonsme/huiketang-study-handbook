@@ -4,11 +4,13 @@
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
+- Agent 阅读指南：[README.agent.md](README.agent.md)（公开：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/README.agent.md）
 
 ## 内容结构
 
 | 路径 | 说明 |
 | --- | --- |
+| `README.agent.md` | 给其他 Agent 直接阅读的项目说明、数据契约与维护流程 |
 | `index.html` | 手机端学习手册（单文件，数据已内嵌） |
 | `dist/index.html` | 部署用静态输出，内容与根目录一致 |
 | `data-v2.json` | 主数据：111 期、模块、精读、逐字稿、引文 |

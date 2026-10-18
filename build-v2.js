@@ -9,6 +9,13 @@ const out1 = path.join(__dirname, '慧客堂·学习手册-v2.html');
 fs.writeFileSync(out1, html, 'utf8');
 console.log('written', out1, (html.length / 1024).toFixed(0) + 'KB');
 
+// Agent 阅读指南随构建一起进入本地 dist 与站点目录
+const agentReadme = path.join(__dirname, 'README.agent.md');
+if (fs.existsSync(agentReadme)) {
+  fs.mkdirSync(path.join(__dirname, 'dist'), { recursive: true });
+  fs.copyFileSync(agentReadme, path.join(__dirname, 'dist', 'README.agent.md'));
+}
+
 // Qoder Site 实际绑定的是会话目录，而不是本项目目录；按 site_config.json 同步过去。
 // --no-site-sync 用于转写后的草稿构建，精读完成后再做最终构建并同步，避免半成品进入可发布目录。
 const doSiteSync = !process.argv.includes('--no-site-sync');
@@ -22,6 +29,7 @@ if (doSiteSync && fs.existsSync(cfgPath)) {
   fs.writeFileSync(siteIndex, html, 'utf8');
   const siteCopy = path.join(cfg.siteRoot, '慧客堂·学习手册.html');
   fs.writeFileSync(siteCopy, html, 'utf8');
+  if (fs.existsSync(agentReadme)) fs.copyFileSync(agentReadme, path.join(webDir, 'README.agent.md'));
   console.log('site synced', siteIndex);
 } else {
   console.log(doSiteSync ? 'site_config.json missing: local build only' : 'draft build: site sync skipped');
