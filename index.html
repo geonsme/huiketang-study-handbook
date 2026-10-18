@@ -699,6 +699,17 @@ html[data-theme="dark"] .pick-core span{color:#ffc45c;background:rgba(245,166,35
 html[data-theme="dark"] .vg-keys span{color:#ffc45c;background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)}
 .guide-badge{display:inline-block;font-size:9px;line-height:1.5;color:var(--red);border:1px solid rgba(169,90,5,.35);border-radius:4px;padding:0 5px;margin-right:5px;vertical-align:1px;font-weight:600}
 .recap-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6}
+.rm-title{font-size:9.5px;letter-spacing:.16em;color:var(--red);font-weight:700;margin-top:16px;margin-bottom:8px}
+.read-map{display:flex;flex-direction:column;gap:0;margin-top:2px}
+.rm-step{display:grid;grid-template-columns:28px 1fr;gap:10px;position:relative;padding-bottom:10px}
+.rm-step:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--line-strong)}
+.rm-node{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-family:var(--mono);font-size:10px;z-index:1;position:relative}
+.rm-body{border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:var(--paper)}
+.rm-kicker{font-size:9px;letter-spacing:.12em;color:var(--red);font-weight:700}
+.rm-body h4{font-family:var(--serif);font-size:13.5px;line-height:1.4;margin-top:2px;color:var(--ink)}
+.rm-body p{font-size:11px;line-height:1.6;color:var(--muted);margin:3px 0 0}
+.vol-map{margin-top:12px;padding:12px 14px;border:1px dashed var(--line-strong);border-radius:14px;background:rgba(245,166,35,.04)}
+html[data-theme="dark"] .vol-map{background:rgba(245,166,35,.03)}
 @media (max-width:560px){
   .learn-path{grid-template-columns:1fr}
   .cg-grid{grid-template-columns:1fr}
@@ -797,6 +808,17 @@ function toast(msg){
 function epTitle(e){ return e.title.replace(/^(?:Vol\.|V)\d+[.、\s]*/i,'').trim(); }
 function shortTitle(e, len=30){ const t = epTitle(e); return t.length > len ? t.slice(0,len)+'…' : t; }
 function firstSentence(s, len=46){ const t = String(s||'').split(/[。！？]/)[0]; return t.length > len ? t.slice(0,len)+'…' : t; }
+function readMap(steps){
+  if (!steps || !steps.length) return '';
+  return `<div class="read-map">${steps.map((s,i)=>`<div class="rm-step">
+    <div class="rm-node">${pad(i+1)}</div>
+    <div class="rm-body">
+      <div class="rm-kicker">${esc(s.k||'')}</div>
+      ${s.h?`<h4>${esc(s.h)}</h4>`:''}
+      ${s.p?`<p>${esc(s.p)}</p>`:''}
+    </div>
+  </div>`).join('')}</div>`;
+}
 function durText(e){
   const s = e.seconds; const h = Math.floor(s/3600), m = Math.round((s%3600)/60);
   return h ? `${h} 小时 ${m} 分` : `${m} 分钟`;
@@ -1049,9 +1071,12 @@ function renderModule(id){
   const idx = DATA.modules.findIndex(x=>x.id===id);
   const next = DATA.modules[idx+1];
   const g = m.guide;
+  const mapSteps = (m.sections || []).map((s, i) => ({ k: `第 ${i + 1} 步`, h: s.h, p: firstSentence((s.p || [])[0], 52) }));
   const guideHtml = g ? `<div class="chapter-guide">
     <div class="cg-label">CHAPTER GUIDE · 本章导读</div>
     <p class="cg-hook">${esc(g.hook)}</p>
+    <div class="rm-title">READING MAP · 本章脉络</div>
+    ${readMap(mapSteps)}
     <div class="cg-grid">
       <div class="cg-block"><h3>带着三个问题读</h3><ol>${(g.questions||[]).map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>
       <div class="cg-block"><h3>读完后，你应该能</h3><ul>${(g.outcomes||[]).map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
@@ -1212,6 +1237,13 @@ function renderVol(n){
 
   const noteVal = state.notes[e.n] || '';
   const g = e.guide;
+  const a0 = (e.analysis || [])[0];
+  const mapSteps = g ? [
+    { k: '入口问题', h: '这一期在回答什么', p: g.question },
+    { k: '主理人的判断', h: '我先给结论', p: e.line || summary },
+    { k: '展开的线索', h: a0?.h || '这一期的关键拆解', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
+  ] : [];
+  const mapHtml = g ? `<div class="vol-map"><div class="rm-title">READING MAP · 本期脉络</div>${readMap(mapSteps)}</div>` : '';
   const guideHtml = g ? `<div class="vol-guide">
     <div class="vg-label">EPISODE GUIDE · 本期导读</div>
     <p class="vg-hook">${esc(g.hook)}</p>
@@ -1231,6 +1263,7 @@ function renderVol(n){
         <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
       </div>
       ${guideHtml}
+      ${mapHtml}
       <div class="vol-line"><span class="vl-k">本期一句话</span>${esc(summary)}</div>
     </div>
     <div class="vol-body">
