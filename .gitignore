@@ -1,0 +1,22 @@
+# 大体积音频与模型（不入库）
+audio/
+wav/
+sherpa-onnx-*/
+*.tar.bz2
+*.m4a
+*.wav
+*.onnx
+*.onnx.txt
+
+# 本机与运行产物
+__pycache__/
+.venv/
+*.log
+*.qoder.site
+.DS_Store
+Thumbs.db
+
+# 临时与调试
+check.js
+sample*
+apple.json

@@ -1,0 +1,14 @@
+const fs = require('fs');
+const path = require('path');
+const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
+const json = JSON.stringify(data).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+const html = template.replace('/*__DATA__*/', json);
+const out1 = path.join(__dirname, '慧客堂·学习手册.html');
+fs.writeFileSync(out1, html, 'utf8');
+const cwd = process.cwd();
+const out2 = path.join(cwd, '慧客堂·学习手册.html');
+fs.writeFileSync(out2, html, 'utf8');
+console.log('written', out1, (html.length / 1024).toFixed(0) + 'KB');
+console.log('written', out2);
+console.log('episodes', data.episodes.length, 'modules', data.modules.length, 'principles', data.principles.length);

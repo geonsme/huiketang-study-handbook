@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f0e6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f5a623%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2760%27 text-anchor=%27middle%27 fill=%27%23171512%27%3E%E6%85%A7%3C/text%3E%3C/svg%3E">
+<title>慧客堂 · 学习手册｜按 Vol 与模块的播客深读</title>
+<meta name="description" content="慧客堂 111 期播客学习手册：逐字稿原文摘录、34 期核心精读、8 大模块、按 Vol 与按模块双主线。">
+<style>
+:root{
+  --paper:#fbf3e3;
+  --paper-2:#f5e5c6;
+  --card:#fff9ec;
+  --ink:#171512;
+  --ink-2:#3b3226;
+  --muted:#786b58;
+  --line:rgba(23,21,18,.15);
+  --line-strong:rgba(23,21,18,.3);
+  --orange:#f5a623;
+  --orange-2:#e18f0b;
+  --red:#a95a05;
+  --red-2:#d9860b;
+  --teal:#2b241b;
+  --gold:#8a5a1c;
+  --shadow:0 18px 44px rgba(80,50,5,.12);
+  --shadow-sm:0 7px 20px rgba(80,50,5,.08);
+  --radius:18px;
+  --serif:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  --mono:"SFMono-Regular","Cascadia Mono","Consolas",monospace;
+  --nav-h:72px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+  --paper:#15120d; --paper-2:#211a10; --card:#201a12; --ink:#fbf1dd; --ink-2:#e7d9c1;
+  --muted:#b4a58b; --line:rgba(251,241,221,.16); --line-strong:rgba(251,241,221,.3);
+  --orange:#f5a623; --orange-2:#ffc14d; --red:#ffb02e; --red-2:#ffc45c; --teal:#f2e5cc; --gold:#d9a441;
+  --shadow:0 18px 44px rgba(0,0,0,.32); --shadow-sm:0 7px 20px rgba(0,0,0,.22);
+  }
+}
+html[data-theme="light"]{
+  --paper:#fbf3e3;
+  --paper-2:#f5e5c6;
+  --card:#fff9ec;
+  --ink:#171512;
+  --ink-2:#3b3226;
+  --muted:#786b58;
+  --line:rgba(23,21,18,.15);
+  --line-strong:rgba(23,21,18,.3);
+  --orange:#f5a623;
+  --orange-2:#e18f0b;
+  --red:#a95a05;
+  --red-2:#d9860b;
+  --teal:#2b241b;
+  --gold:#8a5a1c;
+  --shadow:0 18px 44px rgba(80,50,5,.12);
+  --shadow-sm:0 7px 20px rgba(80,50,5,.08);
+  --radius:18px;
+  --serif:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  --mono:"SFMono-Regular","Cascadia Mono","Consolas",monospace;
+  --nav-h:72px;
+}
+html[data-theme="dark"]{
+  --paper:#15120d; --paper-2:#211a10; --card:#201a12; --ink:#fbf1dd; --ink-2:#e7d9c1;
+  --muted:#b4a58b; --line:rgba(251,241,221,.16); --line-strong:rgba(251,241,221,.3);
+  --orange:#f5a623; --orange-2:#ffc14d; --red:#ffb02e; --red-2:#ffc45c; --teal:#f2e5cc; --gold:#d9a441;
+  --shadow:0 18px 44px rgba(0,0,0,.32); --shadow-sm:0 7px 20px rgba(0,0,0,.22);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.72;letter-spacing:.01em;
+  background-image:
+    radial-gradient(900px 420px at 110% -8%, rgba(245,166,35,.15), transparent 60%),
+    radial-gradient(700px 380px at -10% 8%, rgba(169,90,5,.06), transparent 60%),
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(23,21,18,.012) 3px, rgba(23,21,18,.012) 4px);
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 16px);
+}
+body.sheet-open{overflow:hidden}
+::selection{background:rgba(245,166,35,.35)}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:.01em;margin:0}
+p{margin:0 0 1em}
+p:last-child{margin-bottom:0}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.small{font-size:12.5px;line-height:1.6}
+.tiny{font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.serif{font-family:var(--serif)}
+.accent{color:var(--red)}
+
+/* header */
+.app-header{
+  position:sticky;top:0;z-index:50;
+  background:var(--paper);
+  background:color-mix(in srgb, var(--paper) 84%, transparent);
+  backdrop-filter:saturate(1.2) blur(18px);-webkit-backdrop-filter:saturate(1.2) blur(18px);
+  border-bottom:1px solid transparent;transition:border-color .25s,box-shadow .25s;
+}
+.app-header.scrolled{border-bottom-color:var(--line);box-shadow:0 8px 30px rgba(40,30,15,.05)}
+.header-inner{max-width:760px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;text-decoration:none}
+.seal{
+  width:32px;height:32px;border-radius:8px;background:var(--red);color:#fff8eb;
+  display:grid;place-items:center;font-family:var(--serif);font-size:19px;line-height:1;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);flex:none;
+}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.brand-text strong{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.08em}
+.brand-text span{font-size:9.5px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.header-actions{margin-left:auto;display:flex;gap:4px}
+.icon-btn{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink-2);transition:background .2s,color .2s;
+}
+.icon-btn:hover,.icon-btn:focus-visible{background:var(--paper-2);color:var(--red)}
+.icon-btn.on{color:var(--red);background:rgba(163,58,47,.08)}
+.icon-btn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* views */
+.view{display:none}
+.view.active{display:block;animation:rise .32s ease both}
+@keyframes rise{from{opacity:.65;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);padding:30px 0 26px}
+.hero::after{
+  content:"";position:absolute;inset:auto -20% -55% 35%;height:340px;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(163,58,47,.14), transparent 70%);pointer-events:none;
+}
+.hero-cover{
+  position:absolute;right:-38px;top:-6px;width:190px;height:190px;object-fit:cover;
+  border-radius:50%;opacity:.16;filter:saturate(.75) contrast(.9);pointer-events:none;
+  mask-image:radial-gradient(circle at 50% 50%, #000 30%, transparent 70%);
+  -webkit-mask-image:radial-gradient(circle at 50% 50%, #000 30%, transparent 70%);
+}
+.hero-inner{position:relative;z-index:1}
+.eyebrow{display:flex;align-items:center;gap:8px;color:var(--red);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;margin-bottom:14px}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--red);display:block}
+.hero h1{font-size:clamp(34px,9.2vw,50px);line-height:1.16;letter-spacing:.01em;max-width:11em}
+.hero h1 em{font-style:normal;color:var(--red);position:relative;white-space:nowrap}
+.hero h1 em::after{content:"";position:absolute;left:0;right:0;bottom:.08em;height:.18em;background:rgba(163,58,47,.18);z-index:-1}
+.hero-lead{margin-top:16px;color:var(--ink-2);font-size:14.5px;max-width:34em}
+.hero-lead strong{font-weight:600;color:var(--ink)}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.hero-stat{padding:14px 8px 13px 0;border-right:1px solid var(--line)}
+.hero-stat:last-child{border-right:0;padding-left:12px}
+.hero-stat b{display:block;font-family:var(--serif);font-size:22px;font-weight:600;line-height:1;letter-spacing:-.02em}
+.hero-stat span{display:block;color:var(--muted);font-size:10.5px;margin-top:7px;letter-spacing:.06em}
+.hero-actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:600;line-height:1;
+  border:1px solid var(--line-strong);transition:transform .18s,background .2s,border-color .2s;
+}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-primary:hover{background:var(--red);border-color:var(--red)}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* sections */
+.section{padding:30px 0 4px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:16px}
+.section-head .kicker{color:var(--red);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;margin-bottom:8px}
+.section-head h2{font-size:25px;line-height:1.25}
+.section-head .sub{color:var(--muted);font-size:12.5px;margin-top:5px}
+.link-more{color:var(--red);font-size:12px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;text-decoration:none;padding-bottom:3px}
+.link-more svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+
+/* host card */
+.host-card{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--shadow-sm);overflow:hidden;
+}
+.host-card::before{content:"慧";position:absolute;right:10px;bottom:-26px;font-family:var(--serif);font-size:120px;color:rgba(163,58,47,.055);line-height:1}
+.host-top{display:flex;gap:14px;align-items:flex-start}
+.host-avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;border:1px solid var(--line);flex:none;background:var(--paper-2)}
+.host-name{font-family:var(--serif);font-size:19px;line-height:1.2}
+.host-role{color:var(--muted);font-size:11.5px;margin-top:4px}
+.host-bio{color:var(--ink-2);font-size:13px;margin-top:13px;position:relative;z-index:1}
+.host-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;position:relative;z-index:1}
+.pill{display:inline-flex;align-items:center;padding:4px 9px;border-radius:999px;background:rgba(47,93,86,.08);color:var(--teal);font-size:10.5px;letter-spacing:.03em;white-space:nowrap}
+html[data-theme="dark"] .pill{background:rgba(141,185,174,.12)}
+.pill.red{background:rgba(163,58,47,.09);color:var(--red)}
+.pill.gold{background:rgba(169,130,73,.12);color:var(--gold)}
+
+/* principles */
+.principles{border-top:1px solid var(--line)}
+.principle{
+  display:grid;grid-template-columns:42px 1fr;gap:12px;padding:15px 0;border-bottom:1px solid var(--line);
+  cursor:pointer;transition:background .2s;
+}
+.principle:hover{background:color-mix(in srgb,var(--card) 70%,transparent)}
+.principle .no{font-family:var(--serif);color:var(--red);font-size:15px;padding-top:2px}
+.principle h3{font-size:16.5px;line-height:1.35}
+.principle p{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.65}
+.principle .refs{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.ref-chip{font-size:10px;color:var(--red);border:1px solid rgba(163,58,47,.22);border-radius:999px;padding:2px 7px;background:transparent}
+.ref-chip:hover{background:rgba(163,58,47,.07)}
+
+/* howto */
+.howto{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.howto-card{border:1px solid var(--line);border-radius:14px;padding:13px;background:var(--card)}
+.howto-card b{font-family:var(--serif);font-size:12px;color:var(--red);font-weight:600}
+.howto-card h3{font-size:14px;margin-top:6px;line-height:1.35}
+.howto-card p{font-size:10.5px;color:var(--muted);line-height:1.65;margin-top:5px}
+@media (max-width:380px){.howto{grid-template-columns:1fr}.howto-card{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:start}.howto-card b{grid-row:span 2}.howto-card h3{margin-top:0}.howto-card p{grid-column:2}}
+
+/* path */
+.path-scroll{display:flex;gap:12px;overflow-x:auto;padding:2px 0 8px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.path-scroll::-webkit-scrollbar{display:none}
+.path-card{
+  flex:0 0 255px;scroll-snap-align:start;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:17px;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+}
+.path-card .stage{font-size:10px;letter-spacing:.16em;color:var(--red);font-weight:700}
+.path-card h3{font-size:18px;margin-top:6px;line-height:1.3}
+.path-card .time{font-size:10.5px;color:var(--muted);margin-top:3px}
+.path-card p{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.65}
+.path-card .eps{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}
+.path-card .ep-dot{font-size:9.5px;border:1px solid var(--line);border-radius:6px;padding:2px 6px;color:var(--ink-2)}
+.path-card::after{content:"";position:absolute;right:-22px;top:-22px;width:70px;height:70px;border-radius:50%;background:rgba(163,58,47,.06)}
+.phase-card{flex-basis:232px}
+.phase-card .stage{letter-spacing:.08em;font-size:9.5px}
+.phase-card h3{font-size:22px}
+
+/* module grid */
+.module-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.module-card{
+  position:relative;text-align:left;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:15px 14px 14px;min-height:148px;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;
+}
+.module-card:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+.module-card .mno{font-family:var(--serif);font-size:11px;color:var(--red);letter-spacing:.1em}
+.module-card h3{font-size:16.5px;line-height:1.3;margin-top:9px;max-width:9.5em}
+.module-card .msub{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+.module-card .mcount{margin-top:auto;padding-top:10px;font-size:10px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.module-card .mcount svg{width:13px;height:13px;stroke:var(--red);fill:none;stroke-width:1.8}
+.module-card::before{content:"";position:absolute;right:-26px;bottom:-30px;width:88px;height:88px;border-radius:50%;border:1px solid rgba(163,58,47,.12)}
+
+/* episode rows */
+.ep-list{display:flex;flex-direction:column;gap:8px}
+.ep-row{
+  width:100%;text-align:left;display:grid;grid-template-columns:58px 1fr;gap:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 13px;
+  transition:border-color .2s,transform .18s,box-shadow .2s;position:relative;
+}
+.ep-row:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm)}
+.ep-row:active{transform:scale(.995)}
+.ep-row .ep-label{font-family:var(--mono);font-size:10.5px;color:var(--red);letter-spacing:-.02em;padding-top:2px}
+.ep-row .ep-date{font-size:9.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+.ep-row h3{font-size:14.5px;line-height:1.45;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ep-row .ep-line{color:var(--muted);font-size:11.5px;margin-top:5px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ep-row .ep-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.ep-row .mini-tag{font-size:9.5px;color:var(--muted);background:var(--paper-2);border-radius:4px;padding:2px 6px}
+.ep-row .core-tag{font-size:9px;color:#fff8eb;background:var(--red);border-radius:4px;padding:2px 5px;letter-spacing:.04em}
+.ep-row .done-dot{position:absolute;right:10px;top:10px;width:7px;height:7px;border-radius:50%;background:var(--teal);display:none}
+.ep-row.is-done .done-dot{display:block}
+.ep-row.is-done{background:color-mix(in srgb,var(--teal) 5%,var(--card))}
+
+/* books */
+.book-scroll{display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.book-scroll::-webkit-scrollbar{display:none}
+.book-card{flex:0 0 175px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+.book-card .bt{font-family:var(--serif);font-size:13.5px;line-height:1.4}
+.book-card .bn{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.book-card .be{font-size:9.5px;color:var(--red);margin-top:8px}
+
+/* search / filters */
+.search-wrap{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:2px 0 12px}
+.search-wrap svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:1.8;flex:none}
+.search-wrap input{flex:1;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:13.5px;min-width:0;-webkit-appearance:none;appearance:none}
+.search-wrap input::-webkit-search-cancel-button,.search-wrap input::-webkit-search-decoration{display:none;-webkit-appearance:none}
+.search-wrap input::placeholder{color:var(--muted)}
+.search-clear{width:22px;height:22px;border-radius:50%;display:none;place-items:center;background:var(--paper-2);color:var(--muted);font-size:13px}
+.search-clear.show{display:grid}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);border-radius:999px;padding:6px 11px;font-size:11px;color:var(--muted);background:transparent;white-space:nowrap;transition:all .18s}
+.chip:hover{border-color:var(--line-strong);color:var(--ink)}
+.chip.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.filter-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 12px}
+.filter-count{font-size:11px;color:var(--muted)}
+.sort-btn{font-size:11px;color:var(--red);display:flex;align-items:center;gap:4px}
+.sort-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8}
+.empty{padding:50px 20px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--line);border-radius:var(--radius);margin:10px 0}
+
+/* module detail */
+.detail-top{display:flex;align-items:center;gap:10px;padding:14px 0 4px}
+.back-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);padding:6px 0}
+.back-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8}
+.module-hero{padding:16px 0 22px;border-bottom:1px solid var(--line)}
+.module-hero .mno{font-family:var(--serif);font-size:13px;color:var(--red);letter-spacing:.12em}
+.module-hero h1{font-size:clamp(29px,7.5vw,42px);line-height:1.2;margin-top:8px}
+.module-hero .msub{color:var(--muted);font-size:14px;margin-top:6px}
+.module-hero .lead{font-size:15px;color:var(--ink-2);margin-top:18px;line-height:1.8}
+.big-idea{margin-top:18px;border-left:3px solid var(--red);padding:11px 0 11px 14px;font-family:var(--serif);font-size:17px;line-height:1.55;color:var(--ink)}
+.quote-card{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;position:relative}
+.quote-card .q{font-family:var(--serif);font-size:17px;line-height:1.6}
+.quote-card .src{font-size:10.5px;color:var(--muted);margin-top:8px;letter-spacing:.06em}
+.module-body{padding-top:8px}
+.module-section{padding:20px 0;border-bottom:1px solid var(--line)}
+.module-section h2{font-size:20px;line-height:1.35;margin-bottom:10px}
+.module-section p{font-size:14px;color:var(--ink-2);line-height:1.85}
+.case-grid{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.case-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.case-card h3{font-size:14.5px;line-height:1.4}
+.case-card p{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.7}
+.case-card .case-ep{font-size:10px;color:var(--red);margin-top:8px}
+.action-list{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:9px}
+.action-list li{display:grid;grid-template-columns:18px 1fr;gap:9px;font-size:13px;color:var(--ink-2);line-height:1.65}
+.action-list .box{width:16px;height:16px;border:1px solid var(--line-strong);border-radius:4px;margin-top:3px}
+.related-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.next-module{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:24px 0 8px;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--card)}
+.next-module .nm-k{font-size:10px;color:var(--muted);letter-spacing:.12em}
+.next-module .nm-t{font-family:var(--serif);font-size:17px;margin-top:3px}
+.next-module svg{width:20px;height:20px;stroke:var(--red);fill:none;stroke-width:1.8;flex:none}
+
+/* me */
+.profile-head{padding:22px 0 18px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center}
+.ring-wrap{position:relative;width:86px;height:86px;flex:none}
+.ring-wrap svg{width:86px;height:86px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--line);stroke-width:5}
+.ring-fg{fill:none;stroke:var(--red);stroke-width:5;stroke-linecap:round;transition:stroke-dasharray .5s ease}
+.ring-text{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}
+.ring-text b{font-family:var(--serif);font-size:20px;font-weight:600}
+.ring-text span{font-size:9px;color:var(--muted);display:block;margin-top:2px}
+.profile-head h1{font-size:23px}
+.profile-head p{font-size:12px;color:var(--muted);margin-top:4px}
+.me-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.me-stat{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+.me-stat b{font-family:var(--serif);font-size:20px;display:block;line-height:1}
+.me-stat span{font-size:10px;color:var(--muted);display:block;margin-top:5px}
+.me-section{margin-top:22px}
+.me-section h2{font-size:18px;margin-bottom:10px}
+.note-item{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card);margin-bottom:7px}
+.note-item .nt{font-size:12.5px;font-weight:600;line-height:1.45}
+.note-item .nn{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note-item .ne{font-size:9.5px;color:var(--red);margin-top:7px}
+.empty-mini{font-size:12px;color:var(--muted);padding:14px;border:1px dashed var(--line);border-radius:12px;text-align:center}
+.about-card{border:1px solid var(--line);border-radius:var(--radius);padding:16px;background:var(--card);font-size:12px;color:var(--muted);line-height:1.8}
+.about-card strong{color:var(--ink)}
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.danger{color:var(--red);border-color:rgba(163,58,47,.3)}
+details.glossary{border-top:1px solid var(--line)}
+details.glossary summary{list-style:none;cursor:pointer;padding:12px 0;display:flex;align-items:center;justify-content:space-between;font-size:13px}
+details.glossary summary::-webkit-details-marker{display:none}
+details.glossary summary::after{content:"+";font-size:16px;color:var(--red)}
+details.glossary[open] summary::after{content:"–"}
+.gloss-item{padding:0 0 11px;font-size:12px;color:var(--muted);line-height:1.7}
+.gloss-item b{color:var(--ink);font-family:var(--mono);font-size:11.5px;font-weight:600;margin-right:5px}
+
+/* sheet */
+.sheet{
+  position:fixed;inset:0;z-index:100;background:var(--paper);overflow-y:auto;overscroll-behavior:contain;
+  transform:translateY(100%);transition:transform .34s cubic-bezier(.2,.75,.25,1);visibility:hidden;
+}
+.sheet.open{transform:none;visibility:visible}
+.sheet-header{
+  position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px;
+  padding:12px 16px;background:var(--paper);
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);
+}
+.sheet-header .sh-label{font-family:var(--mono);font-size:10.5px;color:var(--red);letter-spacing:.02em}
+.sheet-header .sh-actions{margin-left:auto;display:flex;gap:2px}
+.sheet-content{max-width:720px;margin:0 auto;padding:20px 18px 60px}
+.sheet-kicker{font-size:10px;letter-spacing:.16em;color:var(--red);text-transform:uppercase;font-weight:700}
+.sheet-title{font-size:clamp(25px,6.5vw,34px);line-height:1.28;margin-top:8px}
+.sheet-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:10.5px;color:var(--muted)}
+.sheet-line{font-size:14px;color:var(--ink-2);line-height:1.8;margin-top:16px;padding-left:13px;border-left:2px solid var(--red)}
+.ep-note{margin-top:14px;padding:10px 12px;border-radius:10px;background:rgba(169,130,73,.09);border:1px solid rgba(169,130,73,.2);color:var(--ink-2);font-size:11.5px;line-height:1.7}
+.sheet-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.sheet-toolbar{display:flex;gap:8px;margin-top:18px}
+.tool-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-size:11.5px;color:var(--muted);background:var(--card);transition:all .18s}
+.tool-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tool-btn.on{color:var(--red);border-color:rgba(163,58,47,.35);background:rgba(163,58,47,.06)}
+.sheet-section{margin-top:26px;padding-top:20px;border-top:1px solid var(--line)}
+.sheet-section h2{font-size:19px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sheet-section h2 .idx{font-family:var(--mono);font-size:10px;color:var(--red);font-weight:400}
+.points{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.points li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:13.5px;line-height:1.75;color:var(--ink-2)}
+.points .pno{font-family:var(--serif);color:var(--red);font-size:13px;padding-top:1px}
+.chapter-list{display:flex;flex-direction:column}
+.chapter{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.6}
+.chapter:last-child{border-bottom:0}
+.chapter .ct{font-family:var(--mono);font-size:10.5px;color:var(--red);padding-top:2px}
+.chapter .cx{color:var(--ink-2)}
+details.notes-block{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}
+details.notes-block summary{list-style:none;cursor:pointer;padding:13px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12.5px;font-weight:600}
+details.notes-block summary::-webkit-details-marker{display:none}
+details.notes-block summary::after{content:"+";color:var(--red);font-size:16px;font-weight:400}
+details.notes-block[open] summary::after{content:"–"}
+.notes-body{padding:0 14px 16px;border-top:1px solid var(--line);padding-top:13px}
+.notes-body p{font-size:12.5px;line-height:1.85;color:var(--ink-2);margin:0 0 .8em}
+.notes-body p:last-child{margin-bottom:0}
+.note-editor{margin-top:10px}
+.note-editor textarea{
+  width:100%;min-height:110px;resize:vertical;border:1px solid var(--line);border-radius:12px;
+  background:var(--card);color:var(--ink);padding:12px;font:inherit;font-size:13px;line-height:1.7;outline:none;
+}
+.note-editor textarea:focus{border-color:rgba(163,58,47,.45);box-shadow:0 0 0 3px rgba(163,58,47,.08)}
+.note-status{font-size:10px;color:var(--muted);margin-top:6px;height:14px}
+.sheet-footer{display:flex;flex-direction:column;gap:10px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.listen-link{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:12px;background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;text-decoration:none}
+.listen-link svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
+.source-note{font-size:10.5px;color:var(--muted);line-height:1.7;margin-top:12px}
+
+/* bottom nav */
+.bottom-nav{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:60;
+  width:100%;max-width:760px;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding:7px 12px env(safe-area-inset-bottom);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  background:var(--paper);
+  background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:saturate(1.2) blur(18px);-webkit-backdrop-filter:saturate(1.2) blur(18px);
+  border-top:1px solid var(--line);
+}
+.nav-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-radius:12px;color:var(--muted);font-size:9.5px;letter-spacing:.08em;transition:color .2s,background .2s}
+.nav-item svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.active{color:var(--red);background:rgba(163,58,47,.055)}
+.nav-item.active svg{stroke-width:1.9}
+
+/* toast */
+.toast{
+  position:fixed;left:50%;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 18px);transform:translate(-50%,12px);
+  background:var(--ink);color:var(--paper);font-size:12px;padding:9px 15px;border-radius:999px;z-index:200;
+  opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:var(--shadow);white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* desktop */
+@media (min-width:720px){
+  body{font-size:15.5px}
+  .wrap{padding:0 28px}
+  .header-inner{padding:14px 28px}
+  .hero{padding:42px 0 34px}
+  .hero h1{font-size:54px}
+  .hero-cover{width:280px;height:280px;right:0;top:10px;opacity:.2}
+  .module-grid{grid-template-columns:repeat(4,1fr)}
+  .module-card{min-height:170px}
+  .related-grid{grid-template-columns:repeat(3,1fr)}
+  .sheet-content{padding:30px 28px 80px}
+  .home-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:start}
+}
+@media (max-width:380px){
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .hero-stat:nth-child(2){border-right:0}
+  .hero-stat:nth-child(n+3){border-top:1px solid var(--line)}
+  .module-grid{grid-template-columns:1fr}
+  .related-grid{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{
+  .app-header,.bottom-nav,.toast,.sheet,.hero-actions,.search-wrap,.chips{display:none!important}
+  body{background:#fff;color:#000;padding:0}
+  .view{display:block!important}
+  .view:not(.active){display:none!important}
+  .module-card,.ep-row,.host-card{box-shadow:none}
+}
+
+/* ===== v2: 播客封面同色系（橙 / 墨黑 / 奶油） ===== */
+:root{--nav-bg:#171512;--hero-ink:#171512;--hero-ink-soft:#4a3a20;}
+html[data-theme="dark"]{--nav-bg:#0d0b08;--hero-ink:#171512;--hero-ink-soft:#4a3a20;}
+.brand-logo{width:38px;height:38px;border-radius:10px;border:1.5px solid var(--ink);box-shadow:3px 3px 0 var(--ink);object-fit:cover;flex:none;background:var(--orange)}
+.brand-text strong{font-size:17px;letter-spacing:.12em}
+.brand-text span{text-transform:none;letter-spacing:.08em;font-size:9px}
+.app-header{border-bottom:1px solid var(--ink)}
+.app-header.scrolled{box-shadow:0 5px 0 rgba(245,166,35,.22)}
+.icon-btn:hover,.icon-btn:focus-visible{background:var(--orange);color:var(--ink)}
+.icon-btn.on{color:var(--red);background:rgba(245,166,35,.2)}
+.hero{background:var(--orange);border-bottom:3px solid var(--ink);color:var(--hero-ink);padding:28px 0 24px}
+.hero::after{inset:0;height:auto;border-radius:0;background:
+  radial-gradient(circle at 1px 1px, rgba(23,21,18,.13) 1px, transparent 1.4px) 0 0/14px 14px;
+  opacity:.55;pointer-events:none;mix-blend-mode:multiply}
+.hero-cover{position:absolute;right:18px;top:30px;width:104px;height:104px;object-fit:cover;border-radius:16px;
+  border:2px solid var(--hero-ink);box-shadow:5px 5px 0 var(--hero-ink);opacity:1;filter:none;
+  mask-image:none;-webkit-mask-image:none;transform:rotate(2deg);z-index:2}
+.hero .eyebrow{color:var(--hero-ink);max-width:calc(100% - 126px)}
+.hero .eyebrow::before{background:var(--hero-ink)}
+.hero h1{color:var(--hero-ink);max-width:calc(100% - 122px);font-size:clamp(32px,8.8vw,52px)}
+.hero h1 em{color:#171512;background:#fbf3e3;padding:0 .08em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.hero h1 em::after{display:none}
+.hero-lead{color:var(--hero-ink-soft);max-width:calc(100% - 10px)}
+.hero-lead strong{color:var(--hero-ink)}
+.hero-stats{border-color:rgba(23,21,18,.4);margin-top:20px}
+.hero-stat{border-color:rgba(23,21,18,.28)}
+.hero-stat b{color:var(--hero-ink)}
+.hero-stat span{color:var(--hero-ink-soft)}
+.hero .btn-primary{background:var(--hero-ink);color:#fbf3e3;border-color:var(--hero-ink)}
+.hero .btn-primary:hover{background:var(--paper);color:var(--hero-ink);border-color:var(--hero-ink)}
+.hero .btn-ghost{border-color:rgba(23,21,18,.55);color:var(--hero-ink)}
+.hero .btn-ghost:hover{border-color:var(--hero-ink);color:var(--hero-ink);background:rgba(255,249,236,.45)}
+.hero-actions .btn{box-shadow:2px 2px 0 rgba(23,21,18,.2)}
+.host-card,.path-card,.module-card,.ep-row,.book-card,.about-card,.quote-card,.case-card,.me-stat,.note-item,.next-module{box-shadow:3px 3px 0 rgba(23,21,18,.07)}
+.module-card:hover,.ep-row:hover{border-color:var(--ink);box-shadow:5px 5px 0 rgba(245,166,35,.25);transform:translateY(-1px)}
+.module-card .mno,.section-head .kicker,.path-card .stage,.module-hero .mno{color:var(--red)}
+.module-card::before{border-color:rgba(169,90,5,.18)}
+.pill{background:rgba(245,166,35,.16);color:#7a4a05}
+.pill.red{background:var(--orange);color:#271b0a}
+.pill.gold{background:rgba(169,90,5,.13);color:var(--gold)}
+.core-tag{background:var(--orange);color:#241a0a;font-weight:700}
+.ep-row .ep-label{color:var(--red);font-weight:700}
+.ep-row .ep-date{color:var(--muted)}
+.ep-row .mini-tag{background:var(--paper-2)}
+.ep-row .done-dot{background:var(--red)}
+.ep-row.is-done{background:color-mix(in srgb,var(--orange) 9%,var(--card))}
+.chip.active{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.chip:hover{border-color:var(--red);color:var(--red)}
+.search-wrap{border-color:var(--line-strong)}
+.search-wrap:focus-within{border-color:var(--red);box-shadow:0 0 0 3px rgba(245,166,35,.14)}
+.btn-primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-primary:hover{background:var(--orange);border-color:var(--orange);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--red);color:var(--red);background:rgba(245,166,35,.08)}
+.bottom-nav{background:var(--nav-bg);border-top:2px solid var(--orange);backdrop-filter:none;-webkit-backdrop-filter:none}
+.nav-item{color:rgba(251,241,221,.62)}
+.nav-item.active{color:var(--orange);background:rgba(245,166,35,.14)}
+.nav-item.active svg{stroke:var(--orange)}
+.toast{background:var(--orange);color:var(--hero-ink);font-weight:600}
+.sheet-header{background:var(--orange);border-bottom:2px solid var(--ink)}
+.sheet-header .sh-label{color:var(--hero-ink);font-weight:700}
+.sheet-header .icon-btn{color:var(--hero-ink)}
+.sheet-header .icon-btn:hover{background:rgba(23,21,18,.12);color:var(--hero-ink)}
+.sheet-kicker,.sheet-section h2 .idx{color:var(--red)}
+.sheet-line{border-left-color:var(--orange)}
+.sheet-toolbar .tool-btn.on{color:#7a4a05;border-color:rgba(169,90,5,.4);background:rgba(245,166,35,.16)}
+.notes-block summary::after{color:var(--red)}
+.listen-link{background:var(--ink);color:var(--paper)}
+.listen-link:hover{background:var(--orange);color:var(--ink)}
+@media (max-width:420px){
+  .hero-cover{position:static;width:84px;height:84px;margin:0 0 14px;transform:rotate(-2deg)}
+  .hero .eyebrow,.hero h1{max-width:100%}
+  .hero h1{font-size:clamp(30px,9.6vw,38px)}
+  .hero-lead{font-size:13px}
+}
+@media (min-width:720px){
+  .hero-cover{width:156px;height:156px;right:28px;top:34px}
+  .hero h1{max-width:calc(100% - 180px)}
+  .hero .eyebrow{max-width:calc(100% - 186px)}
+}
+
+
+/* ===== Vol 精读页 ===== */
+.vol-hero{padding:18px 0 22px;border-bottom:3px solid var(--ink)}
+.vol-hero .vol-kicker{display:flex;align-items:center;gap:8px;font-size:10px;letter-spacing:.16em;color:var(--red);font-weight:700}
+.vol-hero .vol-kicker .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);display:inline-block}
+.vol-hero h1{font-size:clamp(27px,7vw,40px);line-height:1.28;margin-top:9px}
+.vol-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:10.5px;color:var(--muted)}
+.vol-meta .core-tag{font-size:9px}
+.vol-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.vol-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.vol-line{margin-top:18px;background:var(--orange);color:var(--hero-ink);border:2px solid var(--ink);border-radius:14px;padding:14px 15px;font-family:var(--serif);font-size:16px;line-height:1.65;box-shadow:4px 4px 0 rgba(23,21,18,.14)}
+.vol-line .vl-k{display:block;font-family:var(--sans);font-size:9.5px;letter-spacing:.16em;font-weight:700;margin-bottom:6px;opacity:.72}
+.vol-body{padding-top:6px}
+.vol-section{padding:22px 0;border-bottom:1px solid var(--line)}
+.vol-section h2{font-size:20px;line-height:1.35;display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.vol-section h2 .num{font-family:var(--mono);font-size:10px;color:var(--red);font-weight:400;letter-spacing:.08em}
+.vol-section .lead-note{font-size:11px;color:var(--muted);line-height:1.7;margin:-4px 0 12px}
+.excerpt{display:grid;grid-template-columns:56px 1fr;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
+.excerpt:last-child{border-bottom:0}
+.excerpt .ex-time{font-family:var(--mono);font-size:10px;color:var(--red);padding-top:3px}
+.excerpt p{font-size:13px;line-height:1.8;color:var(--ink-2);margin:0}
+.excerpt .ex-note{font-size:10.5px;color:var(--muted);margin-top:5px}
+.analysis-box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px}
+.analysis-box h3{font-size:14px;margin-bottom:6px}
+.analysis-box p{font-size:12.5px;line-height:1.8;color:var(--ink-2)}
+.analysis-box ul{margin:0;padding-left:18px;font-size:12.5px;line-height:1.8;color:var(--ink-2)}
+.analysis-box li{margin-bottom:6px}
+.transcript-tools{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.transcript-tools input{flex:1;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);padding:8px 10px;font:inherit;font-size:11.5px;outline:none}
+.transcript-tools input:focus{border-color:var(--red)}
+.transcript-tools button{border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:10.5px;color:var(--red);background:var(--card);white-space:nowrap}
+.tr-chunk{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.75}
+.tr-chunk:last-child{border-bottom:0}
+.tr-chunk .tr-time{font-family:var(--mono);font-size:10px;color:var(--red);padding-top:3px}
+.tr-chunk p{margin:0;color:var(--ink-2)}
+.tr-empty{font-size:12px;color:var(--muted);padding:14px;border:1px dashed var(--line);border-radius:11px;text-align:center}
+.vol-year{display:flex;align-items:center;gap:10px;margin:22px 0 9px;padding-bottom:7px;border-bottom:2px solid var(--ink)}
+.vol-year b{font-family:var(--serif);font-size:22px;line-height:1}
+.vol-year span{font-size:10px;color:var(--muted);letter-spacing:.1em}
+.vol-year em{margin-left:auto;font-style:normal;font-size:10px;color:var(--red)}
+.ep-row .tr-badge{font-size:9px;color:#7a4a05;background:rgba(245,166,35,.18);border-radius:4px;padding:2px 5px}
+.ep-row .tr-badge.pending{color:var(--muted);background:var(--paper-2)}
+
+
+.tr-status{display:inline-flex;align-items:center;gap:7px;margin-top:14px;font-size:10.5px;color:var(--hero-ink-soft);background:rgba(255,249,236,.42);border:1px solid rgba(23,21,18,.22);border-radius:999px;padding:5px 10px}
+.tr-dot{width:6px;height:6px;border-radius:50%;background:var(--hero-ink);display:inline-block;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+
+.module-quote{display:grid;grid-template-columns:54px 1fr;gap:11px;width:100%;text-align:left;padding:12px 0;border-bottom:1px dashed var(--line);background:none}
+.module-quote:last-child{border-bottom:0}
+.module-quote:hover .mq-text{color:var(--red)}
+.mq-time{font-family:var(--mono);font-size:10px;color:var(--red);padding-top:3px}
+.mq-body{display:flex;flex-direction:column;gap:5px}
+.mq-text{font-family:var(--serif);font-size:15px;line-height:1.65;color:var(--ink)}
+.mq-src{font-size:9.5px;color:var(--muted);letter-spacing:.04em}
+
+
+/* 荧光笔重点句：主题橙，80% 透明 */
+mark.hl{
+  background:linear-gradient(180deg,transparent 10%,rgba(245,166,35,.20) 10%,rgba(245,166,35,.20) 93%,transparent 93%);
+  color:inherit;padding:0 .10em;margin:0 -.02em;border-radius:2px;
+  box-decoration-break:clone;-webkit-box-decoration-break:clone;
+}
+html[data-theme="dark"] mark.hl{
+  background:linear-gradient(180deg,transparent 10%,rgba(255,193,77,.22) 10%,rgba(255,193,77,.22) 93%,transparent 93%);
+}
+
+
+/* ===== 精读主页 ===== */
+.picks-section{padding-top:26px}
+.picks{border-top:1px solid var(--line)}
+.pick-item{display:grid;grid-template-columns:38px 1fr 16px;gap:10px;width:100%;text-align:left;padding:14px 0;border-bottom:1px solid var(--line);background:none;transition:background .2s}
+.pick-item:last-child{border-bottom:0}
+.pick-item:hover{background:rgba(245,166,35,.06)}
+.pick-no{font-family:var(--serif);font-size:16px;color:var(--red);padding-top:2px}
+.pick-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.pick-top{display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--muted)}
+.pick-vol{font-family:var(--mono);color:var(--red);font-weight:700}
+.pick-title{font-family:var(--serif);font-size:16px;line-height:1.35;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pick-reason{font-size:11.5px;color:var(--muted);line-height:1.65}
+.pick-reason b{color:var(--red);font-weight:600;margin-right:6px}
+.pick-core{display:flex;gap:5px;flex-wrap:wrap;margin-top:2px}
+.pick-core span{font-size:9.5px;background:rgba(245,166,35,.14);border:1px solid rgba(245,166,35,.22);color:#7a4a05;border-radius:4px;padding:2px 5px}
+html[data-theme="dark"] .pick-core span{color:#ffc45c;background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.2)}
+.pick-arrow{font-size:16px;color:var(--red);align-self:center}
+.picks-foot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px}
+.picks-foot .btn{padding:9px 14px;font-size:12px}
+.picks-foot span{font-size:10.5px;color:var(--muted);line-height:1.6;flex:1;min-width:180px}
+.two-ways{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.way-card{text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:5px;box-shadow:3px 3px 0 rgba(23,21,18,.06)}
+.way-card:hover{border-color:var(--ink);box-shadow:5px 5px 0 rgba(245,166,35,.22)}
+.way-no{font-family:var(--serif);font-size:30px;line-height:1;color:var(--orange)}
+.way-title{font-family:var(--serif);font-size:19px;color:var(--ink)}
+.way-desc{font-size:11px;color:var(--muted);line-height:1.65}
+.way-go{margin-top:auto;padding-top:10px;font-size:10.5px;color:var(--red)}
+.host-mini{display:flex;align-items:center;gap:13px;border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--card);box-shadow:3px 3px 0 rgba(23,21,18,.06)}
+.host-mini img{width:52px;height:52px;border-radius:12px;border:1px solid var(--ink);flex:none;object-fit:cover}
+.host-mini-main{min-width:0}
+.hm-name{font-family:var(--serif);font-size:17px}
+.hm-name span{font-family:var(--sans);font-size:10px;color:var(--muted)}
+.hm-role{font-size:10px;color:var(--muted);margin-top:2px}
+.host-mini-main p{font-size:11px;color:var(--muted);line-height:1.6;margin-top:5px}
+.hm-more{margin-left:auto;font-size:10.5px;color:var(--red);white-space:nowrap;align-self:flex-start;padding-top:2px}
+.home-note{border-top:1px solid var(--line);padding-top:14px;font-size:10.5px;color:var(--muted);line-height:1.75}
+.home-note b{color:var(--red);font-weight:600}
+.home-note-links{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+.home-note-links button,.home-note-links a{font-size:10.5px;color:var(--red);text-decoration:none}
+@media (max-width:420px){.picks-section .section-head{display:block}.picks-section .link-more{margin-top:8px}.pick-item{grid-template-columns:30px 1fr 14px;gap:8px}.pick-title{font-size:15px}.two-ways{grid-template-columns:1fr}.way-no{font-size:26px}.host-mini{align-items:flex-start}.hm-more{display:none}}
+
+</style>
+</head>
+<body>
+<header class="app-header" id="appHeader">
+  <div class="header-inner">
+    <a class="brand" href="#/home" aria-label="回到总览">
+      <img class="brand-logo" src="__LOGO__" alt="慧客堂 logo">
+      <span class="brand-text"><strong>慧客堂</strong><span>播客学习手册</span></span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchJump" aria-label="搜索节目">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </button>
+      <button class="icon-btn" id="themeToggle" aria-label="切换深浅色">
+        <svg id="themeIcon" viewBox="0 0 24 24"><path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path><circle cx="12" cy="12" r="4"></circle></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="view active" id="view-home"></section>
+  <section class="view" id="view-modules"></section>
+  <section class="view" id="view-module"></section>
+  <section class="view" id="view-episodes"></section>
+  <section class="view" id="view-vol"></section>
+  <section class="view" id="view-me"></section>
+</main>
+
+<nav class="bottom-nav" aria-label="主导航">
+  <button class="nav-item active" data-nav="home">
+    <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"></path></svg>
+    <span>总览</span>
+  </button>
+  <button class="nav-item" data-nav="modules">
+    <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>
+    <span>按模块</span>
+  </button>
+  <button class="nav-item" data-nav="episodes">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+    <span>按 Vol</span>
+  </button>
+  <button class="nav-item" data-nav="me">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+    <span>我的</span>
+  </button>
+</nav>
+
+<div class="sheet" id="episodeSheet" role="dialog" aria-modal="true" aria-label="节目详情">
+  <div class="sheet-header">
+    <button class="icon-btn" id="closeSheet" aria-label="关闭">
+      <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+    </button>
+    <span class="sh-label" id="sheetLabel">节目详情</span>
+    <div class="sh-actions">
+      <button class="icon-btn" id="sheetDone" aria-label="标记已学">
+        <svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>
+      </button>
+      <button class="icon-btn" id="sheetSave" aria-label="收藏">
+        <svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>
+      </button>
+    </div>
+  </div>
+  <div class="sheet-content" id="sheetContent"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = /*__DATA__*/;
+const STORE_KEY = 'hkt-handbook-v1';
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const byId = Object.fromEntries(DATA.episodes.map(e => [e.n, e]));
+const modById = Object.fromEntries(DATA.modules.map(m => [m.id, m]));
+const pad = n => String(n).padStart(2,'0');
+
+let state = { done:{}, saved:{}, notes:{}, theme:null };
+try { state = Object.assign(state, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch(e) {}
+if (state.theme) document.documentElement.dataset.theme = state.theme;
+else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+
+function saveState(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch(e){} }
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('show'), 1700);
+}
+function epTitle(e){ return e.title.replace(/^(?:Vol\.|V)\d+[.、\s]*/i,'').trim(); }
+function shortTitle(e, len=30){ const t = epTitle(e); return t.length > len ? t.slice(0,len)+'…' : t; }
+function durText(e){
+  const s = e.seconds; const h = Math.floor(s/3600), m = Math.round((s%3600)/60);
+  return h ? `${h} 小时 ${m} 分` : `${m} 分钟`;
+}
+function epMeta(e){ return `${e.date} · ${durText(e)}${e.chapters.length ? ' · '+e.chapters.length+' 个章节' : ''}`; }
+function fmtTime(sec){ sec=Math.max(0,Math.floor(sec||0)); const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s2=sec%60; return h?`${h}:${String(m).padStart(2,'0')}:${String(s2).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s2).padStart(2,'0')}`; }
+function doneCount(){ return Object.keys(state.done).filter(k=>state.done[k]).length; }
+function savedCount(){ return Object.keys(state.saved).filter(k=>state.saved[k]).length; }
+function noteCount(){ return Object.values(state.notes).filter(v=>v && v.trim()).length; }
+function epHref(e){ return e.link || DATA.podcast.url; }
+function moduleName(id){ return modById[id]?.title || ''; }
+function modEpCount(id){ return DATA.episodes.filter(e=>(e.mods||[]).includes(id)).length; }
+function modLabel(e){ return (e.mods||[]).map(moduleName).filter(Boolean).slice(0,2); }
+function tagPills(tags, cls=''){ return (tags||[]).map(t=>`<span class="pill ${cls}">${esc(t)}</span>`).join(''); }
+function refChips(eps, max=3){ return (eps||[]).slice(0,max).map(n=>byId[n]?`<button class="ref-chip" data-ep="${n}">${esc(byId[n].label)}</button>`:'').join(''); }
+
+/* ---------- highlighter ---------- */
+const HL_WORDS = ['投资','资产','风险','收益','配置','周期','基金','市场','财富','选择','长期','安全','自由','现金','杠杆','回撤','价值','价格','认知','信息','家庭','健康','时间','能力','边界','概率','结构','复利','本质','系统','信任','情绪','目标','成本','策略'];
+function hlScore(s){
+  let v = 0;
+  for (const w of HL_WORDS) if (s.includes(w)) v += 1.2;
+  if (s.length >= 18 && s.length <= 82) v += 1;
+  if (/本质|关键|最重要|不是|而是|所以|因此|真正|其实|必须|不要|应该|只有|才能|长期|复利/.test(s)) v += 1.2;
+  if (/[0-9]/.test(s)) v += .2;
+  if (/^(这一期|今天|我们|大家|首先|然后|那么|但是)/.test(s)) v -= .7;
+  if (/[？?]$/.test(s)) v -= .2;
+  return v;
+}
+function hlPick(text){
+  const parts = (text || '').match(/[^。！？；!?;\n]+[。！？；!?;]?/g) || [];
+  let best = null;
+  for (const raw of parts){
+    const s = raw.trim();
+    if (s.length < 12 || s.length > 100) continue;
+    const sc = hlScore(s);
+    if (!best || sc > best.score) best = { sentence: s, score: sc };
+  }
+  if (best && best.score > 0) return best;
+  for (const raw of parts){
+    const s = raw.trim();
+    if (s.length >= 10) return { sentence: s, score: 0 };
+  }
+  return null;
+}
+function hlWrap(el, sentence){
+  if (!el || el.querySelector('mark.hl')) return;
+  const text = el.textContent || '';
+  const idx = text.indexOf(sentence);
+  if (idx < 0) return;
+  el.innerHTML = esc(text.slice(0, idx)) + '<mark class="hl">' + esc(sentence) + '</mark>' + esc(text.slice(idx + sentence.length));
+}
+function applyHighlights(root){
+  if (!root) return;
+  root.querySelectorAll('.excerpt p, .module-quote .mq-text, .principle p').forEach(el=>{
+    const pick = hlPick(el.textContent);
+    if (pick) hlWrap(el, pick.sentence);
+  });
+  root.querySelectorAll('.analysis-box, .module-section').forEach(box=>{
+    const ps = [...box.querySelectorAll(':scope > p')];
+    let best = null, bestEl = null;
+    for (const p of ps){
+      const pick = hlPick(p.textContent);
+      if (pick && (!best || pick.score > best.score)) { best = pick; bestEl = p; }
+    }
+    if (bestEl) hlWrap(bestEl, best.sentence);
+  });
+}
+
+/* ---------- home ---------- */
+function renderHome(){
+  const p = DATA.podcast;
+  const picks = [
+    { n: 2, reason: '这一期，我先建立投资世界观：承认看不懂、识别立场偏差，再按资金期限选择打法。', core: ['看不懂', '立场偏差', '资金属性'] },
+    { n: 5, reason: '这一期，我从《再见爱人》聊到信托：家庭财富不是买产品，而是把“我想照顾谁”写进安排里。', core: ['家庭工具箱', '信托', '传承'] },
+    { n: 15, reason: '我用 21 年买方经历讲我为什么选 FOF：越微观越算法，越宏观越人脑。', core: ['FOF', '方法论多样性', '敬畏'] },
+    { n: 26, reason: '这一期，我把黄金、商品、CTA 与危机 Alpha 一次讲清，也讲清它们什么时候失效。', core: ['商品定价', '危机 Alpha', 'CTA'] },
+    { n: 27, reason: '这一期，我教你分清 Beta 与 Alpha，用四问拆指数、指增与 ETF。', core: ['宽基', '指增', '跟踪误差'] },
+    { n: 43, reason: '这一期，我复盘上半年并给出下半年配置：低利率下别信 5%-6% 的“无风险”。', core: ['微观年', '拥挤度', '哑铃'] },
+    { n: 60, reason: '这一期，我讲周期：它是地图不是时钟，普通人只需要“模糊的准确”。', core: ['周期嵌套', '情绪钟摆', '打分表'] },
+    { n: 71, reason: '这一期，我用“往外看 / 往内看”两只眼睛，搭一个 2026 年睡得踏实的组合。', core: ['世界叙事', '机构行为', '财富地图'] },
+    { n: 97, reason: '这一期，我请韭菜之王复盘十年踩坑：合同、结构、利益一致性比明星项目重要。', core: ['股权份额', '工商变更', '双录'] },
+    { n: 106, reason: '这一期，我请两位嘉宾讲两种人生、四层资产：以支定收，先算下限，再谈自由。', core: ['四层资产', '以支定收', '现金流'] },
+  ];
+
+  $('#view-home').innerHTML = `
+  <div class="hero">
+    <img class="hero-cover" src="__LOGO__" alt="慧客堂封面">
+    <div class="wrap hero-inner">
+      <div class="eyebrow">播客学习手册 · ${p.firstDate} — ${p.lastDate}</div>
+      <h1>把「慧客堂」<br>读成一本<br><em>人生的资产配置书</em></h1>
+      <p class="hero-lead"><strong>${p.count} 期，${p.hours} 小时。</strong>我先带你读 10 期精华，建立投资、配置与人生的框架；想深入时，再按 Vol 或模块回到原声。</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><b>${p.count}</b><span>期节目</span></div>
+        <div class="hero-stat"><b>${p.hours}</b><span>小时音频</span></div>
+        <div class="hero-stat"><b>${DATA.podcast.transcriptWan || 0}</b><span>万字逐字稿</span></div>
+        <div class="hero-stat"><b>${DATA.episodes.filter(e=>e.core).length}</b><span>期精读</span></div>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-scroll="picks">开始精读 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        <button class="btn btn-ghost" data-go="episodes">按 Vol 浏览</button>
+      </div>
+      <div class="tr-status"><span class="tr-dot"></span>逐字稿 ${DATA.podcast.transcribedCount || 0}/111 期已转写 · ${DATA.podcast.transcriptWan || 0} 万字原文</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section class="section picks-section" id="picks">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Quick Start</div>
+          <h2>10 期精读，先读精华</h2>
+          <div class="sub">每期只留一句“为什么读”和三个核心词；读完再回原声。</div>
+        </div>
+        <button class="link-more" data-epfilter="core">34 期精读 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+      </div>
+      <div class="picks">
+        ${picks.map((x, i) => {
+          const e = byId[x.n];
+          if (!e) return '';
+          return `<button class="pick-item" data-ep="${e.n}">
+            <span class="pick-no">${pad(i + 1)}</span>
+            <span class="pick-main">
+              <span class="pick-top"><span class="pick-vol">${esc(e.label)}</span><span class="pick-dur">${durText(e)}</span>${e.core ? '<span class="core-tag">精读</span>' : ''}</span>
+              <span class="pick-title">${esc(shortTitle(e, 34))}</span>
+              <span class="pick-reason"><b>为什么读</b>${esc(x.reason)}</span>
+              <span class="pick-core">${x.core.map(c => `<span>${esc(c)}</span>`).join('')}</span>
+            </span>
+            <span class="pick-arrow">→</span>
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="picks-foot">
+        <button class="btn btn-ghost" data-epfilter="all">查看全部 111 期</button>
+        <span>覆盖投资世界观、家庭财富、FOF、商品、指数、周期、配置、踩坑与人生。</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><div><div class="kicker">Two Ways</div><h2>接下来怎么读</h2><div class="sub">按时间，或按主题；两条路都能回到同一份原文。</div></div></div>
+      <div class="two-ways">
+        <button class="way-card" data-go="episodes">
+          <span class="way-no">111</span>
+          <span class="way-title">按 Vol</span>
+          <span class="way-desc">从 2024.10 开篇到 V110，按时间读完整 111 期。</span>
+          <span class="way-go">进入时间线 →</span>
+        </button>
+        <button class="way-card" data-go="modules">
+          <span class="way-no">08</span>
+          <span class="way-title">按模块</span>
+          <span class="way-desc">风险、配置、产品、周期、人生、读书、案例、方法，八个主题框架。</span>
+          <span class="way-go">进入模块 →</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="host-mini">
+        <img src="__LOGO__" alt="慧客堂封面">
+        <div class="host-mini-main">
+          <div class="hm-name">我是董艺婷 <span>主播</span></div>
+          <div class="hm-role">21 年买方投资 · 量化 FOF 管理人</div>
+          <p>真话是态度，减法是选择。我用这个节目聊投资，也聊家庭、健康、读书与中年重启。</p>
+        </div>
+        <button class="hm-more" data-go="modules">我的方法 →</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="home-note">
+        <b>全量版</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成分析并更新本页。
+        <div class="home-note-links"><button data-go="me">我的笔记 / 关于</button><a href="${p.url}" target="_blank" rel="noopener">小宇宙播客主页</a></div>
+      </div>
+    </section>
+  </div>`;
+
+  applyHighlights($('#view-home'));
+}
+
+function epRow(e){
+  const done = !!state.done[e.n];
+  const tags = (e.tags||[]).slice(0,2).map(t=>`<span class="mini-tag">${esc(t)}</span>`).join('');
+  return `<button class="ep-row ${done?'is-done':''}" data-ep="${e.n}">
+    <div><div class="ep-label">${esc(e.label)}</div><div class="ep-date">${esc(e.date.slice(5))}<br>${durText(e)}</div></div>
+    <div>
+      <h3>${esc(shortTitle(e,38))}</h3>
+      <div class="ep-line">${esc(e.line)}</div>
+      <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
+    </div>
+    <span class="done-dot"></span>
+  </button>`;
+}
+
+/* ---------- modules ---------- */
+function renderModules(){
+  $('#view-modules').innerHTML = `<div class="wrap">
+    <div class="detail-top"><button class="back-btn" data-go="home"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 总览</button></div>
+    <div class="module-hero">
+      <div class="mno">THE MODULES</div>
+      <h1>八个模块，<br>一套完整的财富观</h1>
+      <p class="lead">先处理风险与概率，再处理资产与产品；先看懂周期与时代，再回到家庭、健康与人生。你可以按顺序读，也可以从最痛的那一块开始。</p>
+    </div>
+    <div class="module-grid" style="margin-top:18px">
+      ${DATA.modules.map(m=>`
+        <button class="module-card" data-module="${m.id}">
+          <div class="mno">MODULE ${m.no}</div>
+          <h3>${esc(m.title)}</h3>
+          <div class="msub">${esc(m.subtitle)}</div>
+          <div class="mcount"><span>${modEpCount(m.id)} 期关联</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+        </button>`).join('')}
+    </div>
+  </div>`;
+  applyHighlights($('#view-modules'));
+}
+
+function renderModule(id){
+  const m = modById[id];
+  if (!m) { location.hash = '#/modules'; return; }
+  const idx = DATA.modules.findIndex(x=>x.id===id);
+  const next = DATA.modules[idx+1];
+  $('#view-module').innerHTML = `<div class="wrap">
+    <div class="detail-top"><button class="back-btn" data-go="modules"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 全部模块</button></div>
+    <div class="module-hero">
+      <div class="mno">MODULE ${m.no} · ${esc(m.kicker)}</div>
+      <h1>${esc(m.title)}</h1>
+      <div class="msub">${esc(m.subtitle)}</div>
+      <p class="lead">${esc(m.lead)}</p>
+      <div class="big-idea">${esc(m.bigIdea)}</div>
+      <div class="quote-card"><div class="q">“${esc(m.quote.text)}”</div><div class="src">— ${esc(m.quote.src)}</div></div>
+    </div>
+    <div class="module-body">
+      ${m.quotes && m.quotes.length ? `<section class="module-section"><h2>节目原话</h2><div class="lead-note" style="font-size:11px;color:var(--muted);margin:-4px 0 12px">从逐字稿中摘录，时间戳对应音频；机器转写可能有错字。</div>${m.quotes.map(q=>`<button class="module-quote" data-ep="${q.n}"><span class="mq-time">${esc(q.t)}</span><span class="mq-body"><span class="mq-text">${esc(q.text)}</span><span class="mq-src">${esc(q.label)} · 点此读原文</span></span></button>`).join('')}</section>` : ''}
+      ${m.transcriptTakeaways && m.transcriptTakeaways.length ? `<section class="module-section"><h2>从原文反复出现的判断</h2><ul class="action-list">${m.transcriptTakeaways.map(t=>`<li><span class="box"></span><span>${esc(t)}</span></li>`).join('')}</ul></section>` : ''}
+      ${m.sections.map((s,si)=>`
+        <section class="module-section">
+          <h2><span class="accent mono" style="font-size:11px;margin-right:6px">${pad(si+1)}</span>${esc(s.h)}</h2>
+          ${s.p.map(p=>`<p>${esc(p)}</p>`).join('')}
+        </section>`).join('')}
+      <section class="module-section">
+        <h2>案例与切片</h2>
+        <div class="case-grid">
+          ${m.cases.map(c=>`<div class="case-card"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p><div class="case-ep">${c.eps.map(n=>`<button class="ref-chip" data-ep="${n}">${esc(byId[n]?.label||'')}</button>`).join(' ')}</div></div>`).join('')}
+        </div>
+      </section>
+      <section class="module-section">
+        <h2>行动清单</h2>
+        <ul class="action-list">${m.actions.map(a=>`<li><span class="box"></span><span>${esc(a)}</span></li>`).join('')}</ul>
+      </section>
+      <section class="module-section">
+        <h2>推荐精读</h2>
+        <div class="related-grid">
+          ${m.eps.map(n=>byId[n]?`<button class="ep-row" data-ep="${n}" style="grid-template-columns:1fr"><div><div class="ep-label">${esc(byId[n].label)}</div><h3 style="margin-top:3px">${esc(shortTitle(byId[n],26))}</h3><div class="ep-tags"><span class="mini-tag">${esc(byId[n].tags[0]||'')}</span></div></div></button>`:'').join('')}
+        </div>
+      </section>
+      ${next?`<button class="next-module" data-module="${next.id}"><div><div class="nm-k">NEXT MODULE</div><div class="nm-t">${esc(next.title)}</div></div><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>`:''}
+    </div>
+  </div>`;
+  applyHighlights($('#view-module'));
+}
+
+/* ---------- episodes ---------- */
+let epFilter = 'all';
+let epSort = 'old';
+let epQuery = '';
+
+function renderEpisodes(){
+  const p = DATA.podcast;
+  const tags = ['all','core','投资入门','资产配置','基金产品','宏观周期','读书认知','财富人生','真实案例','科技AI','商品黄金'];
+  $('#view-episodes').innerHTML = `<div class="wrap">
+    <div class="detail-top"><button class="back-btn" data-go="home"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 总览</button></div>
+    <div class="module-hero" style="padding-top:8px">
+      <div class="mno">BY VOL</div>
+      <h1>按 Vol，<br>从第一期读到最新一期</h1>
+      <p class="lead">${p.firstDate} 的开堂白到 ${p.lastDate} 的最新一期。每一期都有：逐字稿原文摘录、我的观点拆解、官方 Shownotes、完整时间轴与逐字稿全文。</p>
+    </div>
+    <div style="margin-top:18px">
+      <div class="search-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="epSearch" type="search" placeholder="搜索标题、主题、逐字稿或节目笔记…" value="${esc(epQuery)}"><button class="search-clear ${epQuery?'show':''}" id="searchClear" aria-label="清空">×</button></div>
+      <div class="chips" id="epChips">${tags.map(t=>`<button class="chip ${epFilter===t?'active':''}" data-filter="${t}">${t==='all'?'全部':t==='core'?'核心精读':t}</button>`).join('')}</div>
+      <div class="filter-bar"><span class="filter-count" id="epCount"></span><button class="sort-btn" id="sortBtn"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h9M8 18h5M3 6h.01M3 12h.01M3 18h.01"></path></svg><span id="sortLabel">从第一期</span></button></div>
+      <div class="ep-list" id="epList"></div>
+    </div>
+  </div>`;
+  bindEpisodes();
+  updateEpList();
+}
+
+function bindEpisodes(){
+  const input = $('#epSearch');
+  if (!input) return;
+  input.addEventListener('input', e => { epQuery = e.target.value.trim(); $('#searchClear').classList.toggle('show', !!epQuery); updateEpList(); });
+  $('#searchClear').addEventListener('click', ()=>{ epQuery=''; input.value=''; $('#searchClear').classList.remove('show'); updateEpList(); input.focus(); });
+  $('#epChips').addEventListener('click', e=>{
+    const b=e.target.closest('[data-filter]'); if(!b)return;
+    epFilter=b.dataset.filter; $$('#epChips .chip').forEach(x=>x.classList.toggle('active',x===b)); updateEpList();
+  });
+  $('#sortBtn').addEventListener('click', ()=>{ epSort = epSort==='new'?'old':'new'; $('#sortLabel').textContent = epSort==='new'?'最新在前':'从第一期'; updateEpList(); });
+}
+
+function matchEp(e){
+  if (epFilter==='core' && !e.core) return false;
+  if (epFilter!=='all' && epFilter!=='core' && !(e.tags||[]).includes(epFilter)) return false;
+  if (!epQuery) return true;
+  const q = epQuery.toLowerCase();
+  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' ')].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+
+function updateEpList(){
+  const list = $('#epList'); if(!list)return;
+  let arr = DATA.episodes.filter(matchEp);
+  arr = arr.slice().sort((a,b)=> epSort==='new' ? b.n-a.n : a.n-b.n);
+  $('#epCount').textContent = `${arr.length} 期`;
+  if (!arr.length) { list.innerHTML = '<div class="empty">没有找到匹配的节目。<br>试试清空搜索，或换一个主题。</div>'; return; }
+  const groups = [];
+  for (const e of arr) {
+    const y = e.date.slice(0,4);
+    let g = groups.find(x=>x.y===y);
+    if (!g) { g = {y, items: []}; groups.push(g); }
+    g.items.push(e);
+  }
+  list.innerHTML = groups.map(g=>`<div class="vol-year"><b>${g.y}</b><span>YEAR</span><em>${g.items.length} 期</em></div>` + g.items.map(epRow).join('')).join('');
+}
+
+function renderVol(n){
+  const e = byId[n];
+  if (!e) { location.hash = '#/episodes'; return; }
+  const done = !!state.done[e.n], saved = !!state.saved[e.n];
+  const chunks = e.transcript?.chunks || [];
+  const key = e.excerpts || (e.quotes && e.quotes.length ? e.quotes : e.keyChunks) || [];
+  const points = e.points || [];
+  const analysis = e.analysis || [];
+  const summary = e.summary || e.line || '';
+  const tagHtml = (e.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('') + (e.mods||[]).map(m=>`<span class="pill red">${esc(modById[m]?.subtitle || moduleName(m))}</span>`).join('');
+
+  const excerptHtml = key.length
+    ? `<div class="lead-note">${e.quotes && e.quotes.length ? '精读引文 + 机器提取的原文段落，按时间排序；时间戳对应音频，引用请以音频为准。' : '从逐字稿中提取的关键段落，按时间排序。机器转写可能存在个别错字，引用请以音频为准。'}</div>` +
+      key.map(c=>`<div class="excerpt"><span class="ex-time">${esc(c.t)}</span><div><p>${esc(c.text)}</p></div></div>`).join('')
+    : points.length
+      ? `<div class="lead-note">逐字稿转写中，先呈现精读要点；完成后会自动替换为原文摘录。</div>` +
+        points.map((p,i)=>`<div class="excerpt"><span class="ex-time">${pad(i+1)}</span><div><p>${esc(p)}</p></div></div>`).join('')
+      : `<div class="tr-empty">逐字稿正在转写中。可以先读下方的官方节目笔记。</div>`;
+
+  const analysisHtml = analysis.length
+    ? analysis.map(s=>`<div class="analysis-box"><h3>${esc(s.h)}</h3>${(s.p||[]).map(p=>`<p>${esc(p)}</p>`).join('')}</div>`).join('')
+    : points.length
+      ? `<div class="analysis-box"><h3>${e.pointsSource==='agent'||e.pointsSource==='agent-brief'?'这一期的几条主线':'原文要点（从逐字稿提取）'}</h3><ul>${points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`
+      : `<div class="analysis-box"><h3>先给你一个抓手</h3><p>${esc(e.line)}</p></div>`;
+
+  const chaptersHtml = e.chapters.length
+    ? `<details class="notes-block" ${e.chapters.length<=10?'open':''}><summary>${e.chapters.length} 个官方章节 · 点击展开</summary><div class="notes-body"><div class="chapter-list">${e.chapters.map(c=>`<div class="chapter"><span class="ct">${esc(c.t)}</span><span class="cx">${esc(c.text)}</span></div>`).join('')}</div></div></details>`
+    : `<div class="tr-empty">这一期官方未附时间轴。</div>`;
+
+  const notesHtml = e.paras.length
+    ? `<details class="notes-block" ${!points.length?'open':''}><summary>官方 Shownotes · 约 ${Math.round(e.paras.join('').length/100)/10}k 字</summary><div class="notes-body">${e.paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div></details>`
+    : `<div class="tr-empty">官方未附 Shownotes。</div>`;
+
+  const transcriptHtml = chunks.length
+    ? `<details class="notes-block"><summary>完整逐字稿 · ${(e.transcriptChars/1000).toFixed(1)}k 字 · ${chunks.length} 段</summary><div class="notes-body">
+        <div class="transcript-tools"><input id="trSearch" placeholder="在这一期逐字稿中搜索…" autocomplete="off"><button id="copyTranscript">复制全文</button></div>
+        <div id="trChunks">${chunks.map(c=>`<div class="tr-chunk" data-text="${esc(c[1])}"><span class="tr-time">${esc(c[0])}</span><p>${esc(c[1])}</p></div>`).join('')}</div>
+        <div class="tr-empty" id="trNoResult" style="display:none">没有匹配的段落。</div>
+      </div></details>`
+    : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
+
+  const noteVal = state.notes[e.n] || '';
+  $('#view-vol').innerHTML = `<div class="wrap">
+    <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
+    <div class="vol-hero">
+      <div class="vol-kicker"><span class="dot"></span>${esc(e.label)} · ${esc(e.tags[0]||'播客')}</div>
+      <h1>${esc(epTitle(e))}</h1>
+      <div class="vol-meta"><span>${esc(e.date)}</span><span>·</span><span>${durText(e)}</span>${e.chapters.length?`<span>·</span><span>${e.chapters.length} 个章节</span>`:''}${e.transcript?`<span>·</span><span>${(e.transcriptChars/1000).toFixed(1)}k 字逐字稿</span>`:'<span>·</span><span>逐字稿转写中</span>'}${e.core?'<span class="core-tag">精读</span>':''}</div>
+      <div class="vol-tags">${tagHtml}</div>
+      <div class="vol-actions">
+        <button class="tool-btn ${done?'on':''}" id="volDoneBtn"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${done?'已学':'标记已学'}</button>
+        <button class="tool-btn ${saved?'on':''}" id="volSaveBtn"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
+        <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
+      </div>
+      <div class="vol-line"><span class="vl-k">本期一句话</span>${esc(summary)}</div>
+    </div>
+    <div class="vol-body">
+      <section class="vol-section"><h2><span class="num">01</span>原文精读</h2>${excerptHtml}</section>
+      <section class="vol-section"><h2><span class="num">02</span>我的观点</h2>${analysisHtml}</section>
+      <section class="vol-section"><h2><span class="num">03</span>本期时间轴</h2>${chaptersHtml}</section>
+      <section class="vol-section"><h2><span class="num">04</span>官方节目笔记</h2>${notesHtml}</section>
+      <section class="vol-section"><h2><span class="num">05</span>完整逐字稿</h2>${transcriptHtml}</section>
+      <section class="vol-section"><h2><span class="num">06</span>我的笔记</h2><div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div></section>
+      <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">逐字稿为本地 Paraformer 转写，可能存在个别错字；原文摘录已按时间标注。精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
+    </div>
+  </div>`;
+
+  $('#volDoneBtn').addEventListener('click', ()=>{ toggleDone(e.n); syncVolActions(e.n); });
+  $('#volSaveBtn').addEventListener('click', ()=>{ toggleSaved(e.n); syncVolActions(e.n); });
+  const ta = $('#volNote');
+  let timer;
+  ta.addEventListener('input', ()=>{
+    state.notes[e.n] = ta.value;
+    $('#volNoteStatus').textContent = '保存中…';
+    clearTimeout(timer);
+    timer = setTimeout(()=>{ saveState(); $('#volNoteStatus').textContent='已自动保存'; }, 350);
+  });
+  const trSearch = $('#trSearch');
+  if (trSearch) {
+    trSearch.addEventListener('input', ()=>{
+      const q = trSearch.value.trim().toLowerCase();
+      let shown = 0;
+      $$('#trChunks .tr-chunk').forEach(el=>{
+        const hit = !q || (el.dataset.text||'').toLowerCase().includes(q);
+        el.style.display = hit ? '' : 'none';
+        if (hit) shown++;
+      });
+      $('#trNoResult').style.display = shown ? 'none' : 'block';
+    });
+  }
+  const copyBtn = $('#copyTranscript');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async ()=>{
+      const text = (e.transcript?.chunks || []).map(c=>c[1]).join('');
+      try {
+        await navigator.clipboard.writeText(text);
+        toast('逐字稿已复制');
+      } catch(err) {
+        const t = document.createElement('textarea');
+        t.value = text; document.body.appendChild(t); t.select();
+        try { document.execCommand('copy'); toast('逐字稿已复制'); } catch(e2) { toast('复制失败，请手动选择'); }
+        t.remove();
+      }
+    });
+  }
+  applyHighlights($('#view-vol'));
+  window.scrollTo({top:0,behavior:'auto'});
+}
+
+function syncVolActions(n){
+  const done = !!state.done[n], saved = !!state.saved[n];
+  const d = $('#volDoneBtn'), s = $('#volSaveBtn');
+  if (d) { d.classList.toggle('on', done); d.innerHTML = `<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${done?'已学':'标记已学'}`; }
+  if (s) { s.classList.toggle('on', saved); s.innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}`; }
+}
+
+function openVol(n){
+  if (!byId[n]) return;
+  if (location.hash === '#/vol/'+n) { renderVol(n); showView('vol'); }
+  else location.hash = '#/vol/'+n;
+}
+
+/* ---------- me ---------- */
+function renderMe(){
+  const total = DATA.episodes.length, done = doneCount(), pct = Math.round(done/total*100);
+  const circ = 2*Math.PI*36;
+  const offsets = circ - (pct/100)*circ;
+  const saved = DATA.episodes.filter(e=>state.saved[e.n]);
+  const noted = DATA.episodes.filter(e=>state.notes[e.n] && state.notes[e.n].trim());
+  $('#view-me').innerHTML = `<div class="wrap">
+    <div class="profile-head">
+      <div class="ring-wrap"><svg viewBox="0 0 86 86"><circle class="ring-bg" cx="43" cy="43" r="36"></circle><circle class="ring-fg" cx="43" cy="43" r="36" stroke-dasharray="${circ}" stroke-dashoffset="${offsets}"></circle></svg><div class="ring-text"><b>${pct}%</b><span>已学</span></div></div>
+      <div><h1>我的学习</h1><p>已学 ${done} / ${total} 期 · 收藏 ${saved.length} 期 · 笔记 ${noted.length} 条</p></div>
+    </div>
+    <div class="me-stats">
+      <div class="me-stat"><b>${done}</b><span>已学节目</span></div>
+      <div class="me-stat"><b>${saved.length}</b><span>收藏</span></div>
+      <div class="me-stat"><b>${noted.length}</b><span>有笔记</span></div>
+    </div>
+    <div class="me-section">
+      <h2>继续学习</h2>
+      <div class="ep-list">${DATA.episodes.filter(e=>!state.done[e.n]).slice(0,3).map(epRow).join('') || '<div class="empty-mini">111 期都学完了。慢慢来，比较快。</div>'}</div>
+    </div>
+    <div class="me-section">
+      <h2>我的收藏</h2>
+      ${saved.length ? `<div class="ep-list">${saved.map(epRow).join('')}</div>` : '<div class="empty-mini">还没有收藏。在节目详情页点右上角的书签。</div>'}
+    </div>
+    <div class="me-section">
+      <h2>我的笔记</h2>
+      ${noted.length ? noted.map(e=>`<button class="note-item" data-ep="${e.n}" style="width:100%;text-align:left"><div class="nt">${esc(e.label)} · ${esc(shortTitle(e,28))}</div><div class="nn">${esc(state.notes[e.n])}</div><div class="ne">打开继续写 →</div></button>`).join('') : '<div class="empty-mini">还没有笔记。学完一期，写一句“我准备改变什么”。</div>'}
+    </div>
+    <div class="me-section">
+      <h2>术语速查</h2>
+      <details class="glossary"><summary>20 个高频词，听懂节目里的黑话</summary>${DATA.glossary.map(g=>`<div class="gloss-item"><b>${esc(g.term)}</b>${esc(g.desc)}</div>`).join('')}</details>
+    </div>
+    <div class="me-section">
+      <h2>关于这本手册</h2>
+      <div class="about-card">
+        <strong>${DATA.podcast.title}</strong> · ${DATA.podcast.subtitle}<br>
+        我是${DATA.podcast.host}。${DATA.podcast.hostBio}<br><br>
+        我把 ${DATA.podcast.count} 期节目、${DATA.podcast.chapters} 个官方章节，整理成这本手册，基于 ${DATA.podcast.firstDate}—${DATA.podcast.lastDate} 的官方 Shownotes 与本地逐字稿编写。逐字稿由 Paraformer 转写，机器转写可能有错字；关键引文已做基础校对，并保留时间戳供回溯。<br><br><strong>转写方法：</strong>60 秒分段 + 标点模型，时间戳为段首，误差约 1 分钟。
+        <div class="actions-row">
+          <button class="btn btn-ghost" id="exportNotes">导出我的笔记</button>
+          <button class="btn btn-ghost danger" id="resetAll">清空学习数据</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  $('#exportNotes')?.addEventListener('click', exportNotes);
+  $('#resetAll')?.addEventListener('click', ()=>{
+    if(confirm('确定清空所有已学、收藏和笔记吗？此操作不可撤销。')){
+      state = { done:{}, saved:{}, notes:{}, theme:state.theme }; saveState(); renderAll(); toast('已清空学习数据');
+    }
+  });
+  applyHighlights($('#view-me'));
+}
+
+function exportNotes(){
+  const noted = DATA.episodes.filter(e=>state.notes[e.n] && state.notes[e.n].trim());
+  let md = `# 慧客堂 · 我的学习笔记\n\n> 共 ${doneCount()} 期已学，${noted.length} 条笔记。导出于 ${new Date().toLocaleString('zh-CN')}\n\n`;
+  if (!noted.length) {
+    md += '还没有笔记。\n';
+  } else {
+    noted.forEach(e=>{ md += `## ${e.label} · ${epTitle(e)}\n\n${state.notes[e.n].trim()}\n\n---\n\n`; });
+  }
+  const blob = new Blob([md], {type:'text/markdown;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = '慧客堂-我的学习笔记.md';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  toast('笔记已导出');
+}
+
+/* ---------- episode sheet ---------- */
+let currentEp = null;
+let sheetBack = '#/episodes';
+function openEpisode(n){
+  const e = byId[n]; if(!e) return;
+  if (!location.hash.startsWith('#/episode/')) sheetBack = location.hash || '#/episodes';
+  currentEp = e;
+  const done = !!state.done[e.n], saved = !!state.saved[e.n];
+  const points = (e.points||[]).length ? `<section class="sheet-section"><h2><span class="idx">01</span>精读笔记</h2><ol class="points">${e.points.map((x,i)=>`<li><span class="pno">${pad(i+1)}</span><span>${esc(x)}</span></li>`).join('')}</ol></section>` : '';
+  const chapters = e.chapters.length ? `<section class="sheet-section"><h2><span class="idx">02</span>本期脉络</h2><details class="notes-block" ${e.chapters.length<=10?'open':''}><summary>${e.chapters.length} 个章节 · 点击展开时间轴</summary><div class="notes-body"><div class="chapter-list">${e.chapters.map(c=>`<div class="chapter"><span class="ct">${esc(c.t)}</span><span class="cx">${esc(c.text)}</span></div>`).join('')}</div></div></details></section>` : '';
+  const shownotes = e.paras.length ? `<section class="sheet-section"><h2><span class="idx">03</span>官方节目笔记</h2><details class="notes-block" ${!e.points.length?'open':''}><summary>完整 Shownotes · 约 ${Math.round(e.paras.join('').length/100)/10}k 字</summary><div class="notes-body">${e.paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div></details></section>` : '';
+  const noteVal = state.notes[e.n] || '';
+  const sheet = $('#sheetContent');
+  sheet.innerHTML = `
+    <div class="sheet-kicker">${esc(e.label)} · ${esc(e.tags.join(' / '))}</div>
+    <h1 class="sheet-title">${esc(epTitle(e))}</h1>
+    <div class="sheet-meta"><span>${esc(e.date)}</span><span>·</span><span>${durText(e)}</span>${e.chapters.length?`<span>·</span><span>${e.chapters.length} 个章节</span>`:''}${e.core?'<span class="core-tag">精读</span>':''}</div>
+    <div class="sheet-line">${esc(e.line)}</div>
+    ${e.note?`<div class="ep-note">${esc(e.note)}</div>`:''}
+    <div class="sheet-tags">${tagPills(e.tags)}${e.mods.map(m=>`<span class="pill red">${esc(modById[m]?.subtitle || moduleName(m))}</span>`).join('')}</div>
+    <div class="sheet-toolbar">
+      <button class="tool-btn ${done?'on':''}" id="markDone"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${done?'已学':'标记已学'}</button>
+      <button class="tool-btn ${saved?'on':''}" id="markSaved"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
+    </div>
+    ${points}
+    ${chapters}
+    ${shownotes}
+    <section class="sheet-section">
+      <h2><span class="idx">04</span>我的笔记</h2>
+      <div class="note-editor"><textarea id="epNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="noteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
+    </section>
+    <div class="sheet-footer">
+      <a class="listen-link" href="${epHref(e)}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a>
+      <div class="source-note">节目笔记来自官方 Shownotes；精读引文来自逐字稿，机器转写可能有错字。${e.chapters.length?'时间轴可直接跳转对应音频位置。':''}</div>
+    </div>`;
+  $('#sheetLabel').textContent = e.label;
+  $('#sheetDone').classList.toggle('on', done);
+  $('#sheetSave').classList.toggle('on', saved);
+  $('#episodeSheet').classList.add('open');
+  document.body.classList.add('sheet-open');
+  if (location.hash !== '#/episode/'+n) history.pushState({sheet:n}, '', '#/episode/'+n);
+
+  $('#markDone').addEventListener('click', ()=>toggleDone(e.n));
+  $('#markSaved').addEventListener('click', ()=>toggleSaved(e.n));
+  $('#sheetDone').onclick = ()=>toggleDone(e.n);
+  $('#sheetSave').onclick = ()=>toggleSaved(e.n);
+  const ta = $('#epNote');
+  let timer;
+  ta.addEventListener('input', ()=>{
+    state.notes[e.n] = ta.value;
+    $('#noteStatus').textContent = '保存中…';
+    clearTimeout(timer);
+    timer = setTimeout(()=>{ saveState(); $('#noteStatus').textContent = '已自动保存'; }, 350);
+  });
+  $('#episodeSheet').scrollTop = 0;
+}
+
+function closeSheet(fromPop){
+  $('#episodeSheet').classList.remove('open');
+  document.body.classList.remove('sheet-open');
+  if (!fromPop) {
+    history.replaceState({}, '', sheetBack || '#/episodes');
+    if (sheetBack && sheetBack.startsWith('#/me')) renderMe();
+  }
+  currentEp = null;
+}
+
+function toggleDone(n){
+  if (state.done[n]) delete state.done[n]; else state.done[n] = true;
+  saveState(); updateProgressUI(); toast(state.done[n]?'已标记为已学':'已取消已学');
+  if (currentEp && currentEp.n===n) {
+    const on = !!state.done[n];
+    $('#markDone')?.classList.toggle('on', on);
+    $('#sheetDone')?.classList.toggle('on', on);
+    if($('#markDone')) $('#markDone').innerHTML = `<svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${on?'已学':'标记已学'}`;
+  }
+}
+function toggleSaved(n){
+  if (state.saved[n]) delete state.saved[n]; else state.saved[n] = true;
+  saveState(); updateProgressUI(); toast(state.saved[n]?'已收藏':'已取消收藏');
+  if (currentEp && currentEp.n===n) {
+    const on = !!state.saved[n];
+    $('#markSaved')?.classList.toggle('on', on);
+    $('#sheetSave')?.classList.toggle('on', on);
+    if($('#markSaved')) $('#markSaved').innerHTML = `<svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${on?'已收藏':'收藏'}`;
+  }
+}
+function updateProgressUI(){
+  if ($('#view-home')?.innerHTML) {
+    // update row done states without full re-render
+    $$('#view-home .ep-row, #view-episodes .ep-row, #view-me .ep-row').forEach(row=>{
+      const n = +row.dataset.ep; row.classList.toggle('is-done', !!state.done[n]);
+    });
+  }
+  if (location.hash.startsWith('#/me')) renderMe();
+}
+
+/* ---------- routing ---------- */
+function showView(name){
+  $$('.view').forEach(v=>v.classList.remove('active'));
+  const v = $('#view-'+name); if(v) v.classList.add('active');
+  const navName = name==='module' ? 'modules' : (name==='vol' ? 'episodes' : name);
+  $$('.nav-item').forEach(b=>b.classList.toggle('active', b.dataset.nav===navName));
+  window.scrollTo({top:0,behavior:'auto'});
+}
+function route(){
+  const h = location.hash.replace(/^#\/?/,'') || 'home';
+  const [seg, id] = h.split('/');
+  if (seg==='home' || seg===''){ renderHome(); showView('home'); }
+  else if (seg==='modules'){ renderModules(); showView('modules'); }
+  else if (seg==='module'){ renderModule(id); showView('module'); }
+  else if (seg==='episodes'){ renderEpisodes(); showView('episodes'); }
+  else if (seg==='vol'){ renderVol(+id); showView('vol'); }
+  else if (seg==='me'){ renderMe(); showView('me'); }
+  else if (seg==='episode'){ openVol(+id); }
+  else { renderHome(); showView('home'); }
+  requestAnimationFrame(()=>{ const active = $('.view.active'); if(active) active.classList.add('active'); });
+}
+function go(target){ location.hash = '#/'+target; }
+
+function renderAll(){
+  renderHome();
+  renderModules();
+  renderMe();
+  if (location.hash.startsWith('#/episodes')) renderEpisodes();
+  route();
+}
+
+/* ---------- global events ---------- */
+document.addEventListener('click', e=>{
+  const scrollBtn = e.target.closest('[data-scroll]');
+  if (scrollBtn){ document.getElementById(scrollBtn.dataset.scroll)?.scrollIntoView({behavior:'smooth'}); return; }
+  const filterBtn = e.target.closest('[data-epfilter]');
+  if (filterBtn){
+    epFilter = filterBtn.dataset.epfilter;
+    if (location.hash === '#/episodes'){ renderEpisodes(); } else { location.hash = '#/episodes'; }
+    return;
+  }
+  const goBtn = e.target.closest('[data-go]');
+  if (goBtn){ go(goBtn.dataset.go); return; }
+  const modBtn = e.target.closest('[data-module]');
+  if (modBtn){ location.hash = '#/module/'+modBtn.dataset.module; return; }
+  const epBtn = e.target.closest('[data-ep]');
+  if (epBtn){ openVol(+epBtn.dataset.ep); return; }
+  const nav = e.target.closest('.nav-item');
+  if (nav){ go(nav.dataset.nav); return; }
+});
+$('#closeSheet').addEventListener('click', ()=>closeSheet(false));
+$('#episodeSheet').addEventListener('click', e=>{ if(e.target === $('#episodeSheet')) closeSheet(false); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('#episodeSheet').classList.contains('open')) closeSheet(false); });
+window.addEventListener('popstate', ()=>{
+  if ($('#episodeSheet').classList.contains('open')) closeSheet(true);
+  route();
+});
+window.addEventListener('hashchange', ()=>{
+  if ($('#episodeSheet').classList.contains('open')) closeSheet(true);
+  route();
+});
+window.addEventListener('scroll', ()=>{ $('#appHeader').classList.toggle('scrolled', window.scrollY>4); }, {passive:true});
+$('#searchJump').addEventListener('click', ()=>{ go('episodes'); setTimeout(()=>$('#epSearch')?.focus(), 120); });
+$('#themeToggle').addEventListener('click', ()=>{
+  const cur = document.documentElement.dataset.theme || 'light';
+  const next = cur==='dark'?'light':'dark';
+  document.documentElement.dataset.theme = next;
+  state.theme = next; saveState();
+  toast(next==='dark'?'已切换到深色':'已切换到浅色');
+});
+
+/* init */
+renderHome();
+renderModules();
+renderMe();
+route();
+</script>
+</body>
+</html>

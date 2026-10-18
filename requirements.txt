@@ -1,0 +1,4 @@
+# Python 3.10+
+# 系统还需安装 ffmpeg
+sherpa-onnx>=1.13
+numpy>=1.26
