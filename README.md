@@ -19,8 +19,8 @@
 | `ep_content/` | 视角改写前的节目内容快照 |
 | `meta.js` | 模块、原则、路径、书单、术语表 |
 | `template-v2.html` | 页面模板（单文件 HTML 的源模板） |
-| `build-v2.js` | 把 `data-v2.json` 注入模板，生成 `index.html` |
-| `update_daily.py` | 每日 RSS 检查、下载、转写、增量写入、构建 |
+| `build-v2.js` | 把 `data-v2.json` 注入模板，生成 `index.html`，并按本机 `site_config.json` 同步到 Qoder Site 目录 |
+| `update_daily.py` | 每日 RSS 检查、下载、转写、增量写入、生成草稿构建 |
 | `transcribe_all.py` | Paraformer 批量转写流水线 |
 
 ## 重新构建
@@ -40,7 +40,13 @@ node build-v2.js
 3. 下载音频、转 16k 单声道 WAV
 4. 用 Paraformer-zh int8 + CT-Transformer 标点转写
 5. 增量写入 `data-v2.json`、`ep_meta/`、`transcripts/`
-6. 运行 `finalize_new.js`、`build-v2.js`，更新 `dist/index.html`
+6. 运行 `finalize_new.js`，先生成一份本地草稿
+
+随后 Qoder 自动化会基于完整逐字稿写精读，依次运行 `apply_summaries.js`、`apply_firstperson.js`、`finalize_new.js`、`build-v2.js`，再发布到 Qoder Sites。
+
+### GitHub 自动提交
+
+每天确认有新一期、且逐字稿/精读/引文完整并通过发布前检查后，自动化会自动把白名单内容 commit 并 push 到本仓库 `main`，不需要人工审批。没有新增时不产生空提交；音频、WAV、模型、日志和本机站点配置不入库。
 
 依赖：
 

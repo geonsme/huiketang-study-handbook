@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import time
@@ -293,17 +294,17 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=1)
 
     subprocess.run(['node', 'finalize_new.js'], check=False)
-    subprocess.run(['node', 'build-v2.js'], check=False)
-    # copy build to public output
+    # 先构建草稿，不同步站点；精读完成后再做最终构建并同步，避免半成品进入可发布目录
+    subprocess.run(['node', 'build-v2.js', '--no-site-sync'], check=False)
     src = os.path.join(BASE, '慧客堂·学习手册-v2.html')
-    dst_dir = os.path.join(BASE, 'dist')
-    os.makedirs(dst_dir, exist_ok=True)
     if os.path.exists(src):
-        with open(src, 'rb') as rf, open(os.path.join(dst_dir, 'index.html'), 'wb') as wf:
-            wf.write(rf.read())
+        local_dist = os.path.join(BASE, 'dist')
+        os.makedirs(local_dist, exist_ok=True)
+        shutil.copyfile(src, os.path.join(local_dist, 'index.html'))
     with open(os.path.join(BASE, 'last_update.json'), 'w', encoding='utf-8') as f:
         json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': added, 'total': len(data['episodes'])}, f, ensure_ascii=False, indent=1)
-    log(f"updated {len(added)} episodes, total {len(data['episodes'])}")
+    log(f"draft built: {len(added)} new episodes, total {len(data['episodes'])}; 等待精读和最终构建")
+    print(json.dumps({'new': added, 'total': len(data['episodes']), 'draft': True}, ensure_ascii=False))
 
 
 if __name__ == '__main__':
