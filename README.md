@@ -69,7 +69,9 @@ node build-v2.js
 
 网页版也在首页提供下载：`ebook/huiketang-handbook.epub`、`ebook/huiketang-transcripts.epub`、`ebook/huiketang-handbook.txt`。
 
-导入方式：微信读书 → 书架右上角「+」→ 从本地导入（安卓）或从 iCloud / 文件导入（iOS）；也可以把文件发到微信文件传输助手，点开 → 用其他应用打开 → 微信读书。推荐 EPUB，保留封面和目录。电子书由 `build_ebook.py` 从 `data-v2.json` 自动生成，内容更新后不要手工改文件，重新运行脚本即可。
+导入方式：微信读书 → 书架右上角「+」→ 从本地导入（安卓）或从 iCloud / 文件导入（iOS）；也可以把文件发到微信文件传输助手，点开 → 用其他应用打开 → 微信读书。推荐 EPUB，保留封面和目录。
+
+EPUB 按电子书规范重排，不是网页快照：正文使用通用衬线字体、2em 首行缩进、三级目录（阅读说明 / 上篇八章导读 / 下篇按 Vol 读 / 附录），不使用网页卡片、色块、阴影或内嵌字体；微信读书可自行切换字体和主题。电子书由 `build_ebook.py` 从 `data-v2.json` 自动生成，内容更新后不要手工改文件，重新运行脚本即可。
 
 依赖：
 
