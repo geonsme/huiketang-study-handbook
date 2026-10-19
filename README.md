@@ -1,6 +1,6 @@
 # 慧客堂 · 学习手册
 
-把播客《慧客堂》111 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、111 篇 Vol 导读、111 条“董了”观点、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
+把播客《慧客堂》111 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、8 个模块的对话切片与观点推演、111 篇 Vol 导读、111 条“董了”观点、逐字稿原文摘录、精读分析、官方 Shownotes、完整时间轴和 350.8 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
 - 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
 - GitHub 公开仓库：https://github.com/geonsme/huiketang-study-handbook
@@ -19,6 +19,8 @@
 | `summaries/` | 各批次的节目摘要、要点、引文、分析 |
 | `fp/` | 第一人称视角改写层：只改主播叙述，嘉宾与原话保持原意 |
 | `guides/` | 8 篇章节大导读、111 篇 Vol 导读与 111 条董了观点的源数据 |
+| `module_scenes.json` | 8 个模块的对话切片、观点推演、现场故事与行动源数据 |
+| `apply_module_scenes.js` | 校验并把模块切片合并进 `data-v2.json` |
 | `apply_guides.js` | 把 `guides/module_guides.json`、`vol_guides.json` 合并进 `data-v2.json` |
 | `build_guides.py` | 生成 8 篇章节导读与 111 篇 Vol 导读 |
 | `apply_dongliao.js` | 把 `guides/dongliao.json` 合并进 `data-v2.json` |
@@ -29,7 +31,8 @@
 | `ep_content/` | 视角改写前的节目内容快照 |
 | `meta.js` | 模块、原则、路径、书单、术语表 |
 | `template-v2.html` | 页面模板（单文件 HTML 的源模板） |
-| `build-v2.js` | 把 `data-v2.json` 注入模板，生成 `index.html`，并按本机 `site_config.json` 同步到 Qoder Site 目录 |
+| `module-story.css` | 模块页的对话、推演与动效样式，构建时注入模板 |
+| `build-v2.js` | 注入模块 CSS 与 `data-v2.json`，生成 `index.html` 和 `dist/index.html`，并按本机 `site_config.json` 同步到 Qoder Site 目录 |
 | `update_daily.py` | 每日 RSS 检查、下载、转写、增量写入、生成草稿构建 |
 | `transcribe_all.py` | Paraformer 批量转写流水线 |
 
@@ -39,7 +42,7 @@
 node build-v2.js
 ```
 
-生成 `慧客堂·学习手册-v2.html`，再复制为 `index.html` / `dist/index.html`。
+生成 `慧客堂·学习手册-v2.html`，同时写入项目 `dist/index.html` 与 Qoder Site 目录。GitHub 快照里的根 `index.html` 由 `sync_github.py` 复制。
 
 ## 每日更新
 
@@ -56,7 +59,7 @@ node build-v2.js
 
 ### 导读结构
 
-- **章节大导读**：每个模块开头有钩子、3 个带读问题、3 个读后能力、3 期建议路线；首页「八章导读」可直接进入。模块页带一张 4 步“本章脉络”纵向流程图。
+- **章节大导读**：每个模块有钩子、3 个带读问题、3 个读后能力、3 期建议路线；首页「八章导读」可直接进入。模块页固定四块：3 个“听友之问 → 节目原声 → 旁白”对话回合、起点/转折/落点的观点推演图、3 个现场切片，以及 3 件可勾选的“带走”。
 - **Vol 小导读**：每期标题下有 2 句开场、一个带读问题和 3 个关键词；节目列表也会显示导读首句。Vol 页带一张“问题 → 判断 → 展开线索”的 3 步脉络图。
 - **董了观点**：每期从逐字稿里选一句原话，放回上下文，再往下想一层（它假设了什么、哪里会失效），最后一句点睛。网站用渐变边框轻动效卡片呈现；节目列表有“董了”标记，可按“董了”筛选；电子书用普通章节呈现。
 - 章节导读源数据在 `guides/module_guides.json`；Vol 导读源数据在 `guides/vol_guides.json`。新增期的导读写在当天的 `summaries/batch_auto_*.json` 里，由 `apply_summaries.js` 一起写入。

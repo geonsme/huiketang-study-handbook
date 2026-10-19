@@ -940,6 +940,7 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
 @media (max-width:560px){.dongliao{padding:18px;border-radius:24px}.dl-title{font-size:20px}.dl-quote p{font-size:15.5px}.dl-grid{grid-template-columns:1fr}.dl-home-grid{grid-template-columns:1fr}.dl-home-card{padding:14px}}
 @media (prefers-reduced-motion:reduce){.dongliao,.dl-flow i,.rm-step:not(:last-child)::before,.rm-node{animation:none!important}}
 
+/*__MODULE_STORY_CSS__*/
 </style>
 </head>
 <body>
@@ -1018,8 +1019,9 @@ const byId = Object.fromEntries(DATA.episodes.map(e => [e.n, e]));
 const modById = Object.fromEntries(DATA.modules.map(m => [m.id, m]));
 const pad = n => String(n).padStart(2,'0');
 
-let state = { done:{}, saved:{}, notes:{}, theme:null };
+let state = { done:{}, saved:{}, notes:{}, takes:{}, theme:null };
 try { state = Object.assign(state, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch(e) {}
+if (!state.takes) state.takes = {};
 if (state.theme) document.documentElement.dataset.theme = state.theme;
 else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
 
@@ -1326,70 +1328,165 @@ function renderModules(){
   applyHighlights($('#view-modules'));
 }
 
+let moduleRevealObserver = null;
+let moduleNavFrame = false;
+
+function updateModuleSceneNav(){
+  const root = $('#view-module');
+  if (!root || !location.hash.startsWith('#/module')) return;
+  const scenes = [...root.querySelectorAll('.scene')];
+  if (!scenes.length) return;
+  const focus = window.innerHeight * 0.42;
+  let active = 0;
+  scenes.forEach((el,i)=>{
+    if (el.getBoundingClientRect().top <= focus) active = i;
+  });
+  root.querySelectorAll('[data-scene-jump]').forEach(b=>{
+    const on = b.dataset.sceneJump === String(active);
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-current', on ? 'true' : 'false');
+  });
+}
+function scheduleModuleSceneNav(){
+  if (moduleNavFrame) return;
+  moduleNavFrame = true;
+  requestAnimationFrame(()=>{ moduleNavFrame = false; updateModuleSceneNav(); });
+}
+
+function initModuleMotion(root){
+  if (!root) return;
+  if (moduleRevealObserver) moduleRevealObserver.disconnect();
+  const reveals = [...root.querySelectorAll('.reveal')];
+  if (!('IntersectionObserver' in window)) {
+    reveals.forEach(el=>el.classList.add('in'));
+    return;
+  }
+  moduleRevealObserver = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if (!en.isIntersecting) return;
+      en.target.classList.add('in');
+      moduleRevealObserver.unobserve(en.target);
+    });
+  }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+  reveals.forEach(el=>moduleRevealObserver.observe(el));
+  scheduleModuleSceneNav();
+}
+
 function renderModule(id){
   const m = modById[id];
   if (!m) { location.hash = '#/modules'; return; }
   const idx = DATA.modules.findIndex(x=>x.id===id);
   const next = DATA.modules[idx+1];
-  const g = m.guide;
-  const mapSteps = (m.sections || []).map((s, i) => ({ k: `第 ${i + 1} 步`, h: s.h, p: firstSentence((s.p || [])[0], 52) }));
-  const guideHtml = g ? `<div class="chapter-guide">
-    <div class="cg-label">CHAPTER GUIDE · 本章导读</div>
-    <p class="cg-hook">${esc(g.hook)}</p>
-    <div class="rm-title">READING MAP · 本章脉络</div>
-    ${readMap(mapSteps)}
-    <div class="cg-grid">
-      <div class="cg-block"><h3>带着三个问题读</h3><ol>${(g.questions||[]).map(q=>`<li>${esc(q)}</li>`).join('')}</ol></div>
-      <div class="cg-block"><h3>读完后，你应该能</h3><ul>${(g.outcomes||[]).map(o=>`<li>${esc(o)}</li>`).join('')}</ul></div>
-    </div>
-    <div class="cg-path"><h3>建议路线</h3><div class="cg-route">
-      ${(g.path||[]).map(p=>{ const e=byId[p.n]; return e?`<button class="cg-route-item" data-ep="${e.n}"><b>${esc(e.label)}</b><span>${esc(p.why)}</span></button>`:''; }).join('')}
-    </div></div>
-  </div>` : '';
+  const g = m.guide || {};
+  const d = m.deduction || {};
+  const steps = [d.premise, d.turn, d.landing].filter(Boolean);
+  const scenes = m.scenes || [];
+  const thread = m.thread || [];
+  const cases = m.sceneCases || [];
+  const takes = m.takes || [];
+  const takeState = state.takes || {};
+  const wave = [10,18,26,14,30,20,12,24,32,16,22,28,12,20,26,14]
+    .map((h,i)=>`<i style="--h:${h}px;--d:${i}"></i>`).join('');
+  const sceneHtml = scenes.map((s,i)=>`
+    <article class="scene reveal" id="mp-scene-${i}" data-scene="${i}" style="--i:${i}">
+      <div class="scene-turn"><span class="scene-no">${pad(i+1)}</span></div>
+      <div class="scene-main">
+        <div class="scene-q"><span class="scene-tag">听友之问</span><p>${esc(s.q)}</p></div>
+        <div class="scene-a">
+          <span class="scene-tag">节目原声</span>
+          <blockquote>${esc(s.a)}</blockquote>
+          <button class="scene-src" data-ep="${s.ep}">${esc(s.src)} · ${esc(s.t)} <span>读原文 →</span></button>
+        </div>
+        <div class="scene-note"><span>旁白</span><p>${esc(s.note)}</p></div>
+      </div>
+    </article>`).join('');
   $('#view-module').innerHTML = `<div class="wrap">
     <div class="detail-top"><button class="back-btn" data-go="modules"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 全部模块</button></div>
-    <div class="module-hero">
-      <div class="mno">MODULE ${m.no} · ${esc(m.kicker)}</div>
+    <section class="mp-hero">
+      <div class="mp-kicker">MODULE ${m.no} · ${esc(m.kicker)}</div>
       <h1>${esc(m.title)}</h1>
-      <div class="msub">${esc(m.subtitle)}</div>
-      ${guideHtml}
-      <p class="lead">${esc(m.lead)}</p>
-      <div class="big-idea">${esc(m.bigIdea)}</div>
-      <div class="quote-card"><div class="q">“${esc(m.quote.text)}”</div><div class="src">— ${esc(m.quote.src)}</div></div>
-    </div>
-    <div class="module-body">
-      ${m.quotes && m.quotes.length ? `<section class="module-section"><h2>节目原话</h2><div class="lead-note" style="font-size:11px;color:var(--muted);margin:-4px 0 12px">从逐字稿中摘录，时间戳对应音频；机器转写可能有错字。</div>${m.quotes.map(q=>`<button class="module-quote" data-ep="${q.n}"><span class="mq-time">${esc(q.t)}</span><span class="mq-body"><span class="mq-text">${esc(q.text)}</span><span class="mq-src">${esc(q.label)} · 点此读原文</span></span></button>`).join('')}</section>` : ''}
-      ${m.transcriptTakeaways && m.transcriptTakeaways.length ? `<section class="module-section"><h2>从原文反复出现的判断</h2><ul class="action-list">${m.transcriptTakeaways.map(t=>`<li><span class="box"></span><span>${esc(t)}</span></li>`).join('')}</ul></section>` : ''}
-      ${m.sections.map((s,si)=>`
-        <section class="module-section">
-          <h2><span class="accent mono" style="font-size:11px;margin-right:6px">${pad(si+1)}</span>${esc(s.h)}</h2>
-          ${s.p.map(p=>`<p>${esc(p)}</p>`).join('')}
-        </section>`).join('')}
-      <section class="module-section">
-        <h2>案例与切片</h2>
-        <div class="case-grid">
-          ${m.cases.map(c=>`<div class="case-card"><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p><div class="case-ep">${c.eps.map(n=>`<button class="ref-chip" data-ep="${n}">${esc(byId[n]?.label||'')}</button>`).join(' ')}</div></div>`).join('')}
-        </div>
-      </section>
-      <section class="module-section">
-        <h2>行动清单</h2>
-        <ul class="action-list">${m.actions.map(a=>`<li><span class="box"></span><span>${esc(a)}</span></li>`).join('')}</ul>
-      </section>
-      ${g?`<section class="module-section module-recap">
-        <h2>离章前，再问自己一次</h2>
-        <ul class="action-list">${(g.questions||[]).map(q=>`<li><span class="box"></span><span>${esc(q)}</span></li>`).join('')}</ul>
-        <div class="recap-note">三个问题都能用自己的话回答，这一章才算真的读完。</div>
-      </section>`:''}
-      <section class="module-section">
-        <h2>推荐精读</h2>
-        <div class="related-grid">
-          ${m.eps.map(n=>byId[n]?`<button class="ep-row" data-ep="${n}" style="grid-template-columns:1fr"><div><div class="ep-label">${esc(byId[n].label)}</div><h3 style="margin-top:3px">${esc(shortTitle(byId[n],26))}</h3><div class="ep-tags"><span class="mini-tag">${esc(byId[n].tags[0]||'')}</span></div></div></button>`:'').join('')}
-        </div>
-      </section>
-      ${next?`<button class="next-module" data-module="${next.id}"><div><div class="nm-k">NEXT MODULE</div><div class="nm-t">${esc(next.title)}</div></div><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>`:''}
-    </div>
+      <div class="mp-sub">${esc(m.subtitle)}</div>
+      <div class="mp-thesis">
+        <div class="mp-thesis-k">节目里的主判断</div>
+        <p>“${esc(m.bigIdea)}”</p>
+      </div>
+      <div class="mp-stats">
+        <span><b>${scenes.length}</b> 次对话</span><i></i>
+        <span><b>${steps.length}</b> 步推演</span><i></i>
+        <span><b>${cases.length}</b> 个现场</span>
+      </div>
+    </section>
+    <section class="mp-block mp-dialogue">
+      <header class="mp-head">
+        <div class="mp-eyebrow">DIALOGUE · 对话现场</div>
+        <h2>把问题摆上桌，听她怎么接</h2>
+        <p>三个回合：先问，再听原声，最后补一句旁白。</p>
+        <div class="mp-wave" aria-hidden="true">${wave}</div>
+      </header>
+      <nav class="mp-thread" aria-label="谈话脉络">
+        ${thread.map((t,i)=>`<button class="mp-thread-step ${i===0?'active':''}" data-scene-jump="${i}" aria-current="${i===0?'true':'false'}"><span>${pad(i+1)}</span><b>${esc(t)}</b></button>`).join('')}
+      </nav>
+      <div class="mp-scenes">${sceneHtml}</div>
+    </section>
+    ${steps.length?`<section class="mp-block mp-deduce">
+      <header class="mp-head">
+        <div class="mp-eyebrow">LOGIC · 观点推演</div>
+        <h2>这句话，是怎么一步步推出来的</h2>
+        <p>起点 → 转折 → 落点，看清判断背后的链条。</p>
+      </header>
+      <div class="dd-board">
+        <div class="dd-track" aria-hidden="true"><i></i></div>
+        ${steps.map((s,i)=>`<div class="dd-card reveal ${i===steps.length-1?'dd-landing':''}" style="--i:${i}">
+          <div class="dd-top"><span class="dd-k">${esc(s.k)}</span><span class="dd-step">STEP ${pad(i+1)}</span></div>
+          <h3>${esc(s.h)}</h3>
+          <p>${esc(s.p)}</p>
+        </div>`).join('')}
+      </div>
+      <div class="dd-boundary"><span>边界</span><p>${esc(d.boundary||'')}</p></div>
+    </section>`:''}
+    ${cases.length?`<section class="mp-block mp-cases">
+      <header class="mp-head">
+        <div class="mp-eyebrow">SCENES · 现场切片</div>
+        <h2>三个故事，照见同一条规律</h2>
+        <p>只留最像你处境的那一个切面。</p>
+      </header>
+      <div class="mp-case-list">
+        ${cases.map((c,i)=>`<button class="case-mini reveal" data-ep="${c.ep}" style="--i:${i}">
+          <span class="cm-label">${esc(byId[c.ep]?.label||'')}</span>
+          <b>${esc(c.title)}</b>
+          <p>${esc(c.line)}</p>
+          <span class="cm-arrow">→</span>
+        </button>`).join('')}
+      </div>
+    </section>`:''}
+    ${takes.length?`<section class="mp-block mp-takes">
+      <header class="mp-head">
+        <div class="mp-eyebrow">TAKEAWAY · 带走</div>
+        <h2>离开这一章，只做三件事</h2>
+        <p>点一下就算做到；下次回来还能看到。</p>
+      </header>
+      <ol class="take-list">
+        ${takes.map((t,i)=>{
+          const key = `${m.id}-${i}`, on = !!takeState[key];
+          return `<li class="take-item reveal ${on?'done':''}" style="--i:${i}">
+            <button class="take-check" data-take="${key}" aria-pressed="${on}" aria-label="标记做到：${esc(t)}"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg></button>
+            <span class="take-no">${pad(i+1)}</span>
+            <p>${esc(t)}</p>
+          </li>`;
+        }).join('')}
+      </ol>
+      ${g.teaser?`<div class="take-teaser"><span>一句话</span><p>${esc(g.teaser)}</p></div>`:''}
+    </section>`:''}
+    ${(g.path||[]).length?`<details class="mp-route">
+      <summary>按顺序读：${g.path.length} 期建议路线</summary>
+      <div class="mp-route-list">
+        ${g.path.map(p=>{ const e = byId[p.n]; return e?`<button class="mp-route-item" data-ep="${e.n}"><b>${esc(e.label)}</b><span>${esc(p.why)}</span></button>`:''; }).join('')}
+      </div>
+    </details>`:''}
+    ${next?`<button class="next-module" data-module="${next.id}"><div><div class="nm-k">NEXT MODULE</div><div class="nm-t">${esc(next.title)}</div></div><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>`:''}
   </div>`;
   applyHighlights($('#view-module'));
+  initModuleMotion($('#view-module'));
 }
 
 /* ---------- episodes ---------- */
@@ -1656,7 +1753,7 @@ function renderMe(){
   $('#exportNotes')?.addEventListener('click', exportNotes);
   $('#resetAll')?.addEventListener('click', ()=>{
     if(confirm('确定清空所有已学、收藏和笔记吗？此操作不可撤销。')){
-      state = { done:{}, saved:{}, notes:{}, theme:state.theme }; saveState(); renderAll(); toast('已清空学习数据');
+      state = { done:{}, saved:{}, notes:{}, takes:{}, theme:state.theme }; saveState(); renderAll(); toast('已清空学习数据');
     }
   });
   applyHighlights($('#view-me'));
@@ -1810,6 +1907,27 @@ function renderAll(){
 document.addEventListener('click', e=>{
   const scrollBtn = e.target.closest('[data-scroll]');
   if (scrollBtn){ document.getElementById(scrollBtn.dataset.scroll)?.scrollIntoView({behavior:'smooth'}); return; }
+  const sceneJump = e.target.closest('[data-scene-jump]');
+  if (sceneJump){
+    const target = document.getElementById('mp-scene-' + sceneJump.dataset.sceneJump);
+    target?.scrollIntoView({behavior:'smooth', block:'start'});
+    $$('.mp-thread-step').forEach(b=>{
+      const on = b===sceneJump;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-current', on ? 'true' : 'false');
+    });
+    return;
+  }
+  const takeBtn = e.target.closest('[data-take]');
+  if (takeBtn){
+    const key = takeBtn.dataset.take;
+    state.takes[key] = !state.takes[key];
+    saveState();
+    const item = takeBtn.closest('.take-item');
+    item?.classList.toggle('done', !!state.takes[key]);
+    takeBtn.setAttribute('aria-pressed', state.takes[key] ? 'true' : 'false');
+    return;
+  }
   const filterBtn = e.target.closest('[data-epfilter]');
   if (filterBtn){
     epFilter = filterBtn.dataset.epfilter;
@@ -1836,7 +1954,10 @@ window.addEventListener('hashchange', ()=>{
   if ($('#episodeSheet').classList.contains('open')) closeSheet(true);
   route();
 });
-window.addEventListener('scroll', ()=>{ $('#appHeader').classList.toggle('scrolled', window.scrollY>4); }, {passive:true});
+window.addEventListener('scroll', ()=>{
+  $('#appHeader').classList.toggle('scrolled', window.scrollY>4);
+  scheduleModuleSceneNav();
+}, {passive:true});
 $('#searchJump').addEventListener('click', ()=>{ go('episodes'); setTimeout(()=>$('#epSearch')?.focus(), 120); });
 $('#themeToggle').addEventListener('click', ()=>{
   const cur = document.documentElement.dataset.theme || 'light';

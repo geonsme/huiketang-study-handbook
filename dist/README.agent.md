@@ -54,6 +54,8 @@
 
 首页可按“董了”筛选：`/#/episodes` 后点击“董了”标签。
 
+模块页不是长文堆叠，固定四块：**对话现场**（3 个“听友之问 → 节目原声 → 旁白”回合）、**观点推演**（起点 / 转折 / 落点 + 边界）、**现场切片**（3 个故事）、**带走**（3 件可勾选的事）。每块的源数据在模块对象的 `thread / scenes / deduction / sceneCases / takes` 字段。
+
 ## 3. 数据契约
 
 ### 主要文件
@@ -65,9 +67,12 @@
 | `guides/vol_guides.json` | 111 篇 Vol 导读源数据 |
 | `guides/module_guides.json` | 8 篇章节大导读源数据 |
 | `guides/dongliao.json` | 111 条“董了”源数据 |
+| `module_scenes.json` | 8 个模块的对话切片、观点推演、现场与行动源数据 |
+| `apply_module_scenes.js` | 把模块切片合并进 `data-v2.json`，并校验数量与 ep 引用 |
 | `summaries/batch*.json` | 分批精读结果；新增期写入 `batch_auto_YYYYMMDD.json` |
 | `template-v2.html` | 单文件页面模板与渲染逻辑 |
-| `build-v2.js` | 把 `data-v2.json` 注入模板，生成最终 HTML |
+| `module-story.css` | 模块页专属样式，构建时注入模板 |
+| `build-v2.js` | 注入模块 CSS 与 `data-v2.json`，生成最终 HTML |
 | `build_ebook.py` | 生成两本 EPUB 和一本 TXT |
 | `site_config.json` | Qoder Site 的 siteRoot / projectId / siteId / 域名；本机配置，不入库 |
 | `sync_github.py` | 有新增时把白名单内容提交到公开 GitHub 仓库 |
@@ -80,6 +85,11 @@ summary, line, points, analysis[], quotes[], case, keywords[]
 chapters[], paras[], transcript.chunks[[t, text]], transcriptChars
 guide { hook, question, keywords[3] }
 dongliao { title, quote, t, context, critique, insight }
+
+Module 关键字段：
+thread[3], scenes[3] { q, a, src, t, ep, note },
+deduction { premise, turn, landing, boundary },
+sceneCases[3] { title, line, ep }, takes[3]
 ```
 
 ### 内容规则
@@ -121,6 +131,7 @@ node apply_summaries.js
 node apply_firstperson.js
 node finalize_new.js
 node apply_guides.js
+node apply_module_scenes.js   # 仅当 module_scenes.json 有改动
 node build-v2.js
 
 # 6. 重新生成电子书
