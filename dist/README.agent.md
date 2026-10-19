@@ -56,6 +56,8 @@
 
 模块页不是长文堆叠，固定四块：**对话现场**（3 个“听友之问 → 节目原声 → 旁白”回合）、**观点推演**（起点 / 转折 / 落点 + 边界）、**现场切片**（3 个故事）、**带走**（3 件可勾选的事）。每块的源数据在模块对象的 `thread / scenes / deduction / sceneCases / takes` 字段。
 
+单期页按一条阅读路径排列：**本期脉络**（一句话 + 导读问题 + 三步）→ **原文精读**（先 3 段，其余折叠）→ **董了**（原文种子 → 上下文 → 再想一层 → 点睛，逐层展开）→ **主理人的观点**（首节直读，其余折叠）→ **原声资料**（时间轴 / 官方笔记 / 完整逐字稿三标签）→ **我的笔记**。董了的标题与渐变边框只在最后一步出现。
+
 ## 3. 数据契约
 
 ### 主要文件
@@ -71,7 +73,7 @@
 | `apply_module_scenes.js` | 把模块切片合并进 `data-v2.json`，并校验数量与 ep 引用 |
 | `summaries/batch*.json` | 分批精读结果；新增期写入 `batch_auto_YYYYMMDD.json` |
 | `template-v2.html` | 单文件页面模板与渲染逻辑 |
-| `module-story.css` | 模块页专属样式，构建时注入模板 |
+| `module-story.css` | 模块页与单期页的对话、推演、资料标签样式，构建时注入模板 |
 | `build-v2.js` | 注入模块 CSS 与 `data-v2.json`，生成最终 HTML |
 | `build_ebook.py` | 生成两本 EPUB 和一本 TXT |
 | `site_config.json` | Qoder Site 的 siteRoot / projectId / siteId / 域名；本机配置，不入库 |

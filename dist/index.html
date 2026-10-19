@@ -1082,6 +1082,116 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
   .mp-wave{display:none}
 }
 
+
+/* ---------- Vol page: one reading path ---------- */
+.vol-hero{padding-bottom:18px}
+.vol-preface{position:relative;margin-top:14px;padding:20px;border-radius:26px;border:1px solid var(--glass-border);background:var(--glass-strong);box-shadow:var(--glass-shadow);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);overflow:hidden}
+.vol-preface::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 90% at 100% 0%,color-mix(in srgb,var(--orange) 14%,transparent),transparent 58%);pointer-events:none}
+.vol-preface>*{position:relative;z-index:1}
+.vp-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.vp-kicker{font-family:var(--font-ui);font-size:9px;letter-spacing:.18em;color:var(--red);font-weight:800;text-transform:uppercase}
+.vp-count{font-size:9px;color:var(--muted);white-space:nowrap}
+.vp-line{margin-top:12px;padding:14px 16px;border-radius:18px;border:1px solid color-mix(in srgb,var(--orange) 28%,var(--glass-border));background:linear-gradient(135deg,color-mix(in srgb,var(--orange) 13%,transparent),color-mix(in srgb,var(--glass-highlight) 18%,transparent));box-shadow:inset 0 1px 0 var(--glass-highlight)}
+.vp-line-k{display:block;font-family:var(--font-ui);font-size:8.5px;letter-spacing:.14em;color:var(--red);font-weight:800;margin-bottom:4px}
+.vp-line p{font-family:var(--font-read);font-size:18px;line-height:1.75;color:var(--ink);margin:0}
+.vp-hook{margin-top:14px;padding-left:12px;border-left:2px solid color-mix(in srgb,var(--orange) 48%,transparent)}
+.vp-hook-k{display:block;font-family:var(--font-ui);font-size:8.5px;letter-spacing:.12em;color:var(--red);font-weight:800;margin-bottom:3px}
+.vp-hook p{font-size:12.5px;line-height:1.82;color:var(--ink-2);margin:0}
+.vp-map{margin-top:14px}
+.vp-map .rm-title{margin-top:8px}
+.vp-keys{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}
+.vp-keys span{font-size:9.5px;background:color-mix(in srgb,var(--orange) 13%,transparent);border:1px solid color-mix(in srgb,var(--orange) 24%,transparent);color:var(--red);border-radius:999px;padding:2px 7px}
+
+.vs-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+.vs-no{font-family:var(--font-ui);font-size:9.5px;color:var(--red);font-weight:800;letter-spacing:.1em}
+.vs-head h2{font-family:var(--font-display);font-size:20px;line-height:1.3;letter-spacing:-.025em;color:var(--ink);margin:0}
+.vs-meta{margin-left:auto;font-size:9.5px;color:var(--muted);white-space:nowrap}
+.more-block{margin-top:12px;border:1px dashed var(--line-strong);border-radius:14px;background:color-mix(in srgb,var(--glass) 55%,transparent);overflow:hidden}
+.more-block summary{cursor:pointer;list-style:none;min-height:44px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;font-weight:600;color:var(--red)}
+.more-block summary::-webkit-details-marker{display:none}
+.more-block summary::after{content:"+";font-size:15px;line-height:1;color:var(--red)}
+.more-block[open] summary::after{content:"−"}
+.more-block .more-body{padding:0 12px 8px}
+.more-block .more-body .excerpt:last-child{border-bottom:0}
+.vol-section .lead-note{font-size:10.5px;color:var(--muted);line-height:1.7;margin:-2px 0 10px}
+
+
+/* 董了：从原文里逐步长出来 */
+.dl-grow{position:relative;margin:20px 0 2px;padding:18px;border-radius:24px;border:1px solid var(--line-strong);background:var(--glass);box-shadow:var(--glass-shadow);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);overflow:hidden;transition:border-color .3s,box-shadow .3s;scroll-margin-top:96px}
+.dl-grow.is-complete{border:1.5px solid transparent;background:linear-gradient(var(--glass-strong),var(--glass-strong)) padding-box,linear-gradient(120deg,rgba(255,184,77,.95),rgba(255,255,255,.22),rgba(245,166,35,.9),rgba(255,255,255,.18)) border-box;background-size:100% 100%,300% 300%;animation:dlBorder 12s ease-in-out infinite;box-shadow:0 22px 55px rgba(245,166,35,.14),inset 0 1px 0 var(--glass-highlight)}
+.dlg-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dlg-kicker{font-family:var(--font-ui);font-size:8.5px;letter-spacing:.12em;color:var(--red);font-weight:700}
+.dlg-progress{margin-left:auto;display:flex;gap:4px;align-items:center}
+.dlg-progress i{width:5px;height:5px;border-radius:50%;background:var(--line-strong);transition:background .25s,box-shadow .25s}
+.dlg-progress i.on{background:var(--orange);box-shadow:0 0 0 3px color-mix(in srgb,var(--orange) 16%,transparent)}
+.dlg-seed{margin-top:12px;padding:13px 14px;border-left:3px solid var(--orange);border-radius:0 14px 14px 0;background:color-mix(in srgb,var(--glass-highlight) 18%,transparent)}
+.dlg-seed-k{font-family:var(--font-ui);font-size:8.5px;letter-spacing:.1em;color:var(--red);font-weight:800}
+.dlg-seed blockquote{margin:5px 0 0;font-family:var(--font-read);font-size:16px;line-height:1.82;color:var(--ink)}
+.dlg-stage,.dlg-final{margin-top:12px;padding:12px 14px;border:1px solid var(--glass-border);border-radius:14px;background:var(--glass);animation:dlgIn .42s cubic-bezier(.22,1,.36,1)}
+.dlg-stage-k,.dlg-final-k{font-family:var(--font-ui);font-size:8.5px;letter-spacing:.1em;color:var(--red);font-weight:800;margin-bottom:4px}
+.dlg-stage p{font-family:var(--font-read);font-size:13px;line-height:1.9;color:var(--ink-2);margin:0}
+.dlg-final{border-color:color-mix(in srgb,var(--orange) 34%,var(--glass-border));background:linear-gradient(135deg,color-mix(in srgb,var(--orange) 14%,transparent),color-mix(in srgb,var(--glass-highlight) 16%,transparent));animation:dlgIn .5s cubic-bezier(.22,1,.36,1)}
+.dlg-final h3{font-family:var(--font-display);font-size:18px;line-height:1.4;letter-spacing:-.02em;color:var(--ink);margin:2px 0 6px}
+.dlg-final p{font-family:var(--font-read);font-size:14px;line-height:1.82;color:var(--ink);margin:0}
+.dlg-stage[hidden],.dlg-final[hidden]{display:none}
+@keyframes dlgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dlg-next{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:46px;margin-top:12px;padding:10px 14px;border-radius:14px;border:1px solid color-mix(in srgb,var(--orange) 32%,var(--glass-border));background:color-mix(in srgb,var(--orange) 8%,var(--glass));color:var(--ink);font-family:var(--font-ui);font-size:11.5px;font-weight:600;text-align:left;transition:background .2s,border-color .2s,transform .2s}
+.dlg-next span{margin-left:auto;color:var(--red);font-size:15px;line-height:1}
+.dlg-next:hover{background:color-mix(in srgb,var(--orange) 14%,var(--glass));border-color:var(--orange)}
+.dlg-next:active{transform:scale(.99)}
+.dl-grow.is-complete .dlg-next{background:transparent;border-color:var(--line);color:var(--muted);font-weight:500}
+.dl-grow.is-complete .dlg-next span{color:var(--muted)}
+
+
+/* 原声资料：时间轴 / 官方笔记 / 逐字稿 收在一个板块 */
+.va-card{margin-top:12px;border:1px solid var(--glass-border);border-radius:20px;background:var(--glass);box-shadow:var(--glass-shadow);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);overflow:hidden}
+.va-tabs{display:flex;gap:4px;padding:6px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--glass-highlight) 10%,transparent)}
+.va-tab{flex:1;min-width:0;min-height:44px;padding:6px 4px;border:0;border-radius:12px;background:transparent;color:var(--muted);font-family:var(--font-ui);font-size:10.5px;font-weight:600;line-height:1.3;transition:background .2s,color .2s,box-shadow .2s}
+.va-tab em{display:block;font-style:normal;font-size:8px;font-weight:500;color:var(--muted);margin-top:1px;opacity:.8}
+.va-tab.active{background:var(--ink);color:var(--paper);box-shadow:0 6px 16px rgba(31,35,60,.14)}
+.va-tab.active em{color:color-mix(in srgb,var(--paper) 66%,transparent)}
+.va-panel{padding:14px}
+.va-panel[hidden]{display:none}
+.va-panel .notes-body{border-top:0;padding:0}
+.va-panel .notes-body p{font-size:12px;line-height:1.82}
+.va-panel .chapter-list{margin-top:0}
+.va-panel .chapter{grid-template-columns:52px minmax(0,1fr);gap:8px;padding:7px 0;font-size:12px;line-height:1.6}
+.va-panel .transcript-tools{margin-bottom:10px}
+.va-panel .tr-chunk{grid-template-columns:50px minmax(0,1fr);gap:8px;font-size:12px;line-height:1.72}
+
+.vol-note textarea{min-height:132px}
+.vol-note .note-status{margin-top:6px}
+.sheet-footer{margin-top:20px}
+
+@media (max-width:560px){
+  .vol-preface{padding:17px;border-radius:24px}
+  .vp-line{padding:12px 13px}
+  .vp-line p{font-size:16.5px;line-height:1.78}
+  .vp-hook p{font-size:12px;line-height:1.8}
+  .vs-head{gap:7px}
+  .vs-head h2{font-size:19px}
+  .vs-meta{font-size:9px}
+  .dl-grow{padding:16px;border-radius:22px}
+  .dlg-seed blockquote{font-size:15px}
+  .va-tab{font-size:10px}
+  .va-panel{padding:12px}
+}
+@media (max-width:340px){
+  .vp-top{gap:6px}
+  .vp-count{font-size:8px}
+  .vs-meta{width:100%;margin-left:0;white-space:normal}
+  .va-tab{font-size:9.5px}
+  .va-tab em{font-size:7.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  .dl-grow,.dl-grow.is-complete{animation:none!important}
+  .dlg-stage,.dlg-final{animation:none!important}
+}
+@media print{
+  .dlg-stage[hidden],.dlg-final[hidden]{display:block!important}
+  .va-panel[hidden]{display:block!important}
+}
+
 </style>
 </head>
 <body>
@@ -1705,63 +1815,73 @@ function renderVol(n){
   const summary = e.summary || e.line || '';
   const tagHtml = (e.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('') + (e.mods||[]).map(m=>`<span class="pill red">${esc(modById[m]?.subtitle || moduleName(m))}</span>`).join('');
 
-  const excerptHtml = key.length
-    ? `<div class="lead-note">${e.quotes && e.quotes.length ? '精读引文 + 机器提取的原文段落，按时间排序；时间戳对应音频，引用请以音频为准。' : '从逐字稿中提取的关键段落，按时间排序。机器转写可能存在个别错字，引用请以音频为准。'}</div>` +
-      key.map(c=>`<div class="excerpt"><span class="ex-time">${esc(c.t)}</span><div><p>${esc(c.text)}</p></div></div>`).join('')
-    : points.length
-      ? `<div class="lead-note">逐字稿转写中，先呈现精读要点；完成后会自动替换为原文摘录。</div>` +
-        points.map((p,i)=>`<div class="excerpt"><span class="ex-time">${pad(i+1)}</span><div><p>${esc(p)}</p></div></div>`).join('')
-      : `<div class="tr-empty">逐字稿正在转写中。可以先读下方的官方节目笔记。</div>`;
+  const excerptItem = c => `<div class="excerpt"><span class="ex-time">${esc(c.t)}</span><div><p>${esc(c.text)}</p></div></div>`;
+  const sourceList = key.length ? key : points.map((p,i)=>({t:pad(i+1),text:p}));
+  const shownSource = sourceList.slice(0,3);
+  const restSource = sourceList.slice(3);
+  const excerptHtml = sourceList.length
+    ? `<div class="lead-note">${key.length ? '从逐字稿里摘出的关键段落，时间戳对应音频；机器转写可能有错字。' : '逐字稿转写中，先呈现精读要点；完成后会自动替换为原文摘录。'}</div>` +
+      shownSource.map(excerptItem).join('') +
+      (restSource.length ? `<details class="more-block"><summary>展开其余 ${restSource.length} 段原文</summary><div class="more-body">${restSource.map(excerptItem).join('')}</div></details>` : '')
+    : `<div class="tr-empty">逐字稿正在转写中。可以先读下方“原声资料”里的官方笔记。</div>`;
 
-  const analysisHtml = analysis.length
-    ? analysis.map(s=>`<div class="analysis-box"><h3>${esc(s.h)}</h3>${(s.p||[]).map(p=>`<p>${esc(p)}</p>`).join('')}</div>`).join('')
-    : points.length
-      ? `<div class="analysis-box"><h3>${e.pointsSource==='agent'||e.pointsSource==='agent-brief'?'这一期的几条主线':'原文要点（从逐字稿提取）'}</h3><ul>${points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`
-      : `<div class="analysis-box"><h3>先给你一个抓手</h3><p>${esc(e.line)}</p></div>`;
+  const analysisBox = s => `<div class="analysis-box"><h3>${esc(s.h)}</h3>${(s.p||[]).map(p=>`<p>${esc(p)}</p>`).join('')}</div>`;
+  let analysisHtml;
+  if (analysis.length) {
+    analysisHtml = analysisBox(analysis[0]);
+    if (analysis.length > 1) {
+      analysisHtml += `<details class="more-block"><summary>继续读完整拆解（${analysis.length-1} 节）</summary><div class="more-body">${analysis.slice(1).map(analysisBox).join('')}</div></details>`;
+    }
+  } else if (points.length) {
+    analysisHtml = `<div class="analysis-box"><h3>${e.pointsSource==='agent'||e.pointsSource==='agent-brief'?'这一期的几条主线':'原文要点（从逐字稿提取）'}</h3><ul>${points.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div>`;
+  } else {
+    analysisHtml = `<div class="analysis-box"><h3>先给你一个抓手</h3><p>${esc(e.line)}</p></div>`;
+  }
+  const analysisMeta = analysis.length ? `${analysis.length} 节拆解` : (points.length ? '要点整理' : '先给一个抓手');
 
-  const chaptersHtml = e.chapters.length
-    ? `<details class="notes-block" ${e.chapters.length<=10?'open':''}><summary>${e.chapters.length} 个官方章节 · 点击展开</summary><div class="notes-body"><div class="chapter-list">${e.chapters.map(c=>`<div class="chapter"><span class="ct">${esc(c.t)}</span><span class="cx">${esc(c.text)}</span></div>`).join('')}</div></div></details>`
+  const noteChars = e.paras.join('').length;
+  const tabDefs = [
+    { key: 'timeline', label: '时间轴', meta: e.chapters.length ? `${e.chapters.length} 章节` : '未附' },
+    { key: 'notes', label: '官方笔记', meta: e.paras.length ? `约 ${(noteChars/1000).toFixed(1)}k 字` : '未附' },
+    { key: 'transcript', label: '逐字稿', meta: chunks.length ? `${(e.transcriptChars/1000).toFixed(1)}k 字` : '转写中' }
+  ];
+  const defaultTab = e.chapters.length ? 'timeline' : (e.paras.length ? 'notes' : 'transcript');
+  const tabsHtml = tabDefs.map(t=>`<button class="va-tab ${t.key===defaultTab?'active':''}" id="va-tab-${t.key}" data-va-tab="${t.key}" role="tab" aria-selected="${t.key===defaultTab}" aria-controls="va-panel-${t.key}">${t.label}<em>${t.meta}</em></button>`).join('');
+  const timelineHtml = e.chapters.length
+    ? `<div class="chapter-list">${e.chapters.map(c=>`<div class="chapter"><span class="ct">${esc(c.t)}</span><span class="cx">${esc(c.text)}</span></div>`).join('')}</div>`
     : `<div class="tr-empty">这一期官方未附时间轴。</div>`;
-
   const notesHtml = e.paras.length
-    ? `<details class="notes-block" ${!points.length?'open':''}><summary>官方 Shownotes · 约 ${Math.round(e.paras.join('').length/100)/10}k 字</summary><div class="notes-body">${e.paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div></details>`
+    ? `<div class="notes-body">${e.paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`
     : `<div class="tr-empty">官方未附 Shownotes。</div>`;
-
   const transcriptHtml = chunks.length
-    ? `<details class="notes-block"><summary>完整逐字稿 · ${(e.transcriptChars/1000).toFixed(1)}k 字 · ${chunks.length} 段</summary><div class="notes-body">
-        <div class="transcript-tools"><input id="trSearch" placeholder="在这一期逐字稿中搜索…" autocomplete="off"><button id="copyTranscript">复制全文</button></div>
-        <div id="trChunks">${chunks.map(c=>`<div class="tr-chunk" data-text="${esc(c[1])}"><span class="tr-time">${esc(c[0])}</span><p>${esc(c[1])}</p></div>`).join('')}</div>
-        <div class="tr-empty" id="trNoResult" style="display:none">没有匹配的段落。</div>
-      </div></details>`
+    ? `<div class="transcript-tools"><input id="trSearch" placeholder="在这一期逐字稿中搜索…" autocomplete="off"><button id="copyTranscript">复制全文</button></div><div id="trChunks">${chunks.map(c=>`<div class="tr-chunk" data-text="${esc(c[1])}"><span class="tr-time">${esc(c[0])}</span><p>${esc(c[1])}</p></div>`).join('')}</div><div class="tr-empty" id="trNoResult" style="display:none">没有匹配的段落。</div>`
     : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
+  const panelHtml = (key, inner) => `<div class="va-panel" id="va-panel-${key}" data-va-panel="${key}" role="tabpanel" aria-labelledby="va-tab-${key}" ${key===defaultTab?'':'hidden'}>${inner}</div>`;
+  const archiveHtml = `<div class="va-card"><div class="va-tabs" id="vaTabs" role="tablist" aria-label="节目原声资料">${tabsHtml}</div>${panelHtml('timeline', timelineHtml)}${panelHtml('notes', notesHtml)}${panelHtml('transcript', transcriptHtml)}</div>`;
 
   const noteVal = state.notes[e.n] || '';
   const g = e.guide;
   const a0 = (e.analysis || [])[0];
-  const mapSteps = g ? [
-    { k: '入口问题', h: '这一期在回答什么', p: g.question },
-    { k: '主理人的判断', h: '我先给结论', p: e.line || summary },
-    { k: '展开的线索', h: a0?.h || '这一期的关键拆解', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
-  ] : [];
-  const mapHtml = g ? `<div class="vol-map"><div class="rm-title">READING MAP · 本期脉络</div>${readMap(mapSteps)}</div>` : '';
+  const mapSteps = [
+    { k: '导读问题', h: '这一期在回答什么', p: g?.question || summary || e.line },
+    { k: '这一期发生什么', h: '先把人物和场景放进来', p: e.line || summary },
+    { k: '展开的线索', h: '原文怎么推到这一步', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
+  ].filter(s=>s.p);
+  const prefaceHtml = `<section class="vol-preface" aria-label="本期脉络">
+    <div class="vp-top"><span class="vp-kicker">START HERE · 本期脉络</span><span class="vp-count">${sourceList.length} 段原文 · ${analysisMeta}</span></div>
+    <div class="vp-line"><span class="vp-line-k">本期一句话 · 导读</span><p>${esc(summary)}</p></div>
+    ${mapSteps.length?`<div class="vp-map"><div class="rm-title">READING MAP · 三步读法</div>${readMap(mapSteps)}</div>`:''}
+    ${(g?.keywords||[]).length?`<div class="vp-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
+  </section>`;
   const dl = e.dongliao;
-  const dlHtml = dl ? `<section class="dongliao" aria-label="董了观点">
-    <div class="dl-head"><span class="dl-badge">董了</span><span class="dl-kicker">原文里长出来的观点</span></div>
-    <h2 class="dl-title">${esc(dl.title)}</h2>
-    <blockquote class="dl-quote"><p>${esc(dl.quote)}</p><cite>${esc(e.label)} · ${esc(dl.t)}</cite></blockquote>
-    <div class="dl-flow" aria-hidden="true"><span>原文</span><i></i><span>上下文</span><i></i><span>再想一层</span><i></i><span>点睛</span></div>
-    <div class="dl-grid">
-      <div class="dl-block"><h3>放回上下文</h3><p>${esc(dl.context)}</p></div>
-      <div class="dl-block"><h3>再往下想一层</h3><p>${esc(dl.critique)}</p></div>
-    </div>
-    <div class="dl-insight"><span>点睛</span><p>${esc(dl.insight)}</p></div>
+  const dlHtml = dl ? `<section class="dl-grow" id="dlGrow" data-stage="0" aria-label="董了观点">
+    <div class="dlg-top"><span class="dl-badge">董了</span><span class="dlg-kicker">BETWEEN · 原文与观点之间</span><span class="dlg-progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></div>
+    <div class="dlg-seed"><div class="dlg-seed-k">原文种子 · ${esc(e.label)} · ${esc(dl.t)}</div><blockquote>${esc(dl.quote)}</blockquote></div>
+    <div class="dlg-stage" data-dlg-stage="1" hidden><div class="dlg-stage-k">01 · 放回上下文</div><p>${esc(dl.context)}</p></div>
+    <div class="dlg-stage" data-dlg-stage="2" hidden><div class="dlg-stage-k">02 · 再往下想一层</div><p>${esc(dl.critique)}</p></div>
+    <div class="dlg-final" data-dlg-stage="3" hidden><div class="dlg-final-k">03 · 点睛</div><h3>${esc(dl.title)}</h3><p>${esc(dl.insight)}</p></div>
+    <button class="dlg-next" id="dlgNext" aria-expanded="false">把这句话放回上下文 <span>→</span></button>
   </section>` : '';
-  const guideHtml = g ? `<div class="vol-guide">
-    <div class="vg-label">EPISODE GUIDE · 本期导读</div>
-    <p class="vg-hook">${esc(g.hook)}</p>
-    ${g.question?`<div class="vg-question"><b>带着这个问题读：</b>${esc(g.question)}</div>`:''}
-    ${(g.keywords||[]).length?`<div class="vg-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
-  </div>` : '';
   $('#view-vol').innerHTML = `<div class="wrap">
     <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
     <div class="vol-hero">
@@ -1774,18 +1894,26 @@ function renderVol(n){
         <button class="tool-btn ${saved?'on':''}" id="volSaveBtn"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
         <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
       </div>
-      ${guideHtml}
-      ${mapHtml}
-      ${dlHtml}
-      <div class="vol-line"><span class="vl-k">本期一句话</span>${esc(summary)}</div>
     </div>
+    ${prefaceHtml}
     <div class="vol-body">
-      <section class="vol-section"><h2><span class="num">01</span>原文精读</h2>${excerptHtml}</section>
-      <section class="vol-section"><h2><span class="num">02</span>主理人的观点</h2>${analysisHtml}</section>
-      <section class="vol-section"><h2><span class="num">03</span>本期时间轴</h2>${chaptersHtml}</section>
-      <section class="vol-section"><h2><span class="num">04</span>官方节目笔记</h2>${notesHtml}</section>
-      <section class="vol-section"><h2><span class="num">05</span>完整逐字稿</h2>${transcriptHtml}</section>
-      <section class="vol-section"><h2><span class="num">06</span>我的笔记</h2><div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div></section>
+      <section class="vol-section vol-read">
+        <div class="vs-head"><span class="vs-no">01</span><h2>原文精读</h2><span class="vs-meta">${sourceList.length ? (sourceList.length>3?`3 / ${sourceList.length} 段`:`${sourceList.length} 段`) : '转写中'}</span></div>
+        ${excerptHtml}
+      </section>
+      ${dlHtml}
+      <section class="vol-section">
+        <div class="vs-head"><span class="vs-no">02</span><h2>主理人的观点</h2><span class="vs-meta">${analysisMeta}</span></div>
+        ${analysisHtml}
+      </section>
+      <section class="vol-section">
+        <div class="vs-head"><span class="vs-no">03</span><h2>原声资料</h2><span class="vs-meta">时间轴 · 笔记 · 逐字稿</span></div>
+        ${archiveHtml}
+      </section>
+      <section class="vol-section vol-note">
+        <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
+        <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
+      </section>
       <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">逐字稿为本地 Paraformer 转写，可能存在个别错字；原文摘录已按时间标注。精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
     </div>
   </div>`;
@@ -1826,6 +1954,42 @@ function renderVol(n){
         try { document.execCommand('copy'); toast('逐字稿已复制'); } catch(e2) { toast('复制失败，请手动选择'); }
         t.remove();
       }
+    });
+  }
+  const vaTabs = $$('#vaTabs [data-va-tab]');
+  const vaPanels = $$('#view-vol [data-va-panel]');
+  vaTabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      const active = tab.dataset.vaTab;
+      vaTabs.forEach(t=>{
+        const on = t===tab;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      vaPanels.forEach(p=>{ p.hidden = p.dataset.vaPanel !== active; });
+    });
+  });
+  const dlgCard = $('#dlGrow');
+  if (dlgCard) {
+    const dlgNext = $('#dlgNext');
+    const dlgStages = [...dlgCard.querySelectorAll('[data-dlg-stage]')];
+    const dlgDots = [...dlgCard.querySelectorAll('.dlg-progress i')];
+    const labels = ['把这句话放回上下文','再往下想一层','最后，点睛','收起，重新读'];
+    const setDlgStage = (stage, scroll=true)=>{
+      dlgCard.dataset.stage = stage;
+      dlgStages.forEach(el=>{ el.hidden = Number(el.dataset.dlgStage) > stage; });
+      dlgDots.forEach((dot,i)=>dot.classList.toggle('on', i <= stage));
+      dlgCard.classList.toggle('is-complete', stage === 3);
+      dlgNext.setAttribute('aria-expanded', stage ? 'true' : 'false');
+      dlgNext.innerHTML = `${labels[stage]} <span>${stage===3?'↺':'→'}</span>`;
+      if (!scroll) return;
+      if (stage === 0) { dlgCard.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+      const target = dlgStages.find(el=>Number(el.dataset.dlgStage)===stage);
+      if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
+    };
+    dlgNext.addEventListener('click', ()=>{
+      const cur = Number(dlgCard.dataset.stage) || 0;
+      setDlgStage(cur >= 3 ? 0 : cur + 1);
     });
   }
   applyHighlights($('#view-vol'));
