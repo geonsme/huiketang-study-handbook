@@ -106,6 +106,7 @@ sceneCases[3] { title, line, ep }, takes[3]
 - 回答内容问题时，优先读取 `data-v2.json`，不要从页面截图猜。
 - 引用原文时带上 `label` 和时间戳，例如：`Vol.15 · 35:24`。
 - 需要“为什么读”时，用 `guide.hook`；需要“批判性观点”时，用 `dongliao`；需要完整上下文时，用 `analysis` 和 `transcripts/{n}.txt`。
+- 回答模块页问题时，先读该模块的 `thread / scenes / deduction / sceneCases / takes`；`guide.hook` 与 `sections` 主要留在电子书长文里。
 - 电子书和网页内容同源；电子书阅读版不含完整逐字稿，逐字稿在单独的 EPUB。
 - 不要声称站点内容经主播本人审订；手册是听众的学习整理。
 
