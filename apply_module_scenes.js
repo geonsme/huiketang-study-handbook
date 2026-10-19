@@ -35,5 +35,5 @@ for (const m of data.modules || []) {
   changed++;
 }
 
-fs.writeFileSync(dataPath, JSON.stringify(data), 'utf8');
+fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), 'utf8');
 console.log(`applied module scenes: ${changed} modules, ${data.episodes.length} episodes`);
