@@ -5,7 +5,12 @@ const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data-v2.json'), 'u
 const json = JSON.stringify(data).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
 const logo = fs.readFileSync(path.join(__dirname, 'cover.png')).toString('base64');
 const moduleCss = fs.readFileSync(path.join(__dirname, 'module-story.css'), 'utf8');
-const html = template.replace('/*__DATA__*/', json).replace(/__LOGO__/g, 'data:image/png;base64,' + logo).replace('/*__MODULE_STORY_CSS__*/', () => moduleCss);
+const html = template
+  .replace('/*__DATA__*/', json)
+  .replace(/__LOGO__/g, 'data:image/png;base64,' + logo)
+  .replace('/*__MODULE_STORY_CSS__*/', () => moduleCss)
+  .replace(/__EP_COUNT__/g, String(data.podcast.count))
+  .replace(/__CORE_COUNT__/g, String(data.episodes.filter(e => e.core).length));
 const out1 = path.join(__dirname, '慧客堂·学习手册-v2.html');
 fs.writeFileSync(out1, html, 'utf8');
 fs.mkdirSync(path.join(__dirname, 'dist'), { recursive: true });

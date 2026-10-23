@@ -7,7 +7,7 @@
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23f5a623%27/%3E%3Ctext x=%2750%27 y=%2770%27 font-size=%2760%27 text-anchor=%27middle%27 fill=%27%23171512%27%3E%E6%85%A7%3C/text%3E%3C/svg%3E">
 <title>慧客堂 · 学习手册｜老听众整理 · 章节导读与 Vol 深读</title>
-<meta name="description" content="慧客堂 111 期播客学习手册（老听众整理）：8 篇章节大导读、111 期 Vol 导读、111 条董了观点、逐字稿原文摘录、34 期核心精读、8 大模块。">
+<meta name="description" content="慧客堂 __EP_COUNT__ 期播客学习手册（老听众整理）：8 篇章节大导读、__EP_COUNT__ 期 Vol 导读、__EP_COUNT__ 条董了观点、逐字稿原文摘录、__CORE_COUNT__ 期核心精读、8 大模块。">
 <style>
 :root{
   --paper:#fbf3e3;
@@ -1145,7 +1145,7 @@ function renderHome(){
         <button class="btn btn-primary" data-scroll="chapters">从导读开始 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
         <button class="btn btn-ghost" data-go="episodes">按 Vol 浏览</button>
       </div>
-      <div class="tr-status"><span class="tr-dot"></span>逐字稿 ${DATA.podcast.transcribedCount || 0}/111 期已转写 · ${DATA.podcast.transcriptWan || 0} 万字原文</div>
+      <div class="tr-status"><span class="tr-dot"></span>逐字稿 ${DATA.podcast.transcribedCount || 0}/${DATA.podcast.count} 期已转写 · ${DATA.podcast.transcriptWan || 0} 万字原文</div>
     </div>
   </div>
 
@@ -1247,7 +1247,7 @@ function renderHome(){
         }).join('')}
       </div>
       <div class="picks-foot">
-        <button class="btn btn-ghost" data-epfilter="all">查看全部 111 期</button>
+        <button class="btn btn-ghost" data-epfilter="all">查看全部 ${DATA.podcast.count} 期</button>
         <span>覆盖投资世界观、家庭财富、FOF、商品、指数、周期、配置、踩坑与人生。</span>
       </div>
     </section>
@@ -1491,7 +1491,7 @@ function renderModule(id){
 
 /* ---------- episodes ---------- */
 let epFilter = 'all';
-let epSort = 'old';
+let epSort = 'new';
 let epQuery = '';
 
 function renderEpisodes(){
@@ -1501,13 +1501,13 @@ function renderEpisodes(){
     <div class="detail-top"><button class="back-btn" data-go="home"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 总览</button></div>
     <div class="module-hero" style="padding-top:8px">
       <div class="mno">BY VOL</div>
-      <h1>按 Vol，<br>从第一期读到最新一期</h1>
-      <p class="lead">${p.firstDate} 的开堂白到 ${p.lastDate} 的最新一期。每一期都有：逐字稿原文摘录、主理人的观点拆解、官方 Shownotes、完整时间轴与逐字稿全文。</p>
+      <h1>按 Vol，<br>从最新一期往回读</h1>
+      <p class="lead">${p.lastDate} 的最新一期到 ${p.firstDate} 的开堂白，默认按年份从近到远排列。每一期都有：按章节分段的逐字稿、主理人的观点拆解、官方 Shownotes 与完整时间轴。</p>
     </div>
     <div style="margin-top:18px">
       <div class="search-wrap"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg><input id="epSearch" type="search" placeholder="搜索标题、主题、逐字稿或节目笔记…" value="${esc(epQuery)}"><button class="search-clear ${epQuery?'show':''}" id="searchClear" aria-label="清空">×</button></div>
       <div class="chips" id="epChips">${tags.map(t=>`<button class="chip ${epFilter===t?'active':''}" data-filter="${t}">${t==='all'?'全部':t==='core'?'核心精读':t}</button>`).join('')}</div>
-      <div class="filter-bar"><span class="filter-count" id="epCount"></span><button class="sort-btn" id="sortBtn"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h9M8 18h5M3 6h.01M3 12h.01M3 18h.01"></path></svg><span id="sortLabel">从第一期</span></button></div>
+      <div class="filter-bar"><span class="filter-count" id="epCount"></span><button class="sort-btn" id="sortBtn"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h9M8 18h5M3 6h.01M3 12h.01M3 18h.01"></path></svg><span id="sortLabel">最新在前</span></button></div>
       <div class="ep-list" id="epList"></div>
     </div>
   </div>`;
@@ -1524,7 +1524,7 @@ function bindEpisodes(){
     const b=e.target.closest('[data-filter]'); if(!b)return;
     epFilter=b.dataset.filter; $$('#epChips .chip').forEach(x=>x.classList.toggle('active',x===b)); updateEpList();
   });
-  $('#sortBtn').addEventListener('click', ()=>{ epSort = epSort==='new'?'old':'new'; $('#sortLabel').textContent = epSort==='new'?'最新在前':'从第一期'; updateEpList(); });
+  $('#sortBtn').addEventListener('click', ()=>{ epSort = epSort==='new'?'old':'new'; $('#sortLabel').textContent = epSort==='new'?'最新在前':'最早在前'; updateEpList(); });
 }
 
 function matchEp(e){
@@ -1540,7 +1540,9 @@ function matchEp(e){
 function updateEpList(){
   const list = $('#epList'); if(!list)return;
   let arr = DATA.episodes.filter(matchEp);
-  arr = arr.slice().sort((a,b)=> epSort==='new' ? b.n-a.n : a.n-b.n);
+  arr = arr.slice().sort((a,b)=> epSort==='new'
+    ? (b.date.localeCompare(a.date) || b.n-a.n)
+    : (a.date.localeCompare(b.date) || a.n-b.n));
   $('#epCount').textContent = `${arr.length} 期`;
   if (!arr.length) { list.innerHTML = '<div class="empty">没有找到匹配的节目。<br>试试清空搜索，或换一个主题。</div>'; return; }
   const groups = [];
@@ -1553,26 +1555,252 @@ function updateEpList(){
   list.innerHTML = groups.map(g=>`<div class="vol-year"><b>${g.y}</b><span>YEAR</span><em>${g.items.length} 期</em></div>` + g.items.map(epRow).join('')).join('');
 }
 
+/* ---------- Vol transcript helpers ---------- */
+function parseTs(s){
+  if (typeof s !== 'string') return 0;
+  const parts = s.trim().split(':').map(x=>parseInt(x,10));
+  if (!parts.length || parts.some(Number.isNaN)) return 0;
+  if (parts.length === 3) return parts[0]*3600 + parts[1]*60 + parts[2];
+  if (parts.length === 2) return parts[0]*60 + parts[1];
+  return parts[0] || 0;
+}
+function cleanWithMap(s=''){
+  const text = String(s);
+  const out = [], map = [];
+  const fillers = ['这个','那个','就是','然后','嗯','呃','哦','啊','诶','唉','哎'];
+  const punct = /[\s，。！？；：、“”‘’（）()《》【】,.!?;:"'\-—…]/;
+  let i = 0;
+  while (i < text.length){
+    let skip = 0;
+    for (const f of fillers){
+      if (text.startsWith(f, i)) { skip = f.length; break; }
+    }
+    if (skip){ i += skip; continue; }
+    const ch = text[i];
+    if (punct.test(ch)){ i++; continue; }
+    out.push(ch); map.push(i); i++;
+  }
+  return { text: out.join(''), map };
+}
+function editDistance(a, b){
+  const n = a.length, m = b.length;
+  if (!n) return m;
+  if (!m) return n;
+  let prev = new Array(m + 1), cur = new Array(m + 1);
+  for (let j = 0; j <= m; j++) prev[j] = j;
+  for (let i = 1; i <= n; i++){
+    cur[0] = i;
+    const ca = a.charCodeAt(i - 1);
+    for (let j = 1; j <= m; j++){
+      const cost = ca === b.charCodeAt(j - 1) ? 0 : 1;
+      cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + cost);
+    }
+    const tmp = prev; prev = cur; cur = tmp;
+  }
+  return prev[m];
+}
+function chunkIndexAt(rows, sec){
+  if (!rows.length) return -1;
+  let lo = 0, hi = rows.length - 1, ans = 0;
+  while (lo <= hi){
+    const mid = (lo + hi) >> 1;
+    if (rows[mid].sec <= sec){ ans = mid; lo = mid + 1; }
+    else hi = mid - 1;
+  }
+  return ans;
+}
+function findHighlightRange(text, candidate){
+  const src = String(text || '');
+  const raw = String(candidate || '').trim();
+  if (!src || !raw) return null;
+  let at = src.indexOf(raw);
+  if (at >= 0) return { start: at, end: at + raw.length, method: 'exact' };
+  const chunkClean = cleanWithMap(src);
+  const candClean = cleanWithMap(raw);
+  if (candClean.text.length >= 8 && chunkClean.text){
+    const j = chunkClean.text.indexOf(candClean.text);
+    if (j >= 0 && candClean.text.length > 0){
+      return {
+        start: chunkClean.map[j],
+        end: chunkClean.map[j + candClean.text.length - 1] + 1,
+        method: 'clean'
+      };
+    }
+  }
+  if (candClean.text.length >= 12 && chunkClean.text.length >= 12){
+    const seedLen = 4;
+    const seeds = new Map();
+    for (let i = 0; i + seedLen <= chunkClean.text.length; i++){
+      const g = chunkClean.text.slice(i, i + seedLen);
+      if (!seeds.has(g)) seeds.set(g, i);
+    }
+    let seed = { score: 0, pos: 0, qi: 0 };
+    for (let i = 0; i + seedLen <= candClean.text.length; i++){
+      const pos = seeds.get(candClean.text.slice(i, i + seedLen));
+      if (pos == null) continue;
+      let left = 0, right = seedLen;
+      while (i - left > 0 && pos - left > 0 && candClean.text[i-left-1] === chunkClean.text[pos-left-1]) left++;
+      while (i + right < candClean.text.length && pos + right < chunkClean.text.length && candClean.text[i+right] === chunkClean.text[pos+right]) right++;
+      const len = left + right;
+      if (len > seed.score) seed = { score: len, pos: pos - left, qi: i - left };
+    }
+    if (seed.score >= seedLen){
+      const m = candClean.text.length;
+      const start0 = seed.pos - seed.qi;
+      const minStart = Math.max(0, start0 - 12);
+      const maxStart = Math.min(chunkClean.text.length - 12, start0 + 12);
+      let best = { sim: 0, start: 0, end: 0 };
+      for (let start = minStart; start <= maxStart; start++){
+        const minLen = Math.max(12, m - 8);
+        const maxLen = Math.min(chunkClean.text.length - start, m + 12);
+        for (let len = minLen; len <= maxLen; len++){
+          const win = chunkClean.text.slice(start, start + len);
+          const sim = 1 - editDistance(win, candClean.text) / Math.max(len, m);
+          if (sim > best.sim + 1e-9){
+            best = { sim, start, end: start + len };
+          }
+        }
+      }
+      if (best.sim >= 0.8 && best.end > best.start){
+        return {
+          start: chunkClean.map[best.start],
+          end: chunkClean.map[best.end - 1] + 1,
+          method: 'fuzzy'
+        };
+      }
+    }
+  }
+  return null;
+}
+function buildHighlightMap(e, rows){
+  const stats = { candidates: 0, exact: 0, clean: 0, fuzzy: 0, miss: 0, applied: 0 };
+  const best = new Map();
+  const seen = new Set();
+  const add = (list, pri) => {
+    for (const item of list || []){
+      if (!item || !item.text || !item.t) continue;
+      const key = `${item.t}|${item.text}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      stats.candidates++;
+      const ci = chunkIndexAt(rows, parseTs(item.t));
+      if (ci < 0) { stats.miss++; continue; }
+      const range = findHighlightRange(rows[ci].text, item.text);
+      if (!range) { stats.miss++; continue; }
+      stats[range.method]++;
+      const rec = { range, pri, length: range.end - range.start };
+      const prev = best.get(ci);
+      if (!prev || rec.pri > prev.pri || (rec.pri === prev.pri && rec.length > prev.length)) best.set(ci, rec);
+    }
+  };
+  add(e.quotes, 3);
+  add(e.excerpts, 2);
+  add(e.keyChunks, 1);
+  stats.applied = best.size;
+  window.__HKT_HL__ = stats;
+  return best;
+}
+function transcriptSectionTitle(text){
+  const t = String(text || '').replace(/^[嗯呃哦啊诶唉哎、，。！？\s]+/, '');
+  return firstSentence(t, 22) || '逐字稿';
+}
+function buildTranscriptSections(e, rows, dlT){
+  const N = rows.length;
+  if (!N) return { sections: [], dlIdx: -1, dlSection: -1, mode: 'empty' };
+  const chapters = (e.chapters || [])
+    .filter(c => c && /\d/.test(String(c.t || '')))
+    .map(c => ({ title: c.text || '', t: c.t, sec: parseTs(c.t), idx: chunkIndexAt(rows, parseTs(c.t)) }))
+    .map(c => ({ ...c, idx: Math.max(0, Math.min(N - 1, c.idx)) }));
+  const lastSec = rows[N-1].sec;
+  const maxChapterSec = chapters.reduce((m, c) => Math.max(m, c.sec), 0);
+  const trailerLike = !!e.trailer || N < 8 || (chapters.length > 0 && chapters.length < 2) || (chapters.length > 0 && maxChapterSec > lastSec + 600);
+  let sections = [];
+  let chapterNo = 1;
+  if (trailerLike){
+    sections.push({
+      k: e.trailer ? '预告' : (chapters.length ? '全篇' : '逐字稿'),
+      title: e.trailer ? '先听一段预告' : '完整逐字稿',
+      rows: rows.map(r => r.idx),
+      start: rows[0].t,
+      end: rows[N-1].t,
+      pseudo: true,
+      open: true
+    });
+  } else if (!chapters.length){
+    const size = 10;
+    for (let i = 0; i < N; i += size){
+      const group = rows.slice(i, i + size);
+      sections.push({
+        k: `小节 ${pad(sections.length + 1)}`,
+        title: transcriptSectionTitle(group[0].text),
+        rows: group.map(r => r.idx),
+        start: group[0].t,
+        end: group[group.length - 1].t,
+        pseudo: true
+      });
+    }
+  } else {
+    const marks = [];
+    const seenIdx = new Set();
+    for (const c of chapters){
+      if (seenIdx.has(c.idx)) continue;
+      seenIdx.add(c.idx);
+      marks.push(c);
+    }
+    marks.sort((a, b) => a.idx - b.idx);
+    if (marks[0].idx > 0){
+      sections.push({
+        k: '开场',
+        title: '节目开场',
+        rows: rows.slice(0, marks[0].idx).map(r => r.idx),
+        start: rows[0].t,
+        end: rows[marks[0].idx - 1].t,
+        pseudo: true
+      });
+    }
+    marks.forEach((m, mi) => {
+      const end = mi + 1 < marks.length ? marks[mi+1].idx : N;
+      if (end <= m.idx) return;
+      sections.push({
+        k: `章节 ${pad(chapterNo++)}`,
+        title: m.title || transcriptSectionTitle(rows[m.idx].text),
+        rows: rows.slice(m.idx, end).map(r => r.idx),
+        start: m.t,
+        end: rows[end-1].t
+      });
+    });
+  }
+  if (!sections.length){
+    sections.push({ k: '逐字稿', title: '完整逐字稿', rows: rows.map(r => r.idx), start: rows[0].t, end: rows[N-1].t, pseudo: true, open: true });
+  }
+  const dlIdx = dlT ? chunkIndexAt(rows, parseTs(dlT)) : -1;
+  let dlSection = -1;
+  if (dlIdx >= 0) sections.forEach((s, si) => { if (s.rows.includes(dlIdx)) dlSection = si; });
+  sections.forEach((s, si) => { s.open = si === 0 || si === dlSection; });
+  return { sections, dlIdx, dlSection, mode: trailerLike ? 'trailer' : (chapters.length ? 'chapters' : 'grouped') };
+}
+function renderChunkHTML(text, range){
+  const src = String(text || '');
+  if (!range || range.start < 0 || range.end > src.length || range.end <= range.start) return esc(src);
+  return esc(src.slice(0, range.start)) + '<mark class="hl">' + esc(src.slice(range.start, range.end)) + '</mark>' + esc(src.slice(range.end));
+}
+
+let volMediaCleanup = null;
+
 function renderVol(n){
+  if (volMediaCleanup) { try { volMediaCleanup(); } catch(e) {} volMediaCleanup = null; }
   const e = byId[n];
   if (!e) { location.hash = '#/episodes'; return; }
   const done = !!state.done[e.n], saved = !!state.saved[e.n];
   const chunks = e.transcript?.chunks || [];
-  const key = e.excerpts || (e.quotes && e.quotes.length ? e.quotes : e.keyChunks) || [];
+  const rows = chunks.map((c,i)=>({ idx: i, t: c[0], sec: parseTs(c[0]), text: c[1] }));
   const points = e.points || [];
   const analysis = e.analysis || [];
   const summary = e.summary || e.line || '';
+  const dl = e.dongliao;
+  const transcript = buildTranscriptSections(e, rows, dl?.t);
+  const hlMap = buildHighlightMap(e, rows);
   const tagHtml = (e.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('') + (e.mods||[]).map(m=>`<span class="pill red">${esc(modById[m]?.subtitle || moduleName(m))}</span>`).join('');
-
-  const excerptItem = c => `<div class="excerpt"><span class="ex-time">${esc(c.t)}</span><div><p>${esc(c.text)}</p></div></div>`;
-  const sourceList = key.length ? key : points.map((p,i)=>({t:pad(i+1),text:p}));
-  const shownSource = sourceList.slice(0,3);
-  const restSource = sourceList.slice(3);
-  const excerptHtml = sourceList.length
-    ? `<div class="lead-note">${key.length ? '从逐字稿里摘出的关键段落，时间戳对应音频；机器转写可能有错字。' : '逐字稿转写中，先呈现精读要点；完成后会自动替换为原文摘录。'}</div>` +
-      shownSource.map(excerptItem).join('') +
-      (restSource.length ? `<details class="more-block"><summary>展开其余 ${restSource.length} 段原文</summary><div class="more-body">${restSource.map(excerptItem).join('')}</div></details>` : '')
-    : `<div class="tr-empty">逐字稿正在转写中。可以先读下方“原声资料”里的官方笔记。</div>`;
 
   const analysisBox = s => `<div class="analysis-box"><h3>${esc(s.h)}</h3>${(s.p||[]).map(p=>`<p>${esc(p)}</p>`).join('')}</div>`;
   let analysisHtml;
@@ -1591,10 +1819,9 @@ function renderVol(n){
   const noteChars = e.paras.join('').length;
   const tabDefs = [
     { key: 'timeline', label: '时间轴', meta: e.chapters.length ? `${e.chapters.length} 章节` : '未附' },
-    { key: 'notes', label: '官方笔记', meta: e.paras.length ? `约 ${(noteChars/1000).toFixed(1)}k 字` : '未附' },
-    { key: 'transcript', label: '逐字稿', meta: chunks.length ? `${(e.transcriptChars/1000).toFixed(1)}k 字` : '转写中' }
+    { key: 'notes', label: '官方笔记', meta: e.paras.length ? `约 ${(noteChars/1000).toFixed(1)}k 字` : '未附' }
   ];
-  const defaultTab = e.chapters.length ? 'timeline' : (e.paras.length ? 'notes' : 'transcript');
+  const defaultTab = e.chapters.length ? 'timeline' : 'notes';
   const tabsHtml = tabDefs.map(t=>`<button class="va-tab ${t.key===defaultTab?'active':''}" id="va-tab-${t.key}" data-va-tab="${t.key}" role="tab" aria-selected="${t.key===defaultTab}" aria-controls="va-panel-${t.key}">${t.label}<em>${t.meta}</em></button>`).join('');
   const timelineHtml = e.chapters.length
     ? `<div class="chapter-list">${e.chapters.map(c=>`<div class="chapter"><span class="ct">${esc(c.t)}</span><span class="cx">${esc(c.text)}</span></div>`).join('')}</div>`
@@ -1602,11 +1829,8 @@ function renderVol(n){
   const notesHtml = e.paras.length
     ? `<div class="notes-body">${e.paras.map(p=>`<p>${esc(p)}</p>`).join('')}</div>`
     : `<div class="tr-empty">官方未附 Shownotes。</div>`;
-  const transcriptHtml = chunks.length
-    ? `<div class="transcript-tools"><input id="trSearch" placeholder="在这一期逐字稿中搜索…" autocomplete="off"><button id="copyTranscript">复制全文</button></div><div id="trChunks">${chunks.map(c=>`<div class="tr-chunk" data-text="${esc(c[1])}"><span class="tr-time">${esc(c[0])}</span><p>${esc(c[1])}</p></div>`).join('')}</div><div class="tr-empty" id="trNoResult" style="display:none">没有匹配的段落。</div>`
-    : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
   const panelHtml = (key, inner) => `<div class="va-panel" id="va-panel-${key}" data-va-panel="${key}" role="tabpanel" aria-labelledby="va-tab-${key}" ${key===defaultTab?'':'hidden'}>${inner}</div>`;
-  const archiveHtml = `<div class="va-card"><div class="va-tabs" id="vaTabs" role="tablist" aria-label="节目原声资料">${tabsHtml}</div>${panelHtml('timeline', timelineHtml)}${panelHtml('notes', notesHtml)}${panelHtml('transcript', transcriptHtml)}</div>`;
+  const archiveHtml = `<div class="va-card"><div class="va-tabs" id="vaTabs" role="tablist" aria-label="节目资料">${tabsHtml}</div>${panelHtml('timeline', timelineHtml)}${panelHtml('notes', notesHtml)}</div>`;
 
   const noteVal = state.notes[e.n] || '';
   const g = e.guide;
@@ -1617,53 +1841,94 @@ function renderVol(n){
     { k: '展开的线索', h: '原文怎么推到这一步', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
   ].filter(s=>s.p);
   const prefaceHtml = `<section class="vol-preface" aria-label="本期脉络">
-    <div class="vp-top"><span class="vp-kicker">START HERE · 本期脉络</span><span class="vp-count">${sourceList.length} 段原文 · ${analysisMeta}</span></div>
+    <div class="vp-top"><span class="vp-kicker">START HERE · 本期脉络</span><span class="vp-count">${transcript.sections.length ? `${transcript.sections.length} 节 · ${rows.length} 段` : '转写中'}</span></div>
     <div class="vp-line"><span class="vp-line-k">本期一句话 · 导读</span><p>${esc(summary)}</p></div>
+    ${dl?`<button class="dl-jump" data-dl-jump><span class="dl-badge">董了</span><span>批注 · ${esc(dl.t)}</span><span>↓</span></button>`:''}
     ${mapSteps.length?`<div class="vp-map"><div class="rm-title">READING MAP · 三步读法</div>${readMap(mapSteps)}</div>`:''}
     ${(g?.keywords||[]).length?`<div class="vp-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
   </section>`;
-  const dl = e.dongliao;
-  const dlHtml = dl ? `<section class="dl-grow" id="dlGrow" data-stage="0" aria-label="董了观点">
-    <div class="dlg-top"><span class="dl-badge">董了</span><span class="dlg-kicker">BETWEEN · 原文与观点之间</span><span class="dlg-progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></div>
+  const dlHtml = dl ? `<section class="dl-grow dl-note" id="dlGrow" data-stage="0" aria-label="董了批注">
+    <div class="dlg-top"><span class="dl-badge">董了</span><span class="dlg-kicker">MARGIN NOTE · 批注</span><span class="dlg-progress" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span></div>
     <div class="dlg-seed"><div class="dlg-seed-k">原文种子 · ${esc(e.label)} · ${esc(dl.t)}</div><blockquote>${esc(dl.quote)}</blockquote></div>
     <div class="dlg-stage" data-dlg-stage="1" hidden><div class="dlg-stage-k">01 · 放回上下文</div><p>${esc(dl.context)}</p></div>
     <div class="dlg-stage" data-dlg-stage="2" hidden><div class="dlg-stage-k">02 · 再往下想一层</div><p>${esc(dl.critique)}</p></div>
     <div class="dlg-final" data-dlg-stage="3" hidden><div class="dlg-final-k">03 · 点睛</div><h3>${esc(dl.title)}</h3><p>${esc(dl.insight)}</p></div>
     <button class="dlg-next" id="dlgNext" aria-expanded="false">把这句话放回上下文 <span>→</span></button>
   </section>` : '';
-  $('#view-vol').innerHTML = `<div class="wrap">
-    <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
-    <div class="vol-hero">
-      <div class="vol-kicker"><span class="dot"></span>${esc(e.label)} · ${esc(e.tags[0]||'播客')}</div>
-      <h1>${esc(epTitle(e))}</h1>
-      <div class="vol-meta"><span>${esc(e.date)}</span><span>·</span><span>${durText(e)}</span>${e.chapters.length?`<span>·</span><span>${e.chapters.length} 个章节</span>`:''}${e.transcript?`<span>·</span><span>${(e.transcriptChars/1000).toFixed(1)}k 字逐字稿</span>`:'<span>·</span><span>逐字稿转写中</span>'}${e.core?'<span class="core-tag">精读</span>':''}</div>
-      <div class="vol-tags">${tagHtml}</div>
-      <div class="vol-actions">
-        <button class="tool-btn ${done?'on':''}" id="volDoneBtn"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${done?'已学':'标记已学'}</button>
-        <button class="tool-btn ${saved?'on':''}" id="volSaveBtn"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
-        <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
+
+  const renderChunk = row => {
+    const rec = hlMap.get(row.idx);
+    const range = rec?.range;
+    const isAnnot = row.idx === transcript.dlIdx;
+    return `<div class="tr-chunk${isAnnot?' has-annot':''}" id="tr-chunk-${row.idx}" data-text="${esc(row.text)}" data-t="${esc(row.t)}">
+      <span class="tr-time">${esc(row.t)}</span>
+      <div class="tr-body"><p>${renderChunkHTML(row.text, range)}</p>
+        ${isAnnot?`<button class="dl-anchor" data-dl-jump><span>董了批注</span> · ${esc(dl.t)}</button><div class="dl-slot" data-dl-slot="mobile"></div>`:''}
       </div>
+    </div>`;
+  };
+  const sectionsHtml = transcript.sections.length
+    ? transcript.sections.map((s,si)=>`<details class="tr-sec" id="tr-sec-${si}" ${s.open?'open':''}>
+        <summary><span class="tr-sec-k">${esc(s.k)}</span><span class="tr-sec-t">${esc(s.title)}<span class="tr-sec-m">${esc(s.start)} · ${s.rows.length} 段</span></span></summary>
+        <div class="tr-sec-body">${s.rows.map(ci=>renderChunk(rows[ci])).join('')}</div>
+      </details>`).join('')
+    : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
+  const transcriptMeta = rows.length ? `${transcript.sections.length} 节 · ${rows.length} 段` : '转写中';
+
+  $('#view-vol').innerHTML = `<div class="wrap vol-page">
+    <div class="vol-narrow">
+      <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
+      <div class="vol-hero">
+        <div class="vol-kicker"><span class="dot"></span>${esc(e.label)} · ${esc(e.tags[0]||'播客')}</div>
+        <h1>${esc(epTitle(e))}</h1>
+        <div class="vol-meta"><span>${esc(e.date)}</span><span>·</span><span>${durText(e)}</span>${e.chapters.length?`<span>·</span><span>${e.chapters.length} 个章节</span>`:''}${e.transcript?`<span>·</span><span>${(e.transcriptChars/1000).toFixed(1)}k 字逐字稿</span>`:'<span>·</span><span>逐字稿转写中</span>'}${e.core?'<span class="core-tag">精读</span>':''}</div>
+        <div class="vol-tags">${tagHtml}</div>
+        <div class="vol-actions">
+          <button class="tool-btn ${done?'on':''}" id="volDoneBtn"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></svg>${done?'已学':'标记已学'}</button>
+          <button class="tool-btn ${saved?'on':''}" id="volSaveBtn"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4Z"></path></svg>${saved?'已收藏':'收藏'}</button>
+          <a class="tool-btn" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg>小宇宙收听</a>
+        </div>
+      </div>
+      ${prefaceHtml}
     </div>
-    ${prefaceHtml}
     <div class="vol-body">
-      <section class="vol-section vol-read">
-        <div class="vs-head"><span class="vs-no">01</span><h2>原文精读</h2><span class="vs-meta">${sourceList.length ? (sourceList.length>3?`3 / ${sourceList.length} 段`:`${sourceList.length} 段`) : '转写中'}</span></div>
-        ${excerptHtml}
+      <section class="vol-section vol-read" id="volTranscript">
+        <div class="vol-read-shell">
+          <div class="vol-read-main">
+            <div class="vs-head"><span class="vs-no">01</span><h2>逐字稿</h2><span class="vs-meta">${transcriptMeta}</span></div>
+            <div class="tr-note">按官方章节分成小节，首节和批注所在节已展开；高亮都是逐字稿原句。</div>
+            <div class="tr-toolbar">
+              <button class="tr-tool" id="trSearchToggle">搜索</button>
+              <button class="tr-tool" id="trExpandAll">展开全部</button>
+              <button class="tr-tool" id="trCollapseAll">收起全部</button>
+              <button class="tr-tool" id="copyTranscript">复制全文</button>
+            </div>
+            <div class="tr-search-wrap" id="trSearchWrap" hidden><input id="trSearch" type="search" placeholder="搜索本期逐字稿…" autocomplete="off"><span id="trSearchCount"></span></div>
+            <div class="tr-sections" id="trSections">${sectionsHtml}</div>
+            ${transcript.dlIdx < 0 && dl ? `<div class="dl-slot" data-dl-slot="mobile" id="dlSlotFallback"></div>` : ''}
+          </div>
+          ${dl?`<aside class="vol-rail" id="volRail" aria-label="董了批注">
+            <div class="vol-rail-head"><span class="vol-rail-kicker">MARGIN NOTE · 批注</span><button class="vol-rail-jump" data-dl-jump>原文 ${esc(dl.t)} →</button></div>
+            <div class="dl-slot" data-dl-slot="desktop"></div>
+          </aside>`:''}
+        </div>
+        ${dl?`<div id="dlHolder" hidden>${dlHtml}</div>`:''}
       </section>
-      ${dlHtml}
-      <section class="vol-section">
-        <div class="vs-head"><span class="vs-no">02</span><h2>主理人的观点</h2><span class="vs-meta">${analysisMeta}</span></div>
-        ${analysisHtml}
-      </section>
-      <section class="vol-section">
-        <div class="vs-head"><span class="vs-no">03</span><h2>原声资料</h2><span class="vs-meta">时间轴 · 笔记 · 逐字稿</span></div>
-        ${archiveHtml}
-      </section>
-      <section class="vol-section vol-note">
-        <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
-        <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
-      </section>
-      <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">逐字稿为本地 Paraformer 转写，可能存在个别错字；原文摘录已按时间标注。精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
+      <div class="vol-narrow">
+        <section class="vol-section">
+          <div class="vs-head"><span class="vs-no">02</span><h2>主理人的观点</h2><span class="vs-meta">${analysisMeta}</span></div>
+          ${analysisHtml}
+        </section>
+        <section class="vol-section">
+          <div class="vs-head"><span class="vs-no">03</span><h2>节目资料</h2><span class="vs-meta">时间轴 · 官方笔记</span></div>
+          ${archiveHtml}
+        </section>
+        <section class="vol-section vol-note">
+          <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
+          <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
+        </section>
+        <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">逐字稿为本地 Paraformer 转写，可能存在个别错字；高亮取自逐字稿原句，匹配不到的引文不会伪造划线。精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
+      </div>
     </div>
   </div>`;
 
@@ -1677,23 +1942,59 @@ function renderVol(n){
     clearTimeout(timer);
     timer = setTimeout(()=>{ saveState(); $('#volNoteStatus').textContent='已自动保存'; }, 350);
   });
+
+  const trSections = $$('#trSections .tr-sec');
+  const defaultOpen = transcript.sections.map(s=>!!s.open);
   const trSearch = $('#trSearch');
+  const trSearchWrap = $('#trSearchWrap');
+  const trSearchCount = $('#trSearchCount');
+  const restoreTranscript = ()=>{
+    trSections.forEach((sec,i)=>{
+      sec.hidden = false;
+      sec.open = defaultOpen[i];
+      sec.querySelectorAll('.tr-chunk').forEach(ch=>{ ch.hidden = false; });
+    });
+    if (trSearchCount) trSearchCount.textContent = '';
+  };
+  $('#trSearchToggle')?.addEventListener('click', ()=>{
+    if (!trSearchWrap) return;
+    if (trSearchWrap.hasAttribute('hidden')){
+      trSearchWrap.removeAttribute('hidden');
+      trSearch?.focus();
+    } else {
+      trSearchWrap.setAttribute('hidden','');
+      if (trSearch) trSearch.value = '';
+      restoreTranscript();
+    }
+  });
   if (trSearch) {
     trSearch.addEventListener('input', ()=>{
       const q = trSearch.value.trim().toLowerCase();
-      let shown = 0;
-      $$('#trChunks .tr-chunk').forEach(el=>{
-        const hit = !q || (el.dataset.text||'').toLowerCase().includes(q);
-        el.style.display = hit ? '' : 'none';
-        if (hit) shown++;
+      if (!q) { restoreTranscript(); return; }
+      let hits = 0;
+      trSections.forEach(sec=>{
+        let hitSec = false;
+        sec.querySelectorAll('.tr-chunk').forEach(ch=>{
+          const hit = (ch.dataset.text || '').toLowerCase().includes(q);
+          ch.hidden = !hit;
+          if (hit){ hits++; hitSec = true; }
+        });
+        sec.hidden = !hitSec;
+        sec.open = hitSec;
       });
-      $('#trNoResult').style.display = shown ? 'none' : 'block';
+      if (trSearchCount) trSearchCount.textContent = `${hits} 段命中`;
     });
   }
+  $('#trExpandAll')?.addEventListener('click', ()=>{
+    trSections.forEach(sec=>{ if (!sec.hidden) sec.open = true; });
+  });
+  $('#trCollapseAll')?.addEventListener('click', ()=>{
+    trSections.forEach(sec=>{ sec.open = false; });
+  });
   const copyBtn = $('#copyTranscript');
   if (copyBtn) {
     copyBtn.addEventListener('click', async ()=>{
-      const text = (e.transcript?.chunks || []).map(c=>c[1]).join('');
+      const text = chunks.map(c=>c[1]).join('\n');
       try {
         await navigator.clipboard.writeText(text);
         toast('逐字稿已复制');
@@ -1705,6 +2006,7 @@ function renderVol(n){
       }
     });
   }
+
   const vaTabs = $$('#vaTabs [data-va-tab]');
   const vaPanels = $$('#view-vol [data-va-panel]');
   vaTabs.forEach(tab=>{
@@ -1718,7 +2020,16 @@ function renderVol(n){
       vaPanels.forEach(p=>{ p.hidden = p.dataset.vaPanel !== active; });
     });
   });
+
   const dlgCard = $('#dlGrow');
+  const placeDongliao = ()=>{
+    if (!dlgCard) return;
+    const desktop = window.matchMedia('(min-width:960px)').matches;
+    const slot = desktop
+      ? document.querySelector('.vol-rail [data-dl-slot="desktop"]')
+      : document.querySelector('[data-dl-slot="mobile"]');
+    if (slot) slot.appendChild(dlgCard);
+  };
   if (dlgCard) {
     const dlgNext = $('#dlgNext');
     const dlgStages = [...dlgCard.querySelectorAll('[data-dlg-stage]')];
@@ -1732,7 +2043,7 @@ function renderVol(n){
       dlgNext.setAttribute('aria-expanded', stage ? 'true' : 'false');
       dlgNext.innerHTML = `${labels[stage]} <span>${stage===3?'↺':'→'}</span>`;
       if (!scroll) return;
-      if (stage === 0) { dlgCard.scrollIntoView({behavior:'smooth',block:'start'}); return; }
+      if (stage === 0) { dlgCard.scrollIntoView({behavior:'smooth',block:'center'}); return; }
       const target = dlgStages.find(el=>Number(el.dataset.dlgStage)===stage);
       if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
     };
@@ -1740,7 +2051,35 @@ function renderVol(n){
       const cur = Number(dlgCard.dataset.stage) || 0;
       setDlgStage(cur >= 3 ? 0 : cur + 1);
     });
+    const jumpToDongliao = ()=>{
+      if (trSearch && trSearch.value) {
+        trSearch.value = '';
+        restoreTranscript();
+      }
+      if (transcript.dlSection >= 0){
+        const sec = document.getElementById('tr-sec-' + transcript.dlSection);
+        if (sec) sec.open = true;
+      }
+      const desktop = window.matchMedia('(min-width:960px)').matches;
+      const target = desktop ? document.getElementById('tr-chunk-' + transcript.dlIdx) : dlgCard;
+      if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
+      if (desktop){
+        dlgCard.classList.add('flash');
+        setTimeout(()=>dlgCard.classList.remove('flash'), 1200);
+      }
+    };
+    $$('#view-vol [data-dl-jump]').forEach(b=>b.addEventListener('click', jumpToDongliao));
+    placeDongliao();
+    const volMq = window.matchMedia('(min-width:960px)');
+    const onVolMq = ()=>placeDongliao();
+    if (volMq.addEventListener) volMq.addEventListener('change', onVolMq);
+    else if (volMq.addListener) volMq.addListener(onVolMq);
+    volMediaCleanup = ()=>{
+      if (volMq.removeEventListener) volMq.removeEventListener('change', onVolMq);
+      else if (volMq.removeListener) volMq.removeListener(onVolMq);
+    };
   }
+
   applyHighlights($('#view-vol'));
   window.scrollTo({top:0,behavior:'auto'});
 }
@@ -1777,7 +2116,7 @@ function renderMe(){
     </div>
     <div class="me-section">
       <h2>继续学习</h2>
-      <div class="ep-list">${DATA.episodes.filter(e=>!state.done[e.n]).slice(0,3).map(epRow).join('') || '<div class="empty-mini">111 期都学完了。慢慢来，比较快。</div>'}</div>
+      <div class="ep-list">${DATA.episodes.filter(e=>!state.done[e.n]).slice(0,3).map(epRow).join('') || `<div class="empty-mini">${DATA.podcast.count} 期都学完了。慢慢来，比较快。</div>`}</div>
     </div>
     <div class="me-section">
       <h2>我的收藏</h2>

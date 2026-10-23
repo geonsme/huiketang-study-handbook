@@ -639,6 +639,7 @@ def build_txt(data, episodes, path):
 def main():
     global EP_BY_N
     data, episodes, EP_BY_N = load_data()
+    ep_count = data["podcast"].get("count")
     os.makedirs(EBOOK_DIR, exist_ok=True)
     if not os.path.exists(COVER_SRC):
         print("ERROR: missing cover.png")
@@ -653,7 +654,7 @@ def main():
         "把投资、财富与生活放到一张桌子上聊", logo.copy()
     )
     create_cover(
-        cover_transcripts, "逐字稿全集", "111 期完整原文 · 60 秒时间戳",
+        cover_transcripts, "逐字稿全集", f"{ep_count} 期完整原文 · 60 秒时间戳",
         f"约 {data['podcast'].get('transcriptWan')} 万字 · {data['podcast'].get('count')} 期",
         "原文在这里，判断交给你", logo.copy()
     )
@@ -696,16 +697,16 @@ def main():
     reading_path = os.path.join(EBOOK_DIR, "慧客堂·学习手册.epub")
     write_epub(
         reading_path, "慧客堂 · 学习手册", "按 Vol 与模块的播客深读",
-        "111 期播客学习手册：8 篇章节大导读、111 篇 Vol 导读、精读、原文摘录与官方 Shownotes。",
+        f"{ep_count} 期播客学习手册：8 篇章节大导读、{ep_count} 篇 Vol 导读、精读、原文摘录与官方 Shownotes。",
         cover_handbook, logo_out, reading_pages, reading_groups
     )
     reading_size = validate_epub(reading_path, len(reading_pages) - 1)
 
     transcript_pages = [
         {"id": "cover", "href": "cover.xhtml", "title": "封面", "content": cover_page_html()},
-        {"id": "titlepage", "href": "titlepage.xhtml", "title": "书名页", "content": title_page_html(data, "逐字稿全集", "111 期完整原文 · 60 秒时间戳")},
+        {"id": "titlepage", "href": "titlepage.xhtml", "title": "书名页", "content": title_page_html(data, "逐字稿全集", f"{ep_count} 期完整原文 · 60 秒时间戳")},
         {"id": "howto", "href": "howto.xhtml", "title": "逐字稿说明", "content": transcript_howto_html(data)},
-        {"id": "part1", "href": "part1.xhtml", "title": "逐字稿全集", "content": part_page("逐字稿全集", "111 期完整原文", "从开篇到最新一期，按时间排列。每段前的时间戳为 60 秒段首，方便回到音频核对。", None)},
+        {"id": "part1", "href": "part1.xhtml", "title": "逐字稿全集", "content": part_page("逐字稿全集", f"{ep_count} 期完整原文", "从开篇到最新一期，按时间排列。每段前的时间戳为 60 秒段首，方便回到音频核对。", None)},
     ]
     transcript_toc = []
     for e in episodes:
@@ -719,8 +720,8 @@ def main():
     ]
     transcript_path = os.path.join(EBOOK_DIR, "慧客堂·逐字稿全集.epub")
     write_epub(
-        transcript_path, "慧客堂 · 逐字稿全集", "111 期完整原文 · 60 秒时间戳",
-        "慧客堂 111 期播客完整逐字稿，含 60 秒段首时间戳；机器转写，引用请以音频为准。",
+        transcript_path, "慧客堂 · 逐字稿全集", f"{ep_count} 期完整原文 · 60 秒时间戳",
+        f"慧客堂 {ep_count} 期播客完整逐字稿，含 60 秒段首时间戳；机器转写，引用请以音频为准。",
         cover_transcripts, logo_out, transcript_pages, transcript_groups
     )
     transcript_size = validate_epub(transcript_path, len(transcript_pages) - 1)
