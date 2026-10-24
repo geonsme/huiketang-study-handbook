@@ -1,0 +1,74 @@
+name: Auto-merge collaborator PRs
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number to merge"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: auto-merge-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.user.login == 'ynchenzju' && github.event.pull_request.draft == false)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve PR number
+        id: pr
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "number=${{ inputs.pr }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "number=${{ github.event.pull_request.number }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wait for GitHub to compute mergeability
+        id: state
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in $(seq 1 12); do
+            mergeable=$(gh pr view "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY" --json mergeable --jq .mergeable)
+            echo "attempt $i: mergeable=$mergeable"
+            if [ "$mergeable" != "UNKNOWN" ]; then
+              echo "mergeable=$mergeable" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "mergeable=UNKNOWN" >> "$GITHUB_OUTPUT"
+
+      - name: Merge without waiting for checks
+        if: steps.state.outputs.mergeable == 'MERGEABLE'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY" --merge
+
+      - name: Try to clear conflicts by updating branch
+        if: steps.state.outputs.mergeable == 'CONFLICTING'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set +e
+          gh pr update-branch "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY"
+          sleep 15
+          mergeable=$(gh pr view "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY" --json mergeable --jq .mergeable)
+          if [ "$mergeable" = "MERGEABLE" ]; then
+            gh pr merge "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY" --merge
+            exit 0
+          fi
+          gh pr comment "${{ steps.pr.outputs.number }}" --repo "$GITHUB_REPOSITORY" --body "自动合并暂停：该 PR 与 \`main\` 存在冲突，已自动尝试更新分支但冲突未消除。需要人工或 Agent 解决冲突后，自动合并会再次触发。"
+          exit 1
