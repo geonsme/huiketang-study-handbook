@@ -1282,6 +1282,18 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
   .tr-sec,.tr-chunk{transition:none!important}
 }
 
+/* 滚动驱动的章节展开 + 文字由浅入深 */
+.tr-sec-body{transition:max-height .62s cubic-bezier(.22,1,.36,1),opacity .5s ease}
+.tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:calc(.42 + .58 * var(--reveal,1));transition:opacity .12s linear}
+@media (prefers-reduced-motion:reduce){
+  .tr-sec-body{transition:none!important}
+  .tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:1!important;transition:none!important}
+}
+@media print{
+  .tr-sec-body{max-height:none!important;opacity:1!important}
+  .tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:1!important}
+}
+
 </style>
 </head>
 <body>
@@ -2117,7 +2129,7 @@ function buildTranscriptSections(e, rows, dlT){
   const dlIdx = dlT ? chunkIndexAt(rows, parseTs(dlT)) : -1;
   let dlSection = -1;
   if (dlIdx >= 0) sections.forEach((s, si) => { if (s.rows.includes(dlIdx)) dlSection = si; });
-  sections.forEach((s, si) => { s.open = si === 0 || si === dlSection; });
+  sections.forEach((s, si) => { s.open = si === 0; });
   return { sections, dlIdx, dlSection, mode: trailerLike ? 'trailer' : (chapters.length ? 'chapters' : 'grouped') };
 }
 function renderChunkHTML(text, range){
@@ -2209,7 +2221,7 @@ function renderVol(n){
     </div>`;
   };
   const sectionsHtml = transcript.sections.length
-    ? transcript.sections.map((s,si)=>`<details class="tr-sec" id="tr-sec-${si}" ${s.open?'open':''}>
+    ? transcript.sections.map((s,si)=>`<details class="tr-sec" id="tr-sec-${si}" data-sec="${si}" ${s.open?'open':''}>
         <summary><span class="tr-sec-k">${esc(s.k)}</span><span class="tr-sec-t">${esc(s.title)}<span class="tr-sec-m">${esc(s.start)} · ${s.rows.length} 段</span></span></summary>
         <div class="tr-sec-body">${s.rows.map(ci=>renderChunk(rows[ci])).join('')}</div>
       </details>`).join('')
@@ -2237,7 +2249,7 @@ function renderVol(n){
         <div class="vol-read-shell">
           <div class="vol-read-main">
             <div class="vs-head"><span class="vs-no">01</span><h2>逐字稿</h2><span class="vs-meta">${transcriptMeta}</span></div>
-            <div class="tr-note">按官方章节分成小节，首节和批注所在节已展开；高亮都是逐字稿原句。</div>
+            <div class="tr-note">按官方章节分成小节；向下滑动，章节会随锚点平滑展开，文字由浅入深。点标题也可手动开合。</div>
             <div class="tr-toolbar">
               <button class="tr-tool" id="trSearchToggle">搜索</button>
               <button class="tr-tool" id="trExpandAll">展开全部</button>
@@ -2285,17 +2297,117 @@ function renderVol(n){
   });
 
   const trSections = $$('#trSections .tr-sec');
-  const defaultOpen = transcript.sections.map(s=>!!s.open);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const trSearch = $('#trSearch');
   const trSearchWrap = $('#trSearchWrap');
   const trSearchCount = $('#trSearchCount');
+  let searchOpenState = null;
+  let searchActive = false;
+  let lastAutoOpen = 0;
+  let jumpLockUntil = 0;
+
+  const sectionBody = sec => sec.querySelector('.tr-sec-body');
+  const clearSectionStyles = body => {
+    if (!body) return;
+    body.style.maxHeight = '';
+    body.style.opacity = '';
+    body.style.overflow = '';
+  };
+  const updateChunkReveal = ()=>{
+    if (reduceMotion) return;
+    const vh = window.innerHeight;
+    const start = vh * 0.96;
+    const span = Math.max(180, vh * 0.52);
+    $$('#trSections .tr-sec[open] .tr-chunk').forEach(ch=>{
+      let p = 1;
+      if (!searchActive){
+        const r = ch.getBoundingClientRect();
+        p = (start - r.top) / span;
+        p = Math.max(0, Math.min(1, p));
+      }
+      ch.style.setProperty('--reveal', p.toFixed(3));
+    });
+  };
+  const openSection = (sec, animate = true)=>{
+    if (!sec || sec.open) return;
+    clearTimeout(sec._closeTimer);
+    const body = sectionBody(sec);
+    if (!animate || reduceMotion || !body){
+      sec.open = true;
+      clearSectionStyles(body);
+      updateChunkReveal();
+      return;
+    }
+    sec.open = true;
+    body.style.overflow = 'hidden';
+    body.style.maxHeight = '0px';
+    body.style.opacity = '0';
+    const full = body.scrollHeight;
+    requestAnimationFrame(()=>{
+      body.style.maxHeight = full + 'px';
+      body.style.opacity = '1';
+    });
+    clearTimeout(sec._openTimer);
+    sec._openTimer = setTimeout(()=>{
+      clearSectionStyles(body);
+      updateChunkReveal();
+    }, 640);
+  };
+  const closeSection = (sec, animate = true, user = false)=>{
+    if (!sec || !sec.open) return;
+    if (user) sec.dataset.userClosed = '1';
+    clearTimeout(sec._openTimer);
+    const body = sectionBody(sec);
+    if (!animate || reduceMotion || !body){
+      sec.open = false;
+      clearSectionStyles(body);
+      return;
+    }
+    body.style.overflow = 'hidden';
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(()=>{
+      body.style.maxHeight = '0px';
+      body.style.opacity = '0';
+    });
+    clearTimeout(sec._closeTimer);
+    sec._closeTimer = setTimeout(()=>{
+      sec.open = false;
+      clearSectionStyles(body);
+      updateChunkReveal();
+    }, 560);
+  };
+  trSections.forEach(sec=>{
+    sec.querySelector('summary')?.addEventListener('click', e=>{
+      e.preventDefault();
+      if (sec.open) closeSection(sec, true, true);
+      else { delete sec.dataset.userClosed; openSection(sec, true); }
+    });
+  });
+  const autoOpenSections = ()=>{
+    if (searchActive) return;
+    const now = Date.now();
+    if (now < jumpLockUntil || now - lastAutoOpen < 700) return;
+    const trigger = window.innerHeight * 1.06;
+    for (const sec of trSections){
+      if (sec.hidden || sec.open || sec.dataset.userClosed === '1') continue;
+      const r = sec.getBoundingClientRect();
+      if (r.top < trigger && r.top > 0) {
+        lastAutoOpen = now;
+        openSection(sec, true);
+        break;
+      }
+    }
+  };
   const restoreTranscript = ()=>{
-    trSections.forEach((sec,i)=>{
+    trSections.forEach(sec=>{
       sec.hidden = false;
-      sec.open = defaultOpen[i];
       sec.querySelectorAll('.tr-chunk').forEach(ch=>{ ch.hidden = false; });
     });
+    if (searchOpenState) trSections.forEach((sec,i)=>{ sec.open = !!searchOpenState[i]; });
+    searchOpenState = null;
+    searchActive = false;
     if (trSearchCount) trSearchCount.textContent = '';
+    updateChunkReveal();
   };
   $('#trSearchToggle')?.addEventListener('click', ()=>{
     if (!trSearchWrap) return;
@@ -2312,6 +2424,10 @@ function renderVol(n){
     trSearch.addEventListener('input', ()=>{
       const q = trSearch.value.trim().toLowerCase();
       if (!q) { restoreTranscript(); return; }
+      if (!searchOpenState){
+        searchOpenState = trSections.map(sec=>sec.open);
+        searchActive = true;
+      }
       let hits = 0;
       trSections.forEach(sec=>{
         let hitSec = false;
@@ -2324,13 +2440,39 @@ function renderVol(n){
         sec.open = hitSec;
       });
       if (trSearchCount) trSearchCount.textContent = `${hits} 段命中`;
+      updateChunkReveal();
     });
   }
   $('#trExpandAll')?.addEventListener('click', ()=>{
-    trSections.forEach(sec=>{ if (!sec.hidden) sec.open = true; });
+    trSections.forEach(sec=>{
+      if (sec.hidden) return;
+      delete sec.dataset.userClosed;
+      openSection(sec, false);
+    });
+    updateChunkReveal();
   });
   $('#trCollapseAll')?.addEventListener('click', ()=>{
-    trSections.forEach(sec=>{ sec.open = false; });
+    trSections.forEach(sec=>{
+      if (!sec.open) return;
+      closeSection(sec, false, true);
+    });
+    updateChunkReveal();
+  });
+  let revealFrame = null;
+  const onVolScroll = ()=>{
+    if (!trSections.length || !document.body.contains(trSections[0])) return;
+    if (revealFrame) return;
+    revealFrame = requestAnimationFrame(()=>{
+      revealFrame = null;
+      autoOpenSections();
+      updateChunkReveal();
+    });
+  };
+  window.addEventListener('scroll', onVolScroll, {passive:true});
+  requestAnimationFrame(()=>{
+    if (!trSections.length || !document.body.contains(trSections[0])) return;
+    autoOpenSections();
+    updateChunkReveal();
   });
   const copyBtn = $('#copyTranscript');
   if (copyBtn) {
@@ -2393,14 +2535,16 @@ function renderVol(n){
       setDlgStage(cur >= 3 ? 0 : cur + 1);
     });
     const jumpToDongliao = ()=>{
+      jumpLockUntil = Date.now() + 1600;
       if (trSearch && trSearch.value) {
         trSearch.value = '';
         restoreTranscript();
       }
       if (transcript.dlSection >= 0){
         const sec = document.getElementById('tr-sec-' + transcript.dlSection);
-        if (sec) sec.open = true;
+        if (sec) { delete sec.dataset.userClosed; openSection(sec, false); }
       }
+      updateChunkReveal();
       const desktop = window.matchMedia('(min-width:960px)').matches;
       const target = desktop ? document.getElementById('tr-chunk-' + transcript.dlIdx) : dlgCard;
       if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
@@ -2420,6 +2564,13 @@ function renderVol(n){
       else if (volMq.removeListener) volMq.removeListener(onVolMq);
     };
   }
+
+  const priorCleanup = volMediaCleanup;
+  volMediaCleanup = ()=>{
+    if (priorCleanup) priorCleanup();
+    if (revealFrame) cancelAnimationFrame(revealFrame);
+    window.removeEventListener('scroll', onVolScroll);
+  };
 
   applyHighlights($('#view-vol'));
   window.scrollTo({top:0,behavior:'auto'});

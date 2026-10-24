@@ -339,3 +339,15 @@
   .dl-grow.flash{animation:none!important}
   .tr-sec,.tr-chunk{transition:none!important}
 }
+
+/* 滚动驱动的章节展开 + 文字由浅入深 */
+.tr-sec-body{transition:max-height .62s cubic-bezier(.22,1,.36,1),opacity .5s ease}
+.tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:calc(.42 + .58 * var(--reveal,1));transition:opacity .12s linear}
+@media (prefers-reduced-motion:reduce){
+  .tr-sec-body{transition:none!important}
+  .tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:1!important;transition:none!important}
+}
+@media print{
+  .tr-sec-body{max-height:none!important;opacity:1!important}
+  .tr-chunk .tr-time,.tr-chunk .tr-body>p{opacity:1!important}
+}
