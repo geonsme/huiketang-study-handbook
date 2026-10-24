@@ -1,1 +1,0 @@
-auto-merge smoke test
