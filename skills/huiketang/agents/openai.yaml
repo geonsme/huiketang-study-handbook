@@ -1,0 +1,4 @@
+interface:
+  display_name: "慧客堂 · 家庭投资框架"
+  short_description: "用董艺婷播客框架分析市场、家庭资产、公私募基金质量与投资理念"
+  default_prompt: "用 $huiketang 分析我的投资问题，区分市场判断、基金质量和个人适配，并给出证据、风险与可执行的下一步。"
