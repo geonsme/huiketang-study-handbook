@@ -64,6 +64,8 @@ hr{border:0;border-top:1px solid rgba(128,128,128,.4);margin:1.4em 0}
 .ref{text-decoration:none;border-bottom:1px dotted rgba(128,128,128,.5)}
 .tr{margin:.45em 0;font-size:.95em;text-indent:0}
 .tr .time{font-family:monospace;font-size:.78em;opacity:.7;margin-right:.4em}
+.tr .who{font-weight:700;font-size:.86em;margin-right:.4em;color:#b4551f}
+.tr .who .role{font-weight:400;opacity:.6;margin-left:.25em;font-size:.85em}
 """
 
 
@@ -260,15 +262,30 @@ def transcript_page(e):
     if g.get("hook"):
         body += f'<p class="lead">{esc(g.get("hook"))}</p>'
     body += "<h2>完整逐字稿</h2>"
-    chunks = (e.get("transcript") or {}).get("chunks") or []
-    if not chunks:
-        body += '<p class="note">这一期的逐字稿暂缺。</p>'
-    else:
+    tr = e.get("transcript") or {}
+    turns = tr.get("turns") or []
+    chunks = tr.get("chunks") or []
+    if turns:
+        last = ""
+        for t in turns:
+            if not t.get("text"):
+                continue
+            who = ""
+            if t.get("name") and t.get("name") != last:
+                role = "主理人" if t.get("role") == "host" else ("嘉宾" if t.get("role") == "guest" else "")
+                role_html = f'<span class="role">{role}</span>' if role else ""
+                who = f'<span class="who">{esc(t.get("name"))}{role_html}</span>'
+                last = t.get("name")
+            body += f'<p class="tr"><span class="time">[{esc(t.get("time"))}]</span>{who}{esc(t.get("text"))}</p>'
+        body += '<p class="note">飞书妙记转写并按说话人分离，时间戳为发言起点；可能有错字，引用请以音频为准。</p>'
+    elif chunks:
         for c in chunks:
             if not c or len(c) < 2 or not c[1]:
                 continue
             body += f'<p class="tr"><span class="time">[{esc(c[0])}]</span>{esc(c[1])}</p>'
-    body += '<p class="note">本地 Paraformer 转写，时间戳为 60 秒段首，可能有错字；引用请以音频为准。</p>'
+        body += '<p class="note">本地 Paraformer 转写，时间戳为 60 秒段首，可能有错字；引用请以音频为准。</p>'
+    else:
+        body += '<p class="note">这一期的逐字稿暂缺。</p>'
     return xhtml(f'{e.get("label")} · 逐字稿', body, "chapter")
 
 

@@ -933,6 +933,8 @@ details.glossary{border-top:1px solid var(--line)}details.glossary summary{font-
 .dl-home-insight{font-size:11.5px;line-height:1.7;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .dl-home-arrow{position:absolute;right:14px;bottom:12px;color:var(--red);font-size:16px}
 .mini-tag.dl-tag{color:var(--red);border:1px solid rgba(245,166,35,.35);background:color-mix(in srgb,var(--orange) 10%,transparent);font-weight:700}
+.mini-tag.spk-tag{color:#2f6f8f;border:1px solid color-mix(in srgb,#2f6f8f 28%,transparent);background:color-mix(in srgb,#2f6f8f 8%,transparent);font-weight:600}
+html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(in srgb,#7fb6d9 35%,transparent);background:color-mix(in srgb,#7fb6d9 10%,transparent)}
 .rm-step:not(:last-child)::before{background:linear-gradient(180deg,transparent,var(--orange),transparent);background-size:100% 220%;animation:rmFlow 4.5s linear infinite}
 @keyframes rmFlow{0%{background-position:0 -120%}100%{background-position:0 220%}}
 .rm-node{animation:rmPulse 4.5s ease-in-out infinite}
@@ -1299,7 +1301,7 @@ function epRow(e){
     <div>
       <h3>${esc(shortTitle(e,38))}</h3>
       <div class="ep-line">${e.guide?'<span class="guide-badge">导读</span>':''}${esc(line)}</div>
-      <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.dongliao?'<span class="mini-tag dl-tag">董了</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
+      <div class="ep-tags">${e.core?'<span class="core-tag">精读</span>':''}${e.dongliao?'<span class="mini-tag dl-tag">董了</span>':''}${e.trailer?'<span class="mini-tag">预告</span>':''}${tags}${e.transcript?.turns?.length?'<span class="mini-tag spk-tag">说话人</span>':''}<span class="tr-badge ${e.transcript?'':'pending'}">${e.transcript?'逐字稿':'转写中'}</span><span class="mini-tag">${e.chapters.length} 章节</span></div>
     </div>
     <span class="done-dot"></span>
   </button>`;
@@ -1533,7 +1535,7 @@ function matchEp(e){
   if (epFilter!=='all' && epFilter!=='core' && epFilter!=='董了' && !(e.tags||[]).includes(epFilter)) return false;
   if (!epQuery) return true;
   const q = epQuery.toLowerCase();
-  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' '),e.guide?[e.guide.hook,e.guide.question,(e.guide.keywords||[]).join(' ')].join(' '):'',e.dongliao?[e.dongliao.title,e.dongliao.quote,e.dongliao.context,e.dongliao.critique,e.dongliao.insight].join(' '):''].join(' ').toLowerCase();
+  const hay = [e.title,e.line,e.tags.join(' '),e.mods.map(moduleName).join(' '),e.chapters.map(c=>c.text).join(' '),e.paras.join(' '),(e.keyChunks||[]).map(c=>c.text).join(' '),(e.transcript?.turns||[]).map(t=>[t.name,t.text].join(' ')).join(' '),e.guide?[e.guide.hook,e.guide.question,(e.guide.keywords||[]).join(' ')].join(' '):'',e.dongliao?[e.dongliao.title,e.dongliao.quote,e.dongliao.context,e.dongliao.critique,e.dongliao.insight].join(' '):''].join(' ').toLowerCase();
   return hay.includes(q);
 }
 
@@ -1672,10 +1674,113 @@ function findHighlightRange(text, candidate){
   }
   return null;
 }
-function buildHighlightMap(e, rows){
-  const stats = { candidates: 0, exact: 0, clean: 0, fuzzy: 0, miss: 0, applied: 0 };
+function sentenceSpans(text){
+  const src = String(text || '');
+  const out = [];
+  const re = /[^。！？!?…；;\n]+[。！？!?…；;]?/g;
+  let m;
+  while ((m = re.exec(src))){
+    let s = m[0];
+    if (!s.trim()) continue;
+    let start = m.index, raw = s;
+    // Very long clause: split again at commas so a highlight stays readable.
+    if (s.length > 80){
+      const parts = s.split(/(?<=[，,])/);
+      let cursor = start;
+      for (const part of parts){
+        if (!part) continue;
+        if (part.trim()) out.push({ start: cursor, end: cursor + part.length, s: part });
+        cursor += part.length;
+      }
+      continue;
+    }
+    out.push({ start, end: start + raw.length, s: raw });
+  }
+  return out;
+}
+function bigramSet(s){
+  const t = cleanWithMap(s).text;
+  const set = new Set();
+  for (let i = 0; i + 1 < t.length; i++) set.add(t.slice(i, i + 2));
+  return set;
+}
+function diceSim(a, b){
+  if (!a.size || !b.size) return 0;
+  let inter = 0;
+  const [small, big] = a.size <= b.size ? [a, b] : [b, a];
+  for (const g of small) if (big.has(g)) inter++;
+  return 2 * inter / (a.size + b.size);
+}
+function quoteSentenceSets(quote){
+  const sents = sentenceSpans(quote).map(sp => sp.s).filter(s => s.trim().length >= 6);
+  const out = (sents.length ? sents : [quote]).map(bigramSet).filter(s => s.size >= 5);
+  return out.slice(0, 4);
+}
+function bestSimilarSentence(text, quoteSets, cache){
+  let best = null;
+  for (const sp of sentenceSpans(text)){
+    const sset = cache.get(sp.s) || bigramSet(sp.s);
+    cache.set(sp.s, sset);
+    if (sset.size < 6) continue;
+    for (const qset of quoteSets){
+      let inter = 0;
+      const [small, big] = sset.size <= qset.size ? [sset, qset] : [qset, sset];
+      for (const g of small) if (big.has(g)) inter++;
+      if (inter < 6) continue;
+      const sim = 2 * inter / (sset.size + qset.size);
+      if (!best || sim > best.sim) best = { start: sp.start, end: sp.end, sim, inter };
+    }
+  }
+  if (!best || best.sim < 0.42) return null;
+  return { start: best.start, end: best.end, method: 'similar', sim: best.sim };
+}
+function matchQuoteNear(rows, ci, quoteSets, opts, cache){
+  // Official timestamps drift, so check the anchor plus a few neighbours.
+  const order = [0, -1, 1, -2, 2, -3, 3];
+  for (const d of order){
+    const i = ci + d;
+    if (i < 0 || i >= rows.length) continue;
+    const range = findHighlightRange(rows[i].text, quoteSets.raw);
+    if (range) return { i, range };
+  }
+  if (!opts.fallback) return null;
+  // ASR rewrites sentences: score nearby sentences by character-bigram overlap.
+  let best = null;
+  for (const d of order){
+    const i = ci + d;
+    if (i < 0 || i >= rows.length) continue;
+    const range = bestSimilarSentence(rows[i].text, quoteSets.sets, cache);
+    if (range && (!best || range.sim > best.range.sim)) best = { i, range };
+  }
+  return best;
+}
+function matchQuoteGlobal(rows, ci, quoteSets, opts, cache){
+  if (!opts.fallback) return null;
+  let best = null;
+  for (let i = 0; i < rows.length; i++){
+    if (Math.abs(i - ci) <= 3) continue;
+    const range = bestSimilarSentence(rows[i].text, quoteSets.sets, cache);
+    if (range && (!best || range.sim > best.range.sim)) best = { i, range };
+  }
+  return best;
+}
+function buildHighlightMap(e, rows, opts={}){
+  const stats = { candidates: 0, exact: 0, clean: 0, fuzzy: 0, similar: 0, miss: 0, applied: 0, detail: [] };
   const best = new Map();
   const seen = new Set();
+  // 4-gram index for a global fallback when the timestamp is far off.
+  let gramIndex = null;
+  const buildGramIndex = () => {
+    gramIndex = new Map();
+    rows.forEach((row, i) => {
+      const t = cleanWithMap(row.text).text;
+      for (let j = 0; j + 4 <= t.length; j++){
+        const g = t.slice(j, j + 4);
+        if (!gramIndex.has(g)) gramIndex.set(g, i);
+      }
+    });
+  };
+  const sentCache = new Map();
   const add = (list, pri) => {
     for (const item of list || []){
       if (!item || !item.text || !item.t) continue;
@@ -1685,12 +1790,34 @@ function buildHighlightMap(e, rows){
       stats.candidates++;
       const ci = chunkIndexAt(rows, parseTs(item.t));
       if (ci < 0) { stats.miss++; continue; }
-      const range = findHighlightRange(rows[ci].text, item.text);
-      if (!range) { stats.miss++; continue; }
+      const quoteSets = { raw: item.text, sets: quoteSentenceSets(item.text) };
+      let found = matchQuoteNear(rows, ci, quoteSets, opts, sentCache);
+      if (!found && opts.fallback){
+        const seed = cleanWithMap(item.text).text.slice(0, 4);
+        if (seed.length === 4){
+          if (!gramIndex) buildGramIndex();
+          const gi = gramIndex.get(seed);
+          if (gi != null){
+            const range = findHighlightRange(rows[gi].text, item.text) ||
+                          bestSimilarSentence(rows[gi].text, quoteSets.sets, sentCache);
+            if (range) found = { i: gi, range };
+          }
+        }
+      }
+      if (!found) found = matchQuoteGlobal(rows, ci, quoteSets, opts, sentCache);
+      if (!found) {
+        stats.miss++;
+        stats.detail.push({ hit: false, pri, t: item.t, q: String(item.text).slice(0, 40),
+                            anchor: rows[ci].t, row: String(rows[ci].text).slice(0, 40) });
+        continue;
+      }
+      const { i: ri, range } = found;
       stats[range.method]++;
+      stats.detail.push({ hit: true, pri, t: item.t, m: range.method, anchor: rows[ri].t,
+                          q: String(item.text).slice(0, 30), got: String(rows[ri].text).slice(range.start, range.start + 30) });
       const rec = { range, pri, length: range.end - range.start };
-      const prev = best.get(ci);
-      if (!prev || rec.pri > prev.pri || (rec.pri === prev.pri && rec.length > prev.length)) best.set(ci, rec);
+      const prev = best.get(ri);
+      if (!prev || rec.pri > prev.pri || (rec.pri === prev.pri && rec.length > prev.length)) best.set(ri, rec);
     }
   };
   add(e.quotes, 3);
@@ -1793,13 +1920,18 @@ function renderVol(n){
   if (!e) { location.hash = '#/episodes'; return; }
   const done = !!state.done[e.n], saved = !!state.saved[e.n];
   const chunks = e.transcript?.chunks || [];
-  const rows = chunks.map((c,i)=>({ idx: i, t: c[0], sec: parseTs(c[0]), text: c[1] }));
+  const turns = e.transcript?.turns || [];
+  const turnMode = turns.length > 0;
+  const rows = turnMode
+    ? turns.map((t,i)=>({ idx: i, t: t.time || fmtTime(t.start), sec: Number(t.start)||0, text: t.text, speaker: t.speaker || '', name: t.name || '', role: t.role || 'unknown' }))
+    : chunks.map((c,i)=>({ idx: i, t: c[0], sec: parseTs(c[0]), text: c[1] }));
+  const unitLabel = turnMode ? '回合' : '段';
   const points = e.points || [];
   const analysis = e.analysis || [];
   const summary = e.summary || e.line || '';
   const dl = e.dongliao;
   const transcript = buildTranscriptSections(e, rows, dl?.t);
-  const hlMap = buildHighlightMap(e, rows);
+  const hlMap = buildHighlightMap(e, rows, { fallback: turnMode });
   const tagHtml = (e.tags||[]).map(t=>`<span class="pill">${esc(t)}</span>`).join('') + (e.mods||[]).map(m=>`<span class="pill red">${esc(modById[m]?.subtitle || moduleName(m))}</span>`).join('');
 
   const analysisBox = s => `<div class="analysis-box"><h3>${esc(s.h)}</h3>${(s.p||[]).map(p=>`<p>${esc(p)}</p>`).join('')}</div>`;
@@ -1841,7 +1973,7 @@ function renderVol(n){
     { k: '展开的线索', h: '原文怎么推到这一步', p: firstSentence(a0?.p?.[0] || (e.points || [])[0] || '', 58) }
   ].filter(s=>s.p);
   const prefaceHtml = `<section class="vol-preface" aria-label="本期脉络">
-    <div class="vp-top"><span class="vp-kicker">START HERE · 本期脉络</span><span class="vp-count">${transcript.sections.length ? `${transcript.sections.length} 节 · ${rows.length} 段` : '转写中'}</span></div>
+    <div class="vp-top"><span class="vp-kicker">START HERE · 本期脉络</span><span class="vp-count">${transcript.sections.length ? `${transcript.sections.length} 节 · ${rows.length} ${unitLabel}` : '转写中'}</span></div>
     <div class="vp-line"><span class="vp-line-k">本期一句话 · 导读</span><p>${esc(summary)}</p></div>
     ${dl?`<button class="dl-jump" data-dl-jump><span class="dl-badge">董了</span><span>批注 · ${esc(dl.t)}</span><span>↓</span></button>`:''}
     ${mapSteps.length?`<div class="vp-map"><div class="rm-title">READING MAP · 三步读法</div>${readMap(mapSteps)}</div>`:''}
@@ -1856,24 +1988,52 @@ function renderVol(n){
     <button class="dlg-next" id="dlgNext" aria-expanded="false">把这句话放回上下文 <span>→</span></button>
   </section>` : '';
 
-  const renderChunk = row => {
+  const renderChunk = (row, showSpeaker=true) => {
     const rec = hlMap.get(row.idx);
     const range = rec?.range;
     const isAnnot = row.idx === transcript.dlIdx;
-    return `<div class="tr-chunk${isAnnot?' has-annot':''}" id="tr-chunk-${row.idx}" data-text="${esc(row.text)}" data-t="${esc(row.t)}">
+    const roleText = row.role === 'host' ? '主理人' : row.role === 'cohost' ? '客串主持' : row.role === 'guest' ? '嘉宾' : '';
+    const speaker = row.speaker && showSpeaker
+      ? `<div class="tr-speaker ${esc(row.role||'unknown')}">${esc(row.name||'')}${roleText?`<span>${roleText}</span>`:''}</div>`
+      : '';
+    return `<div class="tr-chunk${row.speaker?' tr-turn':''}${row.role?' '+esc(row.role):''}${isAnnot?' has-annot':''}${!showSpeaker?' same-speaker':''}" id="tr-chunk-${row.idx}" data-text="${esc(row.text)}" data-t="${esc(row.t)}">
       <span class="tr-time">${esc(row.t)}</span>
-      <div class="tr-body"><p>${renderChunkHTML(row.text, range)}</p>
+      <div class="tr-body">${speaker}<p>${renderChunkHTML(row.text, range)}</p>
         ${isAnnot?`<button class="dl-anchor" data-dl-jump><span>董了批注</span> · ${esc(dl.t)}</button><div class="dl-slot" data-dl-slot="mobile"></div>`:''}
       </div>
     </div>`;
   };
+  const sectionChunks = s => s.rows.map((ci, k) => {
+    const row = rows[ci];
+    const prev = k > 0 ? rows[s.rows[k-1]] : null;
+    const show = !row.speaker || !prev || prev.speaker !== row.speaker;
+    return renderChunk(row, show);
+  }).join('');
   const sectionsHtml = transcript.sections.length
     ? transcript.sections.map((s,si)=>`<details class="tr-sec" id="tr-sec-${si}" data-sec="${si}" ${s.open?'open':''}>
-        <summary><span class="tr-sec-k">${esc(s.k)}</span><span class="tr-sec-t">${esc(s.title)}<span class="tr-sec-m">${esc(s.start)} · ${s.rows.length} 段</span></span></summary>
-        <div class="tr-sec-body">${s.rows.map(ci=>renderChunk(rows[ci])).join('')}</div>
+        <summary><span class="tr-sec-k">${esc(s.k)}</span><span class="tr-sec-t">${esc(s.title)}<span class="tr-sec-m">${esc(s.start)} · ${s.rows.length} ${unitLabel}</span></span></summary>
+        <div class="tr-sec-body">${sectionChunks(s)}</div>
       </details>`).join('')
     : `<div class="tr-empty">这一期的逐字稿正在转写队列中。当前先以官方 Shownotes 与精读要点为主，完成后会自动补上全文。</div>`;
-  const transcriptMeta = rows.length ? `${transcript.sections.length} 节 · ${rows.length} 段` : '转写中';
+  const transcriptMeta = rows.length ? `${transcript.sections.length} 节 · ${rows.length} ${unitLabel}` : '转写中';
+  let cast = '';
+  if (turnMode){
+    const grouped = new Map();
+    for (const s of e.transcript.speakers || []){
+      const key = `${s.name || ''}|${s.role || 'unknown'}`;
+      const cur = grouped.get(key) || { name: s.name || '', role: s.role || 'unknown', duration: 0 };
+      cur.duration += s.duration || 0;
+      grouped.set(key, cur);
+    }
+    cast = [...grouped.values()]
+      .filter(s => s.role !== 'unknown' || s.duration > 60)
+      .map(s => {
+        const mins = Math.max(1, Math.round(s.duration / 60));
+        const roleText = s.role === 'host' ? '主理人' : s.role === 'cohost' ? '客串主持' : s.role === 'guest' ? '嘉宾' : '未识别';
+        return `<span class="tr-cast-i ${esc(s.role)}"><i></i>${esc(s.name)}<em>${roleText} · ${mins} 分钟</em></span>`;
+      }).join('');
+  }
+  const castHtml = cast ? `<div class="tr-cast" aria-label="本期说话人"><span class="tr-cast-k">说话人</span>${cast}</div>` : '';
 
   $('#view-vol').innerHTML = `<div class="wrap vol-page">
     <div class="vol-narrow">
@@ -1896,7 +2056,10 @@ function renderVol(n){
         <div class="vol-read-shell">
           <div class="vol-read-main">
             <div class="vs-head"><span class="vs-no">01</span><h2>逐字稿</h2><span class="vs-meta">${transcriptMeta}</span></div>
-            <div class="tr-note">按官方章节分成小节；向下滑动，章节会随锚点平滑展开，文字由浅入深。点标题也可手动开合。</div>
+            ${castHtml}
+            <div class="tr-note">${turnMode
+              ? '按官方章节分成小节，保留主理人与嘉宾的来回；向下滑动，章节会随锚点平滑展开，文字由浅入深。点小标题也可手动开合。'
+              : '按官方章节分成小节；向下滑动，章节会随锚点平滑展开，文字由浅入深。点标题也可手动开合。'}</div>
             <div class="tr-toolbar">
               <button class="tr-tool" id="trSearchToggle">搜索</button>
               <button class="tr-tool" id="trExpandAll">展开全部</button>
@@ -1927,7 +2090,9 @@ function renderVol(n){
           <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
           <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
         </section>
-        <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">逐字稿为本地 Paraformer 转写，可能存在个别错字；高亮取自逐字稿原句，匹配不到的引文不会伪造划线。精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
+        <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">${turnMode
+          ? '逐字稿由飞书妙记转写并做说话人分离，可能存在个别错字；说话人姓名由我按节目信息标注。高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'
+          : '逐字稿为本地 Paraformer 转写，可能存在个别错字；高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'}精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
       </div>
     </div>
   </div>`;
@@ -2086,7 +2251,7 @@ function renderVol(n){
         sec.hidden = !hitSec;
         sec.open = hitSec;
       });
-      if (trSearchCount) trSearchCount.textContent = `${hits} 段命中`;
+      if (trSearchCount) trSearchCount.textContent = `${hits} ${unitLabel}命中`;
       updateChunkReveal();
     });
   }
@@ -2124,7 +2289,9 @@ function renderVol(n){
   const copyBtn = $('#copyTranscript');
   if (copyBtn) {
     copyBtn.addEventListener('click', async ()=>{
-      const text = chunks.map(c=>c[1]).join('\n');
+      const text = turnMode
+        ? turns.map(t=>`[${t.time || fmtTime(t.start)}] ${t.name || ''}：${t.text}`).join('\n')
+        : chunks.map(c=>c[1]).join('\n');
       try {
         await navigator.clipboard.writeText(text);
         toast('逐字稿已复制');

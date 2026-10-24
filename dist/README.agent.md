@@ -1,6 +1,6 @@
 # 慧客堂学习手册 · Agent 阅读指南
 
-> 给其他 Agent 直接阅读的项目说明。最后更新：2026-10-23。
+> 给其他 Agent 直接阅读的项目说明。最后更新：2026-10-24（多人对谈增补说话人回合）。
 > 站点作者是《慧客堂》的一位老听众，不是主播本人。
 
 ## 0. 一眼看懂
@@ -16,6 +16,7 @@
   "modules": 8,
   "vol_guides": 112,
   "dongliao": 112,
+  "speaker_turns": 20,
   "rss": "https://feed.xyzfm.space/7neh8whbtc9w"
 }
 ```
@@ -35,6 +36,7 @@
 - 112 篇 Vol 导读，每篇含 2 句开场、一个带读问题、3 个关键词。
 - 112 条“董了”观点：原文引句 + 上下文 + 批判性边界 + 点睛。
 - 每期精读、核心要点、官方 Shownotes、时间轴；逐字稿按官方章节分节，高亮回到原文。
+- 首批 20 期多人对谈额外提供“说话人回合”：带姓名/角色标签、短句切分和说话人名单（Vol.4/18/36/41/51/58/62/63/74/78/81/83/93/96/101/105/106/107/109/V110）；单声期仍用 60 秒段落。
 - 全量逐字稿，约 353.8 万字。
 - EPUB / TXT 电子书，可导入微信读书。
 
@@ -56,7 +58,7 @@
 
 模块页不是长文堆叠，固定四块：**对话现场**（3 个“听友之问 → 节目原声 → 旁白”回合）、**观点推演**（起点 / 转折 / 落点 + 边界）、**现场切片**（3 个故事）、**带走**（3 件可勾选的事）。每块的源数据在模块对象的 `thread / scenes / deduction / sceneCases / takes` 字段。
 
-单期页按一条阅读路径排列：**本期脉络**（一句话 + 导读问题 + 三步）→ **逐字稿主阅读**（按官方章节分节，章内 60 秒段落；默认只开首节，向下滑动时章节锚点接近视口会自动平滑展开，文字随滚动由浅入深；点标题可手动开合）→ **董了批注**（桌面右栏 / 手机段后，原文种子 → 上下文 → 再想一层 → 点睛，逐层展开）→ **主理人的观点**（首节直读，其余折叠）→ **节目资料**（时间轴 / 官方笔记两标签）→ **我的笔记**。逐字稿已升为主阅读区，资料卡不再重复一份逐字稿。
+单期页按一条阅读路径排列：**本期脉络**（一句话 + 导读问题 + 三步）→ **逐字稿主阅读**（按官方章节分节；有 `transcript.turns` 时按“时间 + 说话人 + 短回合”渲染并在标题下显示说话人名单，否则用 60 秒段落；默认只开首节，向下滑动时章节锚点接近视口会自动平滑展开，文字随滚动由浅入深；点标题可手动开合）→ **董了批注**（桌面右栏 / 手机段后，原文种子 → 上下文 → 再想一层 → 点睛，逐层展开）→ **主理人的观点**（首节直读，其余折叠）→ **节目资料**（时间轴 / 官方笔记两标签）→ **我的笔记**。逐字稿已升为主阅读区，资料卡不再重复一份逐字稿。
 
 ## 3. 数据契约
 
@@ -85,8 +87,11 @@
 n, label, title, date, duration, seconds, tags, mods
 summary, line, points, analysis[], quotes[], case, keywords[]
 chapters[], paras[], transcript.chunks[[t, text]], transcriptChars
+transcript.turns[] { time, start, end, text, rawSpeaker, speaker, name, role }
+transcript.speakers[] { rawSpeaker, name, role, duration, segments }
+transcript.turnSource, turnCount, turnChars
 guide { hook, question, keywords[3] }
-dongliao { title, quote, t, context, critique, insight }
+dongliao { title, quote, t, speaker, role, context, critique, insight }
 
 Module 关键字段：
 thread[3], scenes[3] { q, a, src, t, ep, note },
@@ -102,6 +107,8 @@ sceneCases[3] { title, line, ep }, takes[3]
 4. 站点级文案用听众视角；首页推荐语不要写“我用 / 我请 / 我教你”，写成“这一期讲 / 董艺婷用 / 适合……”。
 5. “董了”不是金句卡：context 要放回语境，critique 要写出假设、边界和反例，insight 才能点睛。
 6. 不编造数字、年份、人物关系；ASR 不确定时换一句更确定的原文。
+7. `role` 只取 `host / cohost / guest / unknown`；没有明确自我介绍时用“嘉宾 A/B”“听友 1/2”“案例录音”，不要猜真实姓名。
+8. 引文时间戳来自旧 60 秒 chunk，和云端回合天然漂移；页面按“锚点 → 邻近 3 回合 → 全局 4-gram → 句子相似度”回找，不得伪造划线。
 
 ## 4. 对 Agent 的使用建议
 
@@ -125,6 +132,12 @@ python <skill-dir>/scripts/list_pending.py
 
 # 3. 有新期时下载 + 本地 Paraformer 转写
 python update_daily.py
+
+# 3b. 多人对谈：上传飞书妙记取带 Speaker 的逐字稿，再解析成回合
+#     批量：python pilot/cloud_batch.py（需已登录 lark-cli；音频会上传云端）
+#     处理：python pilot/process_cloud.py
+#     名字映射：pilot/speaker_overrides.json
+#     回填：python pilot/apply_cloud_turns.py
 
 # 4. 为新增期写 summaries/batch_auto_YYYYMMDD.json
 #    必须包含 analysis / quotes / guide / dongliao
@@ -164,8 +177,9 @@ python sync_github.py
 
 ## 7. 已知限制
 
-- 逐字稿是本地 Paraformer 机器转写，可能有错字；时间戳为 60 秒段首，约一分钟误差。
-- 页面是单文件 HTML，数据内嵌，文件约 12MB；首次打开可能稍慢。
+- 单声期逐字稿是本地 Paraformer 机器转写，可能有错字；时间戳为 60 秒段首，约一分钟误差。
+- 多人期用飞书妙记做说话人分离；Speaker 标签不带姓名，主播靠声纹 + 主持用语识别，嘉宾名靠节目信息人工补。重叠说话、串台仍可能出现；首批只覆盖 20 期多人样本，其余期保留 60 秒段落。
+- 页面是单文件 HTML，数据内嵌，文件约 13MB；首次打开可能稍慢。
 - 学习进度、收藏、笔记保存在浏览器 localStorage，不跨设备同步。
 - 公开 GitHub 仓库是内容快照，不是站点运行依赖。
 
