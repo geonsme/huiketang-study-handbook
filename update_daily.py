@@ -13,11 +13,14 @@ import sys
 import time
 import urllib.request
 import xml.etree.ElementTree as ET
-from datetime import timezone
-from email.utils import parsedate_to_datetime
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime, format_datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 FEED_URL = 'https://feed.xyzfm.space/7neh8whbtc9w'
+PODCAST_ID = '66e02b91edda3e1cdaa6b628'
+WEB_PODCAST_URL = f'https://www.xiaoyuzhoufm.com/podcast/{PODCAST_ID}'
+WEB_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36'
 DATA_PATH = os.path.join(BASE, 'data-v2.json')
 os.chdir(BASE)
 sys.path.insert(0, BASE)
@@ -109,7 +112,10 @@ def fmt_duration(sec):
 
 def cn_date(pub):
     try:
-        dt = parsedate_to_datetime(pub)
+        try:
+            dt = parsedate_to_datetime(pub)
+        except Exception:
+            dt = datetime.fromisoformat(pub.replace('Z', '+00:00'))
         if dt.tzinfo is None:
             dt = dt.replace(tzinfo=timezone.utc)
         try:
@@ -196,6 +202,63 @@ def parse_feed(raw):
     return items
 
 
+def eid_of(link):
+    m = re.search(r'/episode/([0-9a-z]+)', link or '', re.I)
+    return m.group(1) if m else ''
+
+
+def fetch_html(url):
+    req = urllib.request.Request(url, headers={
+        'User-Agent': WEB_UA,
+        'Accept': 'text/html,application/xhtml+xml',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+    })
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return r.read().decode('utf-8', 'replace')
+
+
+def next_data(html):
+    m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', html, re.S)
+    if not m:
+        raise RuntimeError('__NEXT_DATA__ not found')
+    return json.loads(m.group(1))
+
+
+def fetch_web_episodes():
+    data = next_data(fetch_html(WEB_PODCAST_URL))
+    podcast = data['props']['pageProps']['podcast']
+    return podcast.get('episodeCount', 0), podcast.get('latestEpisodePubDate'), podcast.get('episodes') or []
+
+
+def fetch_web_item(eid):
+    data = next_data(fetch_html(f'https://www.xiaoyuzhoufm.com/episode/{eid}'))
+    ep = data['props']['pageProps'].get('episode') or {}
+    if ep.get('payType') not in (None, 'FREE') or ep.get('isPrivateMedia'):
+        raise RuntimeError('paid or private episode')
+    pub = ep.get('pubDate') or ''
+    try:
+        pub_rfc = format_datetime(datetime.fromisoformat(pub.replace('Z', '+00:00')))
+    except Exception:
+        pub_rfc = pub
+    seconds = int(ep.get('duration') or 0)
+    return {
+        'title': (ep.get('title') or '').strip(),
+        'link': f'https://www.xiaoyuzhoufm.com/episode/{eid}',
+        'guid': eid,
+        'pub': pub_rfc,
+        'duration': fmt_duration(seconds) if seconds else '',
+        'audio': (ep.get('enclosure') or {}).get('url', ''),
+        'shownotes': ep.get('shownotes') or ep.get('description') or '',
+    }
+
+
+def pub_ts(it):
+    try:
+        return parsedate_to_datetime(it['pub']).timestamp()
+    except Exception:
+        return 0
+
+
 def make_episode(it, n):
     text = clean_shownotes(it['shownotes'])
     paras = to_paras(text)
@@ -226,9 +289,36 @@ def main():
 
     data = json.load(open(DATA_PATH, encoding='utf-8'))
     known = {e.get('link', '').split('?')[0] for e in data['episodes']}
+    known_eids = {eid_of(e.get('link', '')) for e in data['episodes']}
+    known_eids.discard('')
     items = parse_feed(fetch_feed())
-    new_items = [it for it in items if it['link'] not in known]
-    log(f"RSS {len(items)} items, known {len(known)}, new {len(new_items)}")
+    log(f"RSS {len(items)} items")
+    try:
+        web_count, web_latest, web_eps = fetch_web_episodes()
+        web_items = []
+        for ep in web_eps:
+            eid = ep.get('eid') or ''
+            if not eid or eid in known_eids:
+                continue
+            try:
+                web_items.append(fetch_web_item(eid))
+            except Exception as e:
+                log(f"web ep {eid} skipped: {e!r}")
+        items = web_items + items
+        log(f"WEB {web_count} episodes, latest {web_latest}, new {len(web_items)}")
+    except Exception as e:
+        log(f"web fallback failed: {e!r}")
+
+    new_items = []
+    seen = set()
+    for it in items:
+        key = eid_of(it['link']) or it.get('guid') or it['link']
+        if it['link'] in known or key in known_eids or key in seen:
+            continue
+        seen.add(key)
+        new_items.append(it)
+    new_items.sort(key=pub_ts, reverse=True)
+    log(f"known {len(known)}, new {len(new_items)}")
     if args.check:
         for it in new_items:
             log('NEW ' + it['title'])
