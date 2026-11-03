@@ -12,10 +12,10 @@
   "language": "zh-CN",
   "podcast": "慧客堂",
   "host": "董艺婷",
-  "episodes": 112,
+  "episodes": 114,
   "modules": 8,
-  "vol_guides": 112,
-  "dongliao": 112,
+  "vol_guides": 114,
+  "dongliao": 114,
   "speaker_turns": 20,
   "rss": "https://feed.xyzfm.space/7neh8whbtc9w"
 }
@@ -33,11 +33,11 @@
 把播客《慧客堂》从开篇到最新一期整理成一本手机端学习手册：
 
 - 8 篇章节大导读，每篇含钩子、3 个带读问题、3 个读后能力、3 期建议路线。
-- 112 篇 Vol 导读，每篇含 2 句开场、一个带读问题、3 个关键词。
-- 112 条“董了”观点：原文引句 + 上下文 + 批判性边界 + 点睛。
+- 114 篇 Vol 导读，每篇含 2 句开场、一个带读问题、3 个关键词。
+- 114 条“董了”观点：原文引句 + 上下文 + 批判性边界 + 点睛。
 - 每期精读、核心要点、官方 Shownotes、时间轴；逐字稿按官方章节分节，高亮回到原文。
 - 首批 20 期多人对谈额外提供“说话人回合”：带姓名/角色标签、短句切分和说话人名单（Vol.4/18/36/41/51/58/62/63/74/78/81/83/93/96/101/105/106/107/109/V110）；单声期仍用 60 秒段落。
-- 全量逐字稿，约 353.8 万字。
+- 全量逐字稿，约 359.2 万字。
 - EPUB / TXT 电子书，可导入微信读书。
 
 站点级文案（品牌、Hero、首页推荐语、关于）使用听众视角；播客正文、导读、精读和“董了”里的第一人称“我”代表主播董艺婷，不代表站点作者。**不要把这个站点说成董艺婷本人维护的。**
@@ -50,7 +50,7 @@
 | 八章导读 | `/#/modules` |
 | 单章 | `/#/module/m1` … `/#/module/m8` |
 | 按 Vol 浏览 | `/#/episodes` |
-| 单期 | `/#/vol/1` … `/#/vol/112` |
+| 单期 | `/#/vol/1` … `/#/vol/114` |
 | 我的学习 / 关于 | `/#/me` |
 | Agent 指南 | `/README.agent.md` |
 
@@ -68,9 +68,9 @@
 | --- | --- |
 | `data-v2.json` | 主数据；页面、电子书、GitHub 快照都从它生成 |
 | `transcripts/{n}.json/.txt` | 第 n 期逐字稿；chunks 的 `t` 是 60 秒段首时间戳 |
-| `guides/vol_guides.json` | 111 篇历史 Vol 导读源数据；第 112 期导读在 `data-v2.json` |
+| `guides/vol_guides.json` | 111 篇历史 Vol 导读源数据；第 112-114 期导读在 `data-v2.json` |
 | `guides/module_guides.json` | 8 篇章节大导读源数据 |
-| `guides/dongliao.json` | 111 条历史“董了”源数据；第 112 期在 `data-v2.json` |
+| `guides/dongliao.json` | 111 条历史“董了”源数据；第 112-114 期在 `data-v2.json` |
 | `module_scenes.json` | 8 个模块的对话切片、观点推演、现场与行动源数据 |
 | `apply_module_scenes.js` | 把模块切片合并进 `data-v2.json`，并校验数量与 ep 引用 |
 | `summaries/batch*.json` | 分批精读结果；新增期写入 `batch_auto_YYYYMMDD.json` |
@@ -123,8 +123,11 @@ sceneCases[3] { title, line, ep }, takes[3]
 
 在项目根目录执行：
 
+> **源头对账**：RSS 可能滞后（2026-11-03 出现过 RSS 112 条、网页 114 期）。小宇宙网页的 `episodeCount` / `latestEpisodePubDate` 是集数权威源；`update_daily.py --check` 必须输出 `coverage.status=ok`。`incomplete` 会 exit 2 并写 `SOURCE_GAP`，禁止继续下载、构建、发布；`unverified` 时不得声称“没有新增”，只能报告源头不可验证。
+
 ```bash
-# 1. 检查 RSS 新增
+# 1. 检查新增：RSS + 小宇宙网页数量/最新日期对账
+#    输出 coverage.status 必须为 ok；incomplete 时脚本 exit 2
 python update_daily.py --check
 
 # 2. 检查缺逐字稿/精读/导读/董了的期数
@@ -168,7 +171,7 @@ python sync_github.py
 
 ## 6. 不要做
 
-- 不要重跑 112 期全量转写；不要删除历史逐字稿、精读、导读或董了。
+- 不要重跑 114 期全量转写；不要删除历史逐字稿、精读、导读或董了。
 - 不要把站点说成主播本人维护，也不要把嘉宾改成“我”。
 - 不要在没有通过 `verify_build.py` 的情况下发布。
 - 不要把 `site_config.json`、token、音频、WAV、模型、日志提交到公开仓库或公开站点。
@@ -179,7 +182,7 @@ python sync_github.py
 
 - 单声期逐字稿是本地 Paraformer 机器转写，可能有错字；时间戳为 60 秒段首，约一分钟误差。
 - 多人期用飞书妙记做说话人分离；Speaker 标签不带姓名，主播靠声纹 + 主持用语识别，嘉宾名靠节目信息人工补。重叠说话、串台仍可能出现；首批只覆盖 20 期多人样本，其余期保留 60 秒段落。
-- 页面是单文件 HTML，数据内嵌，文件约 13MB；首次打开可能稍慢。
+- 页面是单文件 HTML，数据内嵌，文件约 16MB；首次打开可能稍慢。
 - 学习进度、收藏、笔记保存在浏览器 localStorage，不跨设备同步。
 - 公开 GitHub 仓库是内容快照，不是站点运行依赖。
 

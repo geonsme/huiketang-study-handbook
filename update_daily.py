@@ -259,6 +259,36 @@ def pub_ts(it):
         return 0
 
 
+def build_coverage(data, web_count, web_latest, new_items, skipped_paid, web_error):
+    known_count = len(data['episodes'])
+    latest_local = max((e.get('date', '') for e in data['episodes'] if e.get('date')), default='')
+    latest_web = cn_date(web_latest) if web_latest else ''
+    missing = None if web_count is None else web_count - known_count
+    resolved = len(new_items) + len(skipped_paid)
+    status = 'unverified'
+    if web_count is not None:
+        if latest_web and latest_local and latest_web > latest_local and not new_items:
+            status = 'incomplete'
+        elif web_count < known_count:
+            status = 'ahead'
+        elif missing > resolved:
+            status = 'incomplete'
+        else:
+            status = 'ok'
+    return {
+        'source': 'xiaoyuzhou-page',
+        'webCount': web_count,
+        'webLatest': latest_web,
+        'latestLocal': latest_local,
+        'known': known_count,
+        'missing': missing,
+        'resolved': resolved,
+        'skippedPaid': len(skipped_paid),
+        'status': status,
+        'webError': web_error,
+    }
+
+
 def make_episode(it, n):
     text = clean_shownotes(it['shownotes'])
     paras = to_paras(text)
@@ -293,12 +323,21 @@ def main():
     known_eids.discard('')
     items = parse_feed(fetch_feed())
     log(f"RSS {len(items)} items")
+
+    web_count = None
+    web_latest = ''
+    web_error = ''
+    skipped_paid = []
     try:
         web_count, web_latest, web_eps = fetch_web_episodes()
         web_items = []
         for ep in web_eps:
             eid = ep.get('eid') or ''
             if not eid or eid in known_eids:
+                continue
+            if ep.get('payType') not in (None, 'FREE') or ep.get('isPrivateMedia'):
+                skipped_paid.append({'eid': eid, 'title': ep.get('title', '')})
+                log(f"web ep {eid} paid/private, skipped")
                 continue
             try:
                 web_items.append(fetch_web_item(eid))
@@ -307,7 +346,8 @@ def main():
         items = web_items + items
         log(f"WEB {web_count} episodes, latest {web_latest}, new {len(web_items)}")
     except Exception as e:
-        log(f"web fallback failed: {e!r}")
+        web_error = repr(e)
+        log(f"web fallback failed: {web_error}")
 
     new_items = []
     seen = set()
@@ -318,18 +358,27 @@ def main():
         seen.add(key)
         new_items.append(it)
     new_items.sort(key=pub_ts, reverse=True)
-    log(f"known {len(known)}, new {len(new_items)}")
+    coverage = build_coverage(data, web_count, web_latest, new_items, skipped_paid, web_error)
+    log(f"known {coverage['known']}, missing {coverage['missing']}, resolved {coverage['resolved']}, coverage {coverage['status']}")
+    if coverage['status'] == 'incomplete':
+        log('SOURCE_GAP: web count/latest is ahead of local and the missing episodes are not fully resolvable')
     if args.check:
         for it in new_items:
             log('NEW ' + it['title'])
-        print(json.dumps({'new': [{'title': it['title'], 'link': it['link']} for it in new_items]}, ensure_ascii=False))
-        return
+        print(json.dumps({'new': [{'title': it['title'], 'link': it['link']} for it in new_items],
+                          'coverage': coverage}, ensure_ascii=False))
+        return 2 if coverage['status'] == 'incomplete' else 0
+
+    if coverage['status'] == 'incomplete':
+        log('stop before download: source coverage incomplete')
+        return 2
 
     if not new_items:
         with open(os.path.join(BASE, 'last_update.json'), 'w', encoding='utf-8') as f:
-            json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': [], 'total': len(data['episodes'])}, f, ensure_ascii=False, indent=1)
+            json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': [], 'total': len(data['episodes']),
+                       'coverage': coverage}, f, ensure_ascii=False, indent=1)
         log('no new episodes')
-        return
+        return 0
 
     max_n = max((e['n'] for e in data['episodes']), default=0)
     added = []
@@ -367,8 +416,9 @@ def main():
     if not added:
         log('nothing added')
         with open(os.path.join(BASE, 'last_update.json'), 'w', encoding='utf-8') as f:
-            json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': [], 'total': len(data['episodes'])}, f, ensure_ascii=False, indent=1)
-        return
+            json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': [], 'total': len(data['episodes']),
+                       'coverage': coverage}, f, ensure_ascii=False, indent=1)
+        return 0
 
     data['podcast']['count'] = len(data['episodes'])
     data['podcast']['hours'] = round(sum(e.get('seconds', 0) for e in data['episodes']) / 3600, 1)
@@ -392,10 +442,12 @@ def main():
         os.makedirs(local_dist, exist_ok=True)
         shutil.copyfile(src, os.path.join(local_dist, 'index.html'))
     with open(os.path.join(BASE, 'last_update.json'), 'w', encoding='utf-8') as f:
-        json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': added, 'total': len(data['episodes'])}, f, ensure_ascii=False, indent=1)
+        json.dump({'date': time.strftime('%Y-%m-%d %H:%M:%S'), 'new': added, 'total': len(data['episodes']),
+                   'coverage': coverage}, f, ensure_ascii=False, indent=1)
     log(f"draft built: {len(added)} new episodes, total {len(data['episodes'])}; 等待精读和最终构建")
-    print(json.dumps({'new': added, 'total': len(data['episodes']), 'draft': True}, ensure_ascii=False))
+    print(json.dumps({'new': added, 'total': len(data['episodes']), 'draft': True, 'coverage': coverage}, ensure_ascii=False))
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())
