@@ -1103,6 +1103,15 @@ html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(i
 .vp-map .rm-title{margin-top:8px}
 .vp-keys{display:flex;gap:5px;flex-wrap:wrap;margin-top:11px}
 .vp-keys span{font-size:9.5px;background:color-mix(in srgb,var(--orange) 13%,transparent);border:1px solid color-mix(in srgb,var(--orange) 24%,transparent);color:var(--red);border-radius:999px;padding:2px 7px}
+.vp-analysis{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line-strong)}
+.vp-analysis-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+.vp-analysis-k{font-family:var(--font-ui);font-size:9px;letter-spacing:.14em;color:var(--red);font-weight:800}
+.vp-analysis-meta{font-size:9px;color:var(--muted);white-space:nowrap}
+.vp-analysis .analysis-box{padding:0;border:0;background:transparent;box-shadow:none}
+.vp-analysis .analysis-box h3{font-family:var(--font-display);font-size:17px;line-height:1.45;letter-spacing:-.02em;color:var(--ink);margin:0 0 6px}
+.vp-analysis .analysis-box p{font-family:var(--font-read);font-size:14px;line-height:1.9;color:var(--ink-2);margin:8px 0 0}
+.vp-analysis .analysis-box li{font-family:var(--font-read);font-size:14px;line-height:1.9;color:var(--ink-2)}
+.vp-analysis .more-block{margin-top:12px;background:color-mix(in srgb,var(--glass) 40%,transparent)}
 
 .vs-head{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:10px}
 .vs-no{font-family:var(--font-ui);font-size:9.5px;color:var(--red);font-weight:800;letter-spacing:.1em}
@@ -1170,6 +1179,8 @@ html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(i
   .vp-line{padding:12px 13px}
   .vp-line p{font-size:16.5px;line-height:1.78}
   .vp-hook p{font-size:12px;line-height:1.8}
+  .vp-analysis .analysis-box h3{font-size:16px}
+  .vp-analysis .analysis-box p,.vp-analysis .analysis-box li{font-size:13.5px}
   .vs-head{gap:7px}
   .vs-head h2{font-size:19px}
   .vs-meta{font-size:9px}
@@ -1196,13 +1207,15 @@ html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(i
 
 
 /* ---------- Vol transcript-first reading + margin note ---------- */
-.wrap.vol-page{max-width:1000px}
+.wrap.vol-page{max-width:1060px}
+.vol-layout{display:block;max-width:760px;margin:0 auto}
 .vol-narrow{width:100%;max-width:760px;margin:0 auto}
+.vol-top,.vol-after,.vol-body{width:100%;max-width:760px;margin:0 auto}
 .vol-read{padding-top:24px;scroll-margin-top:96px}
 #volTranscript{scroll-margin-top:96px}
 .tr-sec{scroll-margin-top:96px}
-.vol-read-shell{display:grid;grid-template-columns:minmax(0,1fr);gap:0;align-items:start}
-.vol-read-main{min-width:0}
+.vol-read-shell{display:block;max-width:none;margin:0}
+.vol-read-main{min-width:0;width:100%}
 .tr-note{font-size:10.5px;line-height:1.7;color:var(--muted);margin:-2px 0 10px}
 .tr-cast{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 9px;padding:8px 9px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--paper) 60%,transparent)}
 .tr-cast-k{font-family:var(--font-ui);font-size:8px;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-right:2px}
@@ -1271,12 +1284,15 @@ html[data-theme="dark"] .tr-cast-i.guest i{background:#7fb6d9}
 @keyframes annotPulse{0%,100%{box-shadow:var(--glass-shadow)}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--orange) 22%,transparent),0 18px 44px rgba(245,166,35,.2)}}
 
 
-@media (min-width:960px){
-  .vol-read-shell{grid-template-columns:minmax(0,1fr) 240px;gap:32px}
-  .vol-rail{display:block;position:sticky;top:96px;max-height:calc(100vh - 112px);overflow:auto;align-self:start;scrollbar-width:thin}
+@media (min-width:1060px){
+  .vol-layout{display:grid;grid-template-columns:minmax(0,760px) 220px;column-gap:24px;max-width:1004px;margin:0 auto;align-items:start}
+  .vol-top{grid-column:1;grid-row:1;max-width:none;margin:0}
+  .vol-body{grid-column:1;grid-row:2;max-width:none;margin:0}
+  .vol-after{max-width:none;margin:0}
+  .vol-rail{display:block;grid-column:2;grid-row:2;margin-top:30px;position:sticky;top:96px;max-height:calc(100vh - 112px);overflow:auto;align-self:start;scrollbar-width:thin}
   .vol-read-main{max-width:none}
 }
-@media (max-width:959px){
+@media (max-width:1059px){
   .vol-rail{display:none}
   .vol-read-main{width:100%}
 }
@@ -2350,6 +2366,10 @@ function renderVol(n){
     <div class="vp-line"><span class="vp-line-k">本期一句话 · 导读</span><p>${esc(summary)}</p></div>
     ${dl?`<button class="dl-jump" data-dl-jump><span class="dl-badge">董了</span><span>批注 · ${esc(dl.t)}</span><span>↓</span></button>`:''}
     ${mapSteps.length?`<div class="vp-map"><div class="rm-title">READING MAP · 三步读法</div>${readMap(mapSteps)}</div>`:''}
+    <div class="vp-analysis">
+      <div class="vp-analysis-head"><span class="vp-analysis-k">主理人的观点</span><span class="vp-analysis-meta">${analysisMeta}</span></div>
+      ${analysisHtml}
+    </div>
     ${(g?.keywords||[]).length?`<div class="vp-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
   </section>`;
   const dlHtml = dl ? `<section class="dl-grow dl-note" id="dlGrow" data-stage="0" aria-label="董了批注">
@@ -2409,7 +2429,8 @@ function renderVol(n){
   const castHtml = cast ? `<div class="tr-cast" aria-label="本期说话人"><span class="tr-cast-k">说话人</span>${cast}</div>` : '';
 
   $('#view-vol').innerHTML = `<div class="wrap vol-page">
-    <div class="vol-narrow">
+    <div class="vol-layout">
+    <div class="vol-narrow vol-top">
       <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
       <div class="vol-hero">
         <div class="vol-kicker"><span class="dot"></span>${esc(e.label)} · ${esc(e.tags[0]||'播客')}</div>
@@ -2431,8 +2452,8 @@ function renderVol(n){
             <div class="vs-head"><span class="vs-no">01</span><h2>逐字稿</h2><span class="vs-meta">${transcriptMeta}</span></div>
             ${castHtml}
             <div class="tr-note">${turnMode
-              ? '按官方章节分成小节，保留主理人与嘉宾的来回；向下滑动，章节会随锚点平滑展开，文字由浅入深。点小标题也可手动开合。'
-              : '按官方章节分成小节；向下滑动，章节会随锚点平滑展开，文字由浅入深。点标题也可手动开合。'}</div>
+              ? '按官方章节分成小节，保留主理人与嘉宾的来回；点章节标题展开或收起，向下阅读时文字会逐渐清晰。'
+              : '按官方章节分成小节；点章节标题展开或收起，向下阅读时文字会逐渐清晰。'}</div>
             <div class="tr-toolbar">
               <button class="tr-tool" id="trSearchToggle">搜索</button>
               <button class="tr-tool" id="trExpandAll">展开全部</button>
@@ -2443,30 +2464,27 @@ function renderVol(n){
             <div class="tr-sections" id="trSections">${sectionsHtml}</div>
             ${transcript.dlIdx < 0 && dl ? `<div class="dl-slot" data-dl-slot="mobile" id="dlSlotFallback"></div>` : ''}
           </div>
-          ${dl?`<aside class="vol-rail" id="volRail" aria-label="董了批注">
-            <div class="vol-rail-head"><span class="vol-rail-kicker">MARGIN NOTE · 批注</span><button class="vol-rail-jump" data-dl-jump>原文 ${esc(dl.t)} →</button></div>
-            <div class="dl-slot" data-dl-slot="desktop"></div>
-          </aside>`:''}
         </div>
         ${dl?`<div id="dlHolder" hidden>${dlHtml}</div>`:''}
       </section>
-      <div class="vol-narrow">
+      <div class="vol-narrow vol-after">
         <section class="vol-section">
-          <div class="vs-head"><span class="vs-no">02</span><h2>主理人的观点</h2><span class="vs-meta">${analysisMeta}</span></div>
-          ${analysisHtml}
-        </section>
-        <section class="vol-section">
-          <div class="vs-head"><span class="vs-no">03</span><h2>节目资料</h2><span class="vs-meta">时间轴 · 官方笔记</span></div>
+          <div class="vs-head"><span class="vs-no">02</span><h2>节目资料</h2><span class="vs-meta">时间轴 · 官方笔记</span></div>
           ${archiveHtml}
         </section>
         <section class="vol-section vol-note">
-          <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
+          <div class="vs-head"><span class="vs-no">03</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
           <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
         </section>
         <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">${turnMode
           ? '逐字稿由飞书妙记转写并做说话人分离，可能存在个别错字；说话人姓名由我按节目信息标注。高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'
           : '逐字稿为本地 Paraformer 转写，可能存在个别错字；高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'}精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
       </div>
+    </div>
+    ${dl?`<aside class="vol-rail" id="volRail" aria-label="董了批注">
+      <div class="vol-rail-head"><span class="vol-rail-kicker">MARGIN NOTE · 批注</span><button class="vol-rail-jump" data-dl-jump>原文 ${esc(dl.t)} →</button></div>
+      <div class="dl-slot" data-dl-slot="desktop"></div>
+    </aside>`:''}
     </div>
   </div>`;
 
@@ -2675,7 +2693,7 @@ function renderVol(n){
   const dlgCard = $('#dlGrow');
   const placeDongliao = ()=>{
     if (!dlgCard) return;
-    const desktop = window.matchMedia('(min-width:960px)').matches;
+    const desktop = window.matchMedia('(min-width:1060px)').matches;
     const slot = desktop
       ? document.querySelector('.vol-rail [data-dl-slot="desktop"]')
       : document.querySelector('[data-dl-slot="mobile"]');
@@ -2712,7 +2730,7 @@ function renderVol(n){
         if (sec) { delete sec.dataset.userClosed; openSection(sec, false); }
       }
       updateChunkReveal();
-      const desktop = window.matchMedia('(min-width:960px)').matches;
+      const desktop = window.matchMedia('(min-width:1060px)').matches;
       const target = desktop ? document.getElementById('tr-chunk-' + transcript.dlIdx) : dlgCard;
       if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
       if (desktop){
@@ -2722,7 +2740,7 @@ function renderVol(n){
     };
     $$('#view-vol [data-dl-jump]').forEach(b=>b.addEventListener('click', jumpToDongliao));
     placeDongliao();
-    const volMq = window.matchMedia('(min-width:960px)');
+    const volMq = window.matchMedia('(min-width:1060px)');
     const onVolMq = ()=>placeDongliao();
     if (volMq.addEventListener) volMq.addEventListener('change', onVolMq);
     else if (volMq.addListener) volMq.addListener(onVolMq);

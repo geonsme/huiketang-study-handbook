@@ -1977,6 +1977,10 @@ function renderVol(n){
     <div class="vp-line"><span class="vp-line-k">本期一句话 · 导读</span><p>${esc(summary)}</p></div>
     ${dl?`<button class="dl-jump" data-dl-jump><span class="dl-badge">董了</span><span>批注 · ${esc(dl.t)}</span><span>↓</span></button>`:''}
     ${mapSteps.length?`<div class="vp-map"><div class="rm-title">READING MAP · 三步读法</div>${readMap(mapSteps)}</div>`:''}
+    <div class="vp-analysis">
+      <div class="vp-analysis-head"><span class="vp-analysis-k">主理人的观点</span><span class="vp-analysis-meta">${analysisMeta}</span></div>
+      ${analysisHtml}
+    </div>
     ${(g?.keywords||[]).length?`<div class="vp-keys">${g.keywords.map(k=>`<span>${esc(k)}</span>`).join('')}</div>`:''}
   </section>`;
   const dlHtml = dl ? `<section class="dl-grow dl-note" id="dlGrow" data-stage="0" aria-label="董了批注">
@@ -2036,7 +2040,8 @@ function renderVol(n){
   const castHtml = cast ? `<div class="tr-cast" aria-label="本期说话人"><span class="tr-cast-k">说话人</span>${cast}</div>` : '';
 
   $('#view-vol').innerHTML = `<div class="wrap vol-page">
-    <div class="vol-narrow">
+    <div class="vol-layout">
+    <div class="vol-narrow vol-top">
       <div class="detail-top"><button class="back-btn" data-go="episodes"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg> 按 Vol</button><button class="back-btn" data-go="modules" style="margin-left:auto">按模块 <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button></div>
       <div class="vol-hero">
         <div class="vol-kicker"><span class="dot"></span>${esc(e.label)} · ${esc(e.tags[0]||'播客')}</div>
@@ -2058,8 +2063,8 @@ function renderVol(n){
             <div class="vs-head"><span class="vs-no">01</span><h2>逐字稿</h2><span class="vs-meta">${transcriptMeta}</span></div>
             ${castHtml}
             <div class="tr-note">${turnMode
-              ? '按官方章节分成小节，保留主理人与嘉宾的来回；向下滑动，章节会随锚点平滑展开，文字由浅入深。点小标题也可手动开合。'
-              : '按官方章节分成小节；向下滑动，章节会随锚点平滑展开，文字由浅入深。点标题也可手动开合。'}</div>
+              ? '按官方章节分成小节，保留主理人与嘉宾的来回；点章节标题展开或收起，向下阅读时文字会逐渐清晰。'
+              : '按官方章节分成小节；点章节标题展开或收起，向下阅读时文字会逐渐清晰。'}</div>
             <div class="tr-toolbar">
               <button class="tr-tool" id="trSearchToggle">搜索</button>
               <button class="tr-tool" id="trExpandAll">展开全部</button>
@@ -2070,30 +2075,27 @@ function renderVol(n){
             <div class="tr-sections" id="trSections">${sectionsHtml}</div>
             ${transcript.dlIdx < 0 && dl ? `<div class="dl-slot" data-dl-slot="mobile" id="dlSlotFallback"></div>` : ''}
           </div>
-          ${dl?`<aside class="vol-rail" id="volRail" aria-label="董了批注">
-            <div class="vol-rail-head"><span class="vol-rail-kicker">MARGIN NOTE · 批注</span><button class="vol-rail-jump" data-dl-jump>原文 ${esc(dl.t)} →</button></div>
-            <div class="dl-slot" data-dl-slot="desktop"></div>
-          </aside>`:''}
         </div>
         ${dl?`<div id="dlHolder" hidden>${dlHtml}</div>`:''}
       </section>
-      <div class="vol-narrow">
+      <div class="vol-narrow vol-after">
         <section class="vol-section">
-          <div class="vs-head"><span class="vs-no">02</span><h2>主理人的观点</h2><span class="vs-meta">${analysisMeta}</span></div>
-          ${analysisHtml}
-        </section>
-        <section class="vol-section">
-          <div class="vs-head"><span class="vs-no">03</span><h2>节目资料</h2><span class="vs-meta">时间轴 · 官方笔记</span></div>
+          <div class="vs-head"><span class="vs-no">02</span><h2>节目资料</h2><span class="vs-meta">时间轴 · 官方笔记</span></div>
           ${archiveHtml}
         </section>
         <section class="vol-section vol-note">
-          <div class="vs-head"><span class="vs-no">04</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
+          <div class="vs-head"><span class="vs-no">03</span><h2>我的笔记</h2><span class="vs-meta">自动保存</span></div>
           <div class="note-editor"><textarea id="volNote" placeholder="这一期，我准备改变什么？">${esc(noteVal)}</textarea><div class="note-status" id="volNoteStatus">${noteVal?'已自动保存':'输入后自动保存到本机'}</div></div>
         </section>
         <div class="sheet-footer"><a class="listen-link" href="${e.link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7Z"></path></svg> 在小宇宙收听这一期</a><div class="source-note">${turnMode
           ? '逐字稿由飞书妙记转写并做说话人分离，可能存在个别错字；说话人姓名由我按节目信息标注。高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'
           : '逐字稿为本地 Paraformer 转写，可能存在个别错字；高亮取自逐字稿原句，匹配不到的引文不会伪造划线。'}精读与模块分析基于逐字稿和官方 Shownotes 整理，引用请以音频为准。</div></div>
       </div>
+    </div>
+    ${dl?`<aside class="vol-rail" id="volRail" aria-label="董了批注">
+      <div class="vol-rail-head"><span class="vol-rail-kicker">MARGIN NOTE · 批注</span><button class="vol-rail-jump" data-dl-jump>原文 ${esc(dl.t)} →</button></div>
+      <div class="dl-slot" data-dl-slot="desktop"></div>
+    </aside>`:''}
     </div>
   </div>`;
 
@@ -2302,7 +2304,7 @@ function renderVol(n){
   const dlgCard = $('#dlGrow');
   const placeDongliao = ()=>{
     if (!dlgCard) return;
-    const desktop = window.matchMedia('(min-width:960px)').matches;
+    const desktop = window.matchMedia('(min-width:1060px)').matches;
     const slot = desktop
       ? document.querySelector('.vol-rail [data-dl-slot="desktop"]')
       : document.querySelector('[data-dl-slot="mobile"]');
@@ -2339,7 +2341,7 @@ function renderVol(n){
         if (sec) { delete sec.dataset.userClosed; openSection(sec, false); }
       }
       updateChunkReveal();
-      const desktop = window.matchMedia('(min-width:960px)').matches;
+      const desktop = window.matchMedia('(min-width:1060px)').matches;
       const target = desktop ? document.getElementById('tr-chunk-' + transcript.dlIdx) : dlgCard;
       if (target) setTimeout(()=>target.scrollIntoView({behavior:'smooth',block:'center'}), 80);
       if (desktop){
@@ -2349,7 +2351,7 @@ function renderVol(n){
     };
     $$('#view-vol [data-dl-jump]').forEach(b=>b.addEventListener('click', jumpToDongliao));
     placeDongliao();
-    const volMq = window.matchMedia('(min-width:960px)');
+    const volMq = window.matchMedia('(min-width:1060px)');
     const onVolMq = ()=>placeDongliao();
     if (volMq.addEventListener) volMq.addEventListener('change', onVolMq);
     else if (volMq.addListener) volMq.addListener(onVolMq);
