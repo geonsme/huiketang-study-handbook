@@ -57,13 +57,16 @@ def episode_points(ep, limit):
 
 def build_block(ep, site, point_limit):
     n = ep.get("n")
-    label = ep.get("label") or ""
+    label = (ep.get("label") or "").strip()
+    if label.startswith("Vol."):
+        label = ""
     date = ep.get("date") or ""
     title = ep.get("title") or ""
     summary = ep.get("summary") or ep.get("line") or ""
     dl = ep.get("dongliao") or {}
     insight = dl.get("insight") or dl.get("title") or ""
-    lines = [f"【慧客堂更新】Vol.{n} {label} · {date}".replace("  ", " ").strip(), ""]
+    head = f"【慧客堂更新】Vol.{n}" + (f" · {label}" if label else "") + f" · {date}"
+    lines = [head, ""]
     if title:
         lines += [title, ""]
     if summary:
