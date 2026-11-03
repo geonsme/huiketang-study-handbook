@@ -1,6 +1,6 @@
 # 慧客堂学习手册 · Agent 阅读指南
 
-> 给其他 Agent 直接阅读的项目说明。最后更新：2026-11-03（114 期与源头对账）。
+> 给其他 Agent 直接阅读的项目说明。最后更新：2026-11-03（114 期、源头对账与核心观点推送）。
 > 站点作者是《慧客堂》的一位老听众，不是主播本人。
 
 ## 0. 一眼看懂
@@ -58,7 +58,7 @@
 
 模块页不是长文堆叠，固定四块：**对话现场**（3 个“听友之问 → 节目原声 → 旁白”回合）、**观点推演**（起点 / 转折 / 落点 + 边界）、**现场切片**（3 个故事）、**带走**（3 件可勾选的事）。每块的源数据在模块对象的 `thread / scenes / deduction / sceneCases / takes` 字段。
 
-单期页按一条阅读路径排列：**本期脉络**（一句话 + 导读问题 + 三步 + 主理人的观点，首节直读、其余折叠）→ **逐字稿主阅读**（按官方章节分节；有 `transcript.turns` 时按“时间 + 说话人 + 短回合”渲染并在标题下显示说话人名单，否则用 60 秒段落；默认只开首节，滚动不自动展开，点标题手动开合，文字随滚动由浅入深）→ **董了批注**（桌面右栏 / 手机段后，原文种子 → 上下文 → 再想一层 → 点睛，逐层展开）→ **节目资料**（时间轴 / 官方笔记两标签）→ **我的笔记**。桌面端（≥1060px）正文固定 760px 宽，董了批注在正文右侧独立 220px 栏，不占用正文宽度；较窄窗口批注回到段落下方。逐字稿已升为主阅读区，资料卡不再重复一份逐字稿。
+单期页按一条阅读路径排列：**本期脉络**（一句话 + 导读问题 + 三步 + 主理人的观点，首节直读、其余折叠）→ **逐字稿主阅读**（按官方章节分节；有 `transcript.turns` 时按“时间 + 说话人 + 短回合”渲染并在标题下显示说话人名单，否则用 60 秒段落；默认只开首节，滚动不自动展开，点标题手动开合，正文保持清晰，仅时间戳轻微渐显）→ **董了批注**（桌面右栏 / 手机段后，原文种子 → 上下文 → 再想一层 → 点睛，逐层展开）→ **节目资料**（时间轴 / 官方笔记两标签）→ **我的笔记**。桌面端（≥1060px）正文固定 760px 宽，董了批注在正文右侧独立 220px 栏，不占用正文宽度；较窄窗口批注回到段落下方。逐字稿已升为主阅读区，资料卡不再重复一份逐字稿。
 
 ## 3. 数据契约
 
@@ -80,6 +80,7 @@
 | `build_ebook.py` | 生成两本 EPUB 和一本 TXT |
 | `site_config.json` | Qoder Site 的 siteRoot / projectId / siteId / 域名；本机配置，不入库 |
 | `sync_github.py` | 有新增时把白名单内容提交到公开 GitHub 仓库 |
+| `push_core.py` | 有新增时生成当期核心观点推送；无新增输出为空 |
 
 ### Episode 关键字段
 
@@ -161,9 +162,14 @@ python <skill-dir>/scripts/verify_build.py
 
 # 8. 有新增时自动提交 GitHub
 python sync_github.py
+
+# 9. 发布成功且确有新增时，生成核心观点推送（无新增输出为空）
+python push_core.py
 ```
 
-发布用 Qoder Sites MCP：`prepare_site` → 轮询 `get_publish_status` 到 `canPublish=true` 且 `deployment.state=ready` → `publish_site` → 再验证 `published=true` → `show_publish_confirmation`。参数从 `site_config.json` 读取；站点保持 public。
+发布用 Qoder Sites MCP：`prepare_site` → 轮询 `get_publish_status` 到 `canPublish=true` 且 `preparation.state=ready` → `publish_site` → 再验证 `published=true` 且 `readiness=publication_completed`。参数从 `site_config.json` 读取；站点保持 public。发布后用 curl 下载线上 `index.html`，与本地 `dist/index.html` 做 SHA-256 对比。
+
+核心观点推送只在本次确有新增期且已发布时生成，内容取自 `summary`、`points`、`dongliao.insight`；没有新增时不运行、不推送，避免把上次遗留的期重复发出去。
 
 > 本机 Python 使用 miniconda 的解释器，`python` 可能是 Windows 商店桩；具体路径见本机 `huiketang-daily-update` Skill。所有命令都在项目根目录执行。
 
