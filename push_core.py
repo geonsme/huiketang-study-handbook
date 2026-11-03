@@ -7,7 +7,7 @@ import sys
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT_HOST = "huiketang-study-notes-3x1jbx9p8pj.qoder.zone"
+DEFAULT_HOST = "hkt-3x1jbx9p8pj.qoder.zone"
 
 
 def read_json(path, default=None):

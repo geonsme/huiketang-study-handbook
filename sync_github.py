@@ -277,7 +277,7 @@ def main():
         f"- 逐字稿：{new_wan} 万字",
         f"- 精读：{sum(1 for e in episodes if len(e.get('analysis') or []) >= 2)} 期",
         f"- 新增：{', '.join(str(n) for n in new_ns) if new_ns else '无（流程更新）'}",
-        "- 线上：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/",
+        "- 线上：https://hkt-3x1jbx9p8pj.qoder.zone/",
     ]
     if args.message:
         body.append(args.message)

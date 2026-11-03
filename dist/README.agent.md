@@ -7,7 +7,7 @@
 
 ```json
 {
-  "site": "https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/",
+  "site": "https://hkt-3x1jbx9p8pj.qoder.zone/",
   "access": "public",
   "language": "zh-CN",
   "podcast": "慧客堂",
@@ -21,12 +21,12 @@
 }
 ```
 
-- 在线站点：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
+- 在线站点：https://hkt-3x1jbx9p8pj.qoder.zone/
 - 公开 GitHub 快照：https://github.com/geonsme/huiketang-study-handbook
 - 电子书下载：
-  - https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/ebook/huiketang-handbook.epub
-  - https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/ebook/huiketang-transcripts.epub
-  - https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/ebook/huiketang-handbook.txt
+  - https://hkt-3x1jbx9p8pj.qoder.zone/ebook/huiketang-handbook.epub
+  - https://hkt-3x1jbx9p8pj.qoder.zone/ebook/huiketang-transcripts.epub
+  - https://hkt-3x1jbx9p8pj.qoder.zone/ebook/huiketang-handbook.txt
 
 ## 1. 这是什么
 
@@ -196,9 +196,9 @@ python push_core.py
 
 ```json
 {
-  "canonical_site": "https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/",
+  "canonical_site": "https://hkt-3x1jbx9p8pj.qoder.zone/",
   "public": true,
-  "agent_readme": "https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/README.agent.md",
+  "agent_readme": "https://hkt-3x1jbx9p8pj.qoder.zone/README.agent.md",
   "repo": "https://github.com/geonsme/huiketang-study-handbook",
   "repo_visibility": "public",
   "rss": "https://feed.xyzfm.space/7neh8whbtc9w",

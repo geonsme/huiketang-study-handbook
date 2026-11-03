@@ -2,10 +2,10 @@
 
 把播客《慧客堂》114 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、8 个模块的对话切片与观点推演、112 篇 Vol 导读、112 条“董了”观点、按章节分段的逐字稿与内联高亮、精读分析、官方 Shownotes、完整时间轴和 359.2 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
-- 在线版：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/
+- 在线版：https://hkt-3x1jbx9p8pj.qoder.zone/
 - GitHub 公开仓库：https://github.com/geonsme/huiketang-study-handbook
 - 本地版：打开根目录 `index.html`，或 `dist/index.html`
-- Agent 阅读指南：[README.agent.md](README.agent.md)（公开：https://huiketang-study-notes-3x1jbx9p8pj.qoder.zone/README.agent.md）
+- Agent 阅读指南：[README.agent.md](README.agent.md)（公开：https://hkt-3x1jbx9p8pj.qoder.zone/README.agent.md）
 
 ## 内容结构
 
