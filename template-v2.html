@@ -973,6 +973,10 @@ html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(i
 </main>
 
 <nav class="bottom-nav" aria-label="主导航">
+  <button class="nav-item" data-nav="episodes">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+    <span>按 Vol</span>
+  </button>
   <button class="nav-item active" data-nav="home">
     <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"></path></svg>
     <span>总览</span>
@@ -980,10 +984,6 @@ html[data-theme="dark"] .mini-tag.spk-tag{color:#7fb6d9;border-color:color-mix(i
   <button class="nav-item" data-nav="modules">
     <svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>
     <span>按模块</span>
-  </button>
-  <button class="nav-item" data-nav="episodes">
-    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
-    <span>按 Vol</span>
   </button>
   <button class="nav-item" data-nav="me">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
@@ -1283,7 +1283,7 @@ function renderHome(){
 
     <section class="section">
       <div class="home-note">
-        <b>一位老听众整理</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · ${DATA.episodes.filter(e=>e.dongliao).length} 条董了 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查 RSS，新增期会转写、生成导读与分析并更新本页。手册里的精读与“董了”是听众的学习整理，不代表主播本人审订。
+        <b>一位老听众整理</b> · ${p.count} 期逐字稿 · ${DATA.episodes.filter(e=>e.core).length} 期完整精读 · ${DATA.episodes.filter(e=>e.guide).length} 期导读 · ${DATA.episodes.filter(e=>e.dongliao).length} 条董了 · 8 个模块 · ${p.transcriptWan} 万字原文。每天 09:00 自动检查新增，新增期会转写、生成导读与分析并更新本页。手册里的精读与“董了”是听众的学习整理，不代表主播本人审订。
         <div class="home-note-links"><button data-go="me">我的笔记 / 关于</button><a href="README.agent.md" target="_blank" rel="noopener">给 Agent 的 README</a><a href="${p.url}" target="_blank" rel="noopener">小宇宙播客主页</a></div>
       </div>
     </section>
@@ -2115,8 +2115,6 @@ function renderVol(n){
   const trSearchCount = $('#trSearchCount');
   let searchOpenState = null;
   let searchActive = false;
-  let lastAutoOpen = 0;
-  let jumpLockUntil = 0;
 
   const sectionBody = sec => sec.querySelector('.tr-sec-body');
   const clearSectionStyles = body => {
@@ -2195,21 +2193,6 @@ function renderVol(n){
       else { delete sec.dataset.userClosed; openSection(sec, true); }
     });
   });
-  const autoOpenSections = ()=>{
-    if (searchActive) return;
-    const now = Date.now();
-    if (now < jumpLockUntil || now - lastAutoOpen < 700) return;
-    const trigger = window.innerHeight * 1.06;
-    for (const sec of trSections){
-      if (sec.hidden || sec.open || sec.dataset.userClosed === '1') continue;
-      const r = sec.getBoundingClientRect();
-      if (r.top < trigger && r.top > 0) {
-        lastAutoOpen = now;
-        openSection(sec, true);
-        break;
-      }
-    }
-  };
   const restoreTranscript = ()=>{
     trSections.forEach(sec=>{
       sec.hidden = false;
@@ -2276,14 +2259,12 @@ function renderVol(n){
     if (revealFrame) return;
     revealFrame = requestAnimationFrame(()=>{
       revealFrame = null;
-      autoOpenSections();
       updateChunkReveal();
     });
   };
   window.addEventListener('scroll', onVolScroll, {passive:true});
   requestAnimationFrame(()=>{
     if (!trSections.length || !document.body.contains(trSections[0])) return;
-    autoOpenSections();
     updateChunkReveal();
   });
   const copyBtn = $('#copyTranscript');
@@ -2349,7 +2330,6 @@ function renderVol(n){
       setDlgStage(cur >= 3 ? 0 : cur + 1);
     });
     const jumpToDongliao = ()=>{
-      jumpLockUntil = Date.now() + 1600;
       if (trSearch && trSearch.value) {
         trSearch.value = '';
         restoreTranscript();
