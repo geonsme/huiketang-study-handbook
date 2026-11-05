@@ -1,6 +1,6 @@
 # 慧客堂 · 学习手册
 
-把播客《慧客堂》114 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、8 个模块的对话切片与观点推演、112 篇 Vol 导读、112 条“董了”观点、按章节分段的逐字稿与内联高亮、精读分析、官方 Shownotes、完整时间轴和 359.2 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
+把播客《慧客堂》115 期整理成一本手机端学习手册（一位老听众整理）：8 篇章节大导读、8 个模块的对话切片与观点推演、112 篇 Vol 导读、112 条“董了”观点、按章节分段的逐字稿与内联高亮、精读分析、官方 Shownotes、完整时间轴和 361.1 万字逐字稿。另有可导入微信读书的 EPUB / TXT 电子书。
 
 - 在线版：https://hkt-3x1jbx9p8pj.qoder.zone/
 - GitHub 公开仓库：https://github.com/geonsme/huiketang-study-handbook
@@ -14,11 +14,11 @@
 | `README.agent.md` | 给其他 Agent 直接阅读的项目说明、数据契约与维护流程 |
 | `index.html` | 手机端学习手册（单文件，数据已内嵌） |
 | `dist/index.html` | 部署用静态输出，内容与根目录一致 |
-| `data-v2.json` | 主数据：114 期、模块、精读、逐字稿、引文 |
-| `transcripts/` | 114 期逐字稿（txt + json，带 60 秒时间戳） |
+| `data-v2.json` | 主数据：115 期、模块、精读、逐字稿、引文 |
+| `transcripts/` | 115 期逐字稿（txt + json，带 60 秒时间戳） |
 | `summaries/` | 各批次的节目摘要、要点、引文、分析 |
 | `fp/` | 第一人称视角改写层：只改主播叙述，嘉宾与原话保持原意 |
-| `guides/` | 8 篇章节大导读、111 篇历史 Vol 导读与 111 条历史董了观点的源数据；第 114 期在 `data-v2.json` |
+| `guides/` | 8 篇章节大导读、111 篇历史 Vol 导读与 111 条历史董了观点的源数据；第 115 期在 `data-v2.json` |
 | `module_scenes.json` | 8 个模块的对话切片、观点推演、现场故事与行动源数据 |
 | `apply_module_scenes.js` | 校验并把模块切片合并进 `data-v2.json` |
 | `apply_guides.js` | 把 `guides/module_guides.json`、`vol_guides.json` 合并进 `data-v2.json` |
@@ -74,7 +74,7 @@ node build-v2.js
 `ebook/` 下有三份可导入微信读书的文件：
 
 - `慧客堂·学习手册.epub`：导读、核心要点、精读、原文摘录、Shownotes、章节大导读和附录。
-- `慧客堂·逐字稿全集.epub`：114 期完整逐字稿，60 秒段首时间戳。
+- `慧客堂·逐字稿全集.epub`：115 期完整逐字稿，60 秒段首时间戳。
 - `慧客堂·学习手册.txt`：UTF-8 TXT，兼容备份。
 
 网页版也在首页提供下载：`ebook/huiketang-handbook.epub`、`ebook/huiketang-transcripts.epub`、`ebook/huiketang-handbook.txt`。
