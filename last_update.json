@@ -1,20 +1,20 @@
 {
- "date": "2026-11-05 09:01:35",
+ "date": "2026-11-12 09:02:07",
  "new": [
   {
-   "n": 115,
-   "label": "Vol.113",
-   "title": "Vol.113【硅谷新观点】AI不是被发明，而是被召唤的？",
-   "date": "2026.11.05"
+   "n": 116,
+   "label": "Vol.115",
+   "title": "Vol.115 川普中期败选，AI继续烧钱，美债还能撑几年?",
+   "date": "2026.11.12"
   }
  ],
- "total": 115,
+ "total": 116,
  "coverage": {
   "source": "xiaoyuzhou-page",
-  "webCount": 115,
-  "webLatest": "2026.11.05",
-  "latestLocal": "2026.11.02",
-  "known": 114,
+  "webCount": 116,
+  "webLatest": "2026.11.12",
+  "latestLocal": "2026.11.05",
+  "known": 115,
   "missing": 1,
   "resolved": 1,
   "skippedPaid": 0,
