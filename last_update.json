@@ -1,20 +1,20 @@
 {
- "date": "2026-11-12 09:02:07",
+ "date": "2026-11-19 09:02:37",
  "new": [
   {
-   "n": 116,
-   "label": "Vol.115",
-   "title": "Vol.115 川普中期败选，AI继续烧钱，美债还能撑几年?",
-   "date": "2026.11.12"
+   "n": 117,
+   "label": "Vol.116",
+   "title": "Vol.116 从个人英雄到系统制胜：关于投资的漫长胜利",
+   "date": "2026.11.19"
   }
  ],
- "total": 116,
+ "total": 117,
  "coverage": {
   "source": "xiaoyuzhou-page",
-  "webCount": 116,
-  "webLatest": "2026.11.12",
-  "latestLocal": "2026.11.05",
-  "known": 115,
+  "webCount": 117,
+  "webLatest": "2026.11.19",
+  "latestLocal": "2026.11.12",
+  "known": 116,
   "missing": 1,
   "resolved": 1,
   "skippedPaid": 0,

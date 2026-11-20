@@ -321,8 +321,13 @@ def main():
     known = {e.get('link', '').split('?')[0] for e in data['episodes']}
     known_eids = {eid_of(e.get('link', '')) for e in data['episodes']}
     known_eids.discard('')
-    items = parse_feed(fetch_feed())
-    log(f"RSS {len(items)} items")
+    try:
+        items = parse_feed(fetch_feed())
+        log(f"RSS {len(items)} items")
+    except Exception as e:
+        # RSS 可能被 WAF 拦截返回 HTML；网页权威源兜底，coverage 仍负责缺口把关
+        items = []
+        log(f"RSS fetch/parse failed: {e!r}; fallback to web source")
 
     web_count = None
     web_latest = ''
