@@ -1,20 +1,20 @@
 {
- "date": "2026-11-19 09:02:37",
+ "date": "2026-11-24 09:40:34",
  "new": [
   {
-   "n": 117,
-   "label": "Vol.116",
-   "title": "Vol.116 从个人英雄到系统制胜：关于投资的漫长胜利",
-   "date": "2026.11.19"
+   "n": 118,
+   "label": "特别篇",
+   "title": "盘点各策略逆风期，以及投资的钱、技、心",
+   "date": "2026.11.23"
   }
  ],
- "total": 117,
+ "total": 118,
  "coverage": {
   "source": "xiaoyuzhou-page",
-  "webCount": 117,
-  "webLatest": "2026.11.19",
-  "latestLocal": "2026.11.12",
-  "known": 116,
+  "webCount": 118,
+  "webLatest": "2026.11.23",
+  "latestLocal": "2026.11.19",
+  "known": 117,
   "missing": 1,
   "resolved": 1,
   "skippedPaid": 0,
